@@ -1,0 +1,14 @@
+文件结构说明：
+kodama/
+	index.php //程序入口文件
+	attend/
+		AddAttendRecordGet.php //远程添加签到记录，成功返回""
+		AddAttendRecordPost.php //Ajax添加签到记录，返回结果string
+		AttendClass.php //签到记录操作类
+		CheckInUI.php //签到界面
+		GetStudentRadio.php //按班级获取全部学生名单并打包成radio单选控件json
+	include/
+		include_database.php //数据库加载
+		include_function.php //全局函数
+	pdf/
+		PDFWriteGradeAttend.php //生成学生成绩及出席状况证明书.pdf文件

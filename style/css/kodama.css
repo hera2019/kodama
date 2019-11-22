@@ -1,0 +1,500 @@
+/* KODAMA CSS */
+/* 选择器示例
+tr.selected[class^="even"] {}
+tr.selected[class*="odd"]:hover {}
+th:not([class*="text-"])
+*/
+
+/* Password字体 */
+input[type="password"] {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Pop菜单 */
+.dropdown-menu ul.menu .kodama-icon-circle {
+  width: 24px;
+  height: 24px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  display: inline-block;
+}
+.dropdown-menu ul.menu .kodama-icon-circle i {
+  font-size: 18px;
+  line-height: 24px;
+}
+.dropdown-menu ul.menu .kodama-menu-info {
+  display: inline-block;
+  position: relative;
+  top: -3px;
+  left: 5px;
+}
+.dropdown-menu ul.menu .kodama-menu-info h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* 列表横排 */
+.list-group .list-group-item ul.kodama-lista,
+.list-group .list-group-item ul.kodama-listh {
+  width: 100%;
+  height: 1.2rem;
+}
+.list-group .list-group-item ul.kodama-lista li,
+.list-group .list-group-item ul.kodama-listh li {
+  float: left;
+  list-style: none
+}
+.list-group .list-group-item ul.kodama-listh li {
+  font-weight: bold;
+}
+
+.list-group .active {
+  background-color: #2196F3;
+  border-color: #2196F3; }
+  .list-group .active:hover {
+    background-color: #03A9F4;
+    border-color: #03A9F4; }
+
+/* Header字体 */
+.kodama-header {
+  color: #555;
+  padding: 20px;
+  position: relative;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.35);
+}
+.kodama-header .header-dropdown {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  list-style: none;
+}
+.kodama-header .header-dropdown .dropdown-menu li {
+  display: block !important;
+}
+.kodama-header .header-dropdown li {
+  display: inline-block;
+}
+.kodama-header .header-dropdown i {
+  font-size: 20px;
+  color: #999;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.kodama-header .header-dropdown i:hover {
+  color: #000;
+}
+.kodama-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+.kodama-header h2 small {
+  display: block;
+  font-size: 12px;
+  margin-top: 5px;
+  line-height: 15px;
+}
+.kodama-header h2 small a {
+  font-weight: bold;
+}
+.kodama-header .col-xs-12 h2 {
+  margin-top: 5px;
+}
+
+/* 圆形icon按钮 */
+.kodama-header .header-button {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  list-style: none;
+}
+  .kodama-header .header-button li {
+    display: inline-block;
+  }
+  .kodama-header .header-button li:hover {
+    background-color: #fffede;/*#e9e9e9;*/
+  }
+    .kodama-header .header-button li a {
+      text-decoration: none;
+      padding: 5px 10px;
+    }
+    .kodama-header .header-button li a:hover {
+      text-decoration: none;
+    }
+    .kodama-header .header-button .kodama-icon-circle {
+      width: 24px;
+      height: 24px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+      color: #fff;
+      text-align: center;
+      display: inline-block;
+    }
+      .kodama-header .header-button .kodama-icon-circle i {
+        font-size: 18px;
+        line-height: 24px;
+      }
+    .kodama-header .header-button .kodama-menu-info {
+      display: inline-block;
+      position: relative;
+      top: -3px;
+      left: 5px;
+    }
+    .kodama-header .header-button .kodama-checkbox {
+      position: relative;
+      top: -2px;
+    }
+      .kodama-header .header-button .kodama-menu-info h4,
+      .kodama-header .header-button .kodama-checkbox label {
+        margin: 0;
+        font-size: 14px;
+        color: #999;
+      }
+      .kodama-header .header-button .kodama-menu-info h4:hover,
+      .kodama-header .header-button .kodama-checkbox label:hover {
+        color: #000;
+      }
+
+/* li横排 内部icon input横排 */
+.kodama-horli {
+  list-style: none;
+}
+  .kodama-horli .input-group,
+  .kodama-horli .input-group-select {
+    width: 45%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 20px;
+  }
+    .kodama-horli .input-group .input-group-addon,
+    .kodama-horli .input-group-select .input-group-addon {
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      padding: 0;
+      padding-top: 6px;
+      vertical-align: middle;
+      background-color: transparent;
+      border: none;
+    }
+      .kodama-horli .input-group .input-group-addon .material-icons, 
+      .kodama-horli .input-group-select .input-group-addon .material-icons {
+        width: 24px;
+        height: 18px;
+        font-size: 18px;
+      }
+    .kodama-horli .input-group .form-line, 
+    .kodama-horli .input-group-select .form-line {
+      width: 90%;
+      min-width: 200px;
+      padding-left: 12px;
+      padding-right: 18px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+      .kodama-horli .input-group-select .form-line .kodama-icon-select
+      {
+        background-color: transparent;
+        vertical-align: middle;
+        min-height: 34.4px;
+        border: none;
+        width: 90%;
+      }
+
+/* 表格 */
+.table {
+  font-size: 14px;
+  color: #555;
+  vertical-align: middle; 
+}
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > thead > tr > th {
+  word-wrap: break-word;
+  word-break: break-all;
+  table-layout: fixed;
+  vertical-align: middle;
+}
+.custom-control-label {
+  margin-bottom: 0;
+}
+
+/* DataTable */
+.dataTable > tbody > tr.selected.odd {
+  background-color: #2196F3;
+  color: #fff;
+  border-color: #2196F3;
+}
+.dataTable > tbody > tr.selected.even {
+  background-color: #03A9F4;
+  color: #fff;
+  border-color: #03A9F4; }
+  .dataTable > tbody > tr.selected.odd:hover {
+    background-color: #45A7F4;
+    color: #fff;
+    border-color: #45A7F4; }
+  .dataTable > tbody > tr.selected.even:hover {
+    background-color: #16B4FC;
+    color: #fff;
+    border-color: #16B4FC; }
+
+/* 填表式不规则表格 */
+.kodama-formtable > tbody > tr > th:not([class*="text-"]) { /*如果不排除，text-left不起作用*/
+  text-align: center;
+}
+.kodama-formtable > tbody > tr > td,
+.kodama-formtable > tbody > tr > th,
+.kodama-formtable > thead > tr > th  {
+  word-wrap: break-word;
+  word-break: break-all;
+  table-layout: fixed;
+  vertical-align: middle;
+}
+.kodama-formtable > thead > tr > th,
+.kodama-formtable > tbody > tr > th,
+.kodama-formtable > tfoot > tr > th {
+  font-weight: normal;
+  cursor: default;
+}
+.kodama-formtable > tbody > tr > td.kodama-fill,
+.kodama-formtable > tbody > tr > td.kodama-fillcontrol
+{
+  background-color: #fffede; /*#f9f9f9;*/
+  vertical-align: middle;
+  height: 34.4px;
+  cursor: text;
+}
+.kodama-formtable > tbody > tr > td.kodama-depend,
+.kodama-formtable > tbody > tr > td.kodama-dependcontrol
+{
+  background-color: #EDFCFF; /* 依赖于基本信息表的数据 */
+  vertical-align: middle;
+  height: 34.4px;
+  cursor: text;
+}
+.kodama-formtable > tbody > tr > td.kodama-fillcontrol > .form-group > input.kodama-datepicker,
+.kodama-formtable > tbody > tr > td.kodama-fillcontrol > .form-group > input.kodama-monthpicker,
+.kodama-formtable > tbody > tr > td.kodama-dependcontrol > .form-group > input.kodama-datepicker,
+.kodama-formtable > tbody > tr > td.kodama-dependcontrol > .form-group > input.kodama-monthpicker
+{
+  /* 下一级.datetimepicker-input */
+  background-color: transparent;
+  vertical-align: middle;
+  min-height: 34.4px;
+  height: 100%;
+}
+.kodama-formtable > tbody > tr > td.kodama-fill textarea,
+.kodama-formtable > tbody > tr > td.kodama-depend textarea {
+  vertical-align: middle;
+}
+.kodama-formtable > tbody > tr > td.kodama-fill,
+.kodama-formtable > tbody > tr > td.kodama-depend {
+  white-space: pre;
+  padding: 6px;
+}
+.kodama-formtable > tbody > tr > td.kodama-fillcontrol,
+.kodama-formtable > tbody > tr > td.kodama-dependcontrol {
+  padding: 0;
+}
+.kodama-formtable > tbody > tr > td.kodama-fillcontrol .form-group,
+.kodama-formtable > tbody > tr > td.kodama-dependcontrol .form-group {
+  margin: 0;
+}
+.kodama-formtable > tbody > tr > td.kodama-fillcontrol label,
+.kodama-formtable > tbody > tr > td.kodama-dependcontrol label {
+  margin-bottom: 0;
+}
+/* IB-Admission去掉表头边框，可能会冲突 */
+.kodama-formtable-bordered > thead > tr > th {
+  border: none;
+}
+
+/* 控件 */
+.kodama-select
+{
+  background-color: transparent;
+  vertical-align: middle;
+  min-height: 34.4px;
+  height: 100%;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-align-last: center;
+}
+.photoimage { /* 显示图片 */
+  height: auto;
+  width: auto\9;
+  width: 100%;
+  cursor: pointer;
+}
+#photo_drag { /* 拖拽图片区域 */
+  display: block;
+  text-align: center;
+  padding: 1em 1em;
+  margin: 1em 0;
+  color: #555;
+  border: 2px dashed #888;
+  border-radius: 7px;
+  cursor: default;
+}
+#photo_drag.hover { /* 拖拽图片到位置 */
+  border: 2px dashed #000;
+}
+
+/* 选中学生的信息 */
+.kodama-studentinfo {
+  font-size: 12px;
+}
+.kodama-studentinfo tbody > tr > th {
+  background-color: #f4f4f4;
+  text-align: right;
+  border: 1px solid #dfdfdf;
+}
+.kodama-studentinfo tbody > tr > th,
+.kodama-studentinfo tbody > tr > td {
+  line-height: 12px;
+  padding: 5px;
+}
+.kodama-studentinfo td.photo {
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+.kodama-studentinfo img.photo {
+  position: relative;
+  left: 0px;
+  top: 0px;
+}
+
+/* 时间控件 */
+.datepicker-days th.dow:first-child,
+.datepicker-days td:first-child {
+  color: #F44336;
+}/* 周日红色 */
+.datepicker-days th.dow:last-child,
+.datepicker-days td:last-child {
+  color: #2196F3;
+}/* 周六蓝色 */
+.bootstrap-datetimepicker-widget.dropdown-menu {
+  position: absolute;
+  z-index: 9999;
+  margin-top: 2px !important;
+  min-width: 264px; /*264px*/
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+  box-shadow:  0 0px 0px rgba(0, 0, 0, .175);
+  border: 1px solid #dee2e6;
+}
+.bootstrap-datetimepicker-widget table { 
+  background-color: #fff !important; 
+  border: 0;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+.bootstrap-datetimepicker-widget table thead tr th {
+  padding: 5px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border: 0;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 2px solid #dee2e6;
+}
+.bootstrap-datetimepicker-widget table tbody tr td {
+  padding: 5px;
+  border: 0;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+.bootstrap-datetimepicker-widget table tr td.active,
+.bootstrap-datetimepicker-widget table tr td.active:hover {
+  background-color: #18BC9C;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}/* Day选中 */
+.bootstrap-datetimepicker-widget table tr td span.active,
+.bootstrap-datetimepicker-widget table tr td i.active {
+  background-color: #18BC9C;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}/* 年月选中 */
+.bootstrap-datetimepicker-widget .picker-switch .table-condensed tbody tr td a {
+  color: #18BC9C;
+}/* 按钮颜色 */
+.datetimepicker-input {
+  background-color: transparent;
+  text-align: center;
+  min-height: 34.4px;
+  padding: 0;
+  cursor: pointer;
+}/* 时间控件透明 */
+
+/* 宽度占位 */
+.kodama-w-0 {
+  width: 0%;
+}
+.kodama-w-5 {
+  width: 5%;
+}
+.kodama-w-10 {
+  width: 10%;
+}
+.kodama-w-15 {
+  width: 15%;
+}
+.kodama-w-20 {
+  width: 20%;
+}
+.kodama-w-25 {
+  width: 25%;
+}
+.kodama-w-30 {
+  width: 30%;
+}
+.kodama-w-35 {
+  width: 35%;
+}
+.kodama-w-40 {
+  width: 40%;
+}
+.kodama-w-45 {
+  width: 45%;
+}
+.kodama-w-50 {
+  width: 50%;
+}
+.kodama-w-55 {
+  width: 55%;
+}
+.kodama-w-60 {
+  width: 60%;
+}
+.kodama-w-65 {
+  width: 65%;
+}
+.kodama-w-70 {
+  width: 70%;
+}
+.kodama-w-75 {
+  width: 75%;
+}
+.kodama-w-80 {
+  width: 80%;
+}
+.kodama-w-95 {
+  width: 95%;
+}
+.kodama-w-100 {
+  width: 100%;
+}
