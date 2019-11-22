@@ -1,5 +1,3 @@
-//照片默认目录
-var g_photoPath = '../data/photo/';
 //照片上传，点击照片可选择图片文件上传，拖拽图片文件到照片取域也可以上传，支持中日文名
 $(function () {
   function uploadPhoto(file) {
@@ -37,7 +35,7 @@ $(function () {
               photoname.value = data.filename;
             }
           }
-          document.getElementById('photoimage').src = g_photoPath + data.filename;
+          document.getElementById('photoimage').src = kodamafunc.PHOTO_PATH + data.filename;
           document.getElementById('message').innerHTML = data.message;
         } else {
           document.getElementById('message').innerHTML = data.message + ' error code: ' + data.result;

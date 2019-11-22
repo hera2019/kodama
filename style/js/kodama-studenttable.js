@@ -91,12 +91,12 @@ $(function () {
         }
       }
     } else {
-      if(!_kodama_students.multiselect) { //单选
-        cancelSelect();
-      }
       let eltr = this.parentNode.parentNode.parentNode;
       if(eltr) {
         check = !$(eltr).hasClass('selected');
+        if(!_kodama_students.multiselect) { //单选
+          cancelSelect();
+        }
         this.checked = check;
         if (!check) {
           $(eltr).removeClass('selected');
@@ -113,10 +113,10 @@ $(function () {
   });
 
   $('.dataTable tbody').on( 'click', 'tr', function () { //此代码之前必须有DataTable初始化代码
+    var check = !$(this).hasClass('selected');
     if(!_kodama_students.multiselect) { //单选
       cancelSelect();
     }
-    var check = !$(this).hasClass('selected');
     var studentid = '';
     if ( !check ) {
       $(this).removeClass('selected');
@@ -160,7 +160,7 @@ function cancelSelectData() {
   _kodama_students.currentstudentid = '';
   for(let key of _kodama_students.studentkey) {
     if(key == 'photo') {
-      document.getElementById("info_photo").src = '../data/photo/default/empty.jpg';
+      document.getElementById("info_photo").src = kodamafunc.PHOTO_PATH + "default/empty.jpg";
     } else {
       document.getElementById(key).innerHTML = '';
     }
@@ -200,19 +200,24 @@ function showStudent(studentid, selected) {
         let value = data[key];
         if(key == 'genderfemale') {
           if(value == 1) {
-            value ='女 Female';
+            value = '女 Female';
             if(photo.length == 0) {
-              photo = "../data/photo/default/female.jpg";
+              photo = kodamafunc.PHOTO_PATH + "default/female.jpg";
+            }
+          } else if(value == 0) {
+            value = '男 Male';
+            if(photo.length == 0) {
+              photo = kodamafunc.PHOTO_PATH + "default/male.jpg";
             }
           } else {
-            value ='男 Male';
+            value = '';
             if(photo.length == 0) {
-              photo = "../data/photo/default/male.jpg";
+              photo = kodamafunc.PHOTO_PATH + "default/empty.jpg";
             }
           }
         } else if(key == 'photo') {
           if(data[key]) {
-            photo = "../data/photo/" + data[key];
+            photo = kodamafunc.PHOTO_PATH + data[key];
             info[key] = data[key];
           }         
           continue;
@@ -229,7 +234,7 @@ function showStudent(studentid, selected) {
         info[key] = value;
       }
       if(photo.length == 0) {
-        photo = "../data/photo/default/empty.jpg"
+        photo = kodamafunc.PHOTO_PATH + "default/empty.jpg"
       }
       document.getElementById("info_photo").src = photo;
       
@@ -241,7 +246,7 @@ function showStudent(studentid, selected) {
       _kodama_students.currentstudentid = '';
       for(let key of _kodama_students.studentkey) {
         if(key == 'photo') {
-          document.getElementById("info_photo").src = '../data/photo/default/empty.jpg';
+          document.getElementById("info_photo").src = kodamafunc.PHOTO_PATH + "default/empty.jpg";
         } else {
           document.getElementById(key).innerHTML = '';
         }
@@ -291,7 +296,7 @@ function queryStudent(queryParam) {
       { "data": "statusname" },
       { "data": "genderfemale",
         render: function (data, type, obj, meta) {
-          return data == 1 ? '女 Female' : '男 Male';
+          return data == 1 ? '女 Female' : data == 0 ? '男 Male' : '';
         }
       },
       { "data": "nationalityregion" },

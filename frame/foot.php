@@ -33,8 +33,8 @@
 <!-- SweetAlert Plugin Js 弹出漂亮的提示框 -->
 <script src="../style/js/sweetalert.min.js"></script>
 
-<!-- Function Js
-<script src="../style/js/kodama-function.js"></script> -->
+<!-- Function and Const Js -->
+<script src="../style/js/kodama-function.js"></script>
 
 <!-- Main UI Js -->
 <script src="../style/js/kodama-mainui.js"></script>

@@ -4,9 +4,6 @@ require_once( '../include/include_database.php' );
 require_once( '../include/include_function.php' );
 require_once( 'frame.php' );
 
-//照片默认目录
-$PHOTO_PATH = '../data/photo/';
-
 $baseitem = [
   //'nickname' => array('Nickname', 'face'),
   'lastname' => array('Lastname', 'contacts'),
@@ -268,7 +265,9 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){
   g_classesinfo = <?php echo $php_classesinfo; ?>;
+});
 </script>
 <script src="../style/js/kodama-studentedit.js"></script>
 <script src="../style/js/kodama-photoupload.js"></script>

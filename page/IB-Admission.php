@@ -103,7 +103,7 @@
                   <th class="col-xs-2" colspan="2">生年月日<br>Date of  birth</th>
                   <td class="col-xs-2 kodama-dependcontrol" colspan="2">
                     <div class="form-group kodama-datepicker" id="time_0061" data-target-input="nearest">
-                      <input type="text" id="time_student.birthday" class="form-control datetimepicker-input" data-target="#time_0061" data-toggle="datetimepicker"/>
+                      <input type="text" id="time_student.birthday" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_0061" data-toggle="datetimepicker"/>
                     </div>
                   </td>
                   <th class="col-xs-2" colspan="2">性別<br>Sex</th>

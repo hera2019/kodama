@@ -1,4 +1,16 @@
 <?php
+//主题色彩
+$KODAMA_THEME_COLOR = 'rose-red';
+if ( isset( $_COOKIE[ 'KODAMA_THEME_COLOR' ] ) ) {
+  $KODAMA_THEME_COLOR = $_COOKIE[ 'KODAMA_THEME_COLOR' ];
+  if(empty($KODAMA_THEME_COLOR)) {
+    $KODAMA_THEME_COLOR = 'rose-red';
+  }
+}
+
+//照片默认目录
+$PHOTO_PATH = '../data/photo/';
+
 //跳转URL
 function GotoURL( string $strURL ) {
   echo "<script language='javascript' type='text/javascript'>";

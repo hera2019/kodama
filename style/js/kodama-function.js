@@ -1,4 +1,8 @@
 var kodamafunc ={};
+
+//照片默认目录
+kodamafunc.PHOTO_PATH = '../data/photo/';
+
 kodamafunc.getUrlParam = function(name) {
   var reg = new RegExp("[?&]" + name + "=([^&#]*)", "i");
   var res = window.location.href.match(reg);

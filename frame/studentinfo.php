@@ -21,7 +21,24 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
           <th class="col-xs-1" colspan="1">クラス名</th>
           <td class="col-xs-1" colspan="1" id="classname"><?= isset($StudentInfo) ? $StudentInfo->classname : ''; ?></td>
           <td class="col-xs-1 photo" colspan="1" rowspan="5">
-            <img class="photo" id="info_photo" alt="写真" height="100" src="<?= isset($StudentInfo) && $StudentInfo->photo ? '../data/photo/' . $StudentInfo->photo : '../data/photo/default/empty.jpg'; ?>" />
+            <img class="photo" id="info_photo" alt="写真" height="100" src="
+              <?php
+              $photo = $PHOTO_PATH . 'default/empty.jpg';
+              if(isset($StudentInfo) && !empty($StudentInfo)) {
+                if(isset($StudentInfo->photo) && !empty($StudentInfo->photo)) {
+                  $photo = $PHOTO_PATH . $StudentInfo->photo;
+                } else {
+                  if(isset($StudentInfo->genderfemale)) {
+                    if($StudentInfo->genderfemale == '女 Female') {
+                      $photo = $PHOTO_PATH . 'default/female.jpg';
+                    } else if($StudentInfo->genderfemale == '男 Male') {
+                      $photo = $PHOTO_PATH . 'default/male.jpg';
+                    }
+                  }
+                }
+              }
+              echo $photo;
+              ?>" />
           </td>
         </tr>
         <tr>

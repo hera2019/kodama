@@ -350,15 +350,21 @@ function postGetData(id, fileID) {
           }
         } else if(key.search(/photo_/) == 0) { //photo
           let keyname = key.substring(6);
-          if(keyname && student[keyname]) {
-            let el = document.getElementById('photo_student.' + keyname);
-            if(el) {
-              el.value = student[keyname];
-            }
-            el = document.getElementById('photoimage');
-            if(el) {
-              el.src = '../data/photo/' + student[keyname];
-            }
+          if(keyname) {
+            let eltext = document.getElementById('photo_student.' + keyname);
+            let elimage = document.getElementById('photoimage');
+            if(eltext && elimage) {
+              if(student[keyname]) {
+                eltext.value = student[keyname];
+                elimage.src = kodamafunc.PHOTO_PATH + student[keyname];
+              } else {
+                if(student['genderfemale'] == 1) {
+                  elimage.src = kodamafunc.PHOTO_PATH + 'default/female.jpg';
+                } else if(student['genderfemale'] == 0) {
+                  elimage.src = kodamafunc.PHOTO_PATH + 'default/male.jpg';
+                }
+              }
+            }            
           }
         }
       }
@@ -421,7 +427,7 @@ function postGetData(id, fileID) {
     var student = jsonStr.student;
     if(student) {
       document.getElementById('student.name').innerHTML = student.name;
-      document.getElementById('photoimage').src = '../data/photo/' + student.photo;
+      document.getElementById('photoimage').src = kodamafunc.PHOTO_PATH + student.photo;
     }
 
     if(jsonStr.studentdata) {
