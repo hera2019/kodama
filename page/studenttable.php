@@ -1,14 +1,15 @@
+<head>
 <!-- code by zmq -->
 <?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php
 require_once( 'frame.php' );
 require_once( '../include/include_database.php' );
 ?>
-<head>
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="../style/css/kodama.css" rel="stylesheet">
 </head>
+
 <section class="content">
   <div class="container-fluid">
     <div class="row m-t--60">
