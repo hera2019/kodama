@@ -20,6 +20,7 @@
         <ul class="ml-menu">
           <li> <a href="IB-Admission.php"> <span>入学願書</span> </a> </li>
           <li> <a href="IB-AdmissionAppend.php"> <span>入学追加調書</span> </a> </li>
+          <li> <a href="IB-AdmissionResumeAppend.php"> <span>履歴書（追加）</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">person</i> <span>基本登録</span> </a>

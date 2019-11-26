@@ -412,7 +412,7 @@
                   </td>
                   <td class="kodama-fillcontrol col-xs-2" colspan="2">
                     <div class="form-group kodama-datepicker" id="time_0841" data-target-input="nearest">
-                      <input type="text" id="time_prevjpdeparture2" class="form-control datetimepicker-input" data-target="#time_0841" data-toggle="datetimepicker"/>
+                      <input type="text" id="time_prevjpdeparture1" class="form-control datetimepicker-input" data-target="#time_0841" data-toggle="datetimepicker"/>
                     </div>
                   </td>
                 </tr>
