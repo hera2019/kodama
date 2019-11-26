@@ -15,7 +15,7 @@ require_once( '../include/include_database.php' );
     <div class="row m-t--60">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <?php
-        $strinfo = ' on other page. Then query and choose a student now.';
+        $strinfo = 'Student Info: You will operate the data by this student on other page. Then query and choose a student now.';
         if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
           require_once( '../frame/studentinfo.php' );
         }

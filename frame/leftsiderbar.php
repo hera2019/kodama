@@ -18,8 +18,8 @@
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">people</i> <span>申請者管理</span> </a>
         <ul class="ml-menu">
-          <li> <a href="IB-Admission.php"> <span>申請者登録</span> </a> </li>
-          <li> <a href="htmlpagetest.php"> <span>申請者詳細情報登録</span> </a> </li>
+          <li> <a href="IB-Admission.php"> <span>入学願書</span> </a> </li>
+          <li> <a href="IB-AdmissionAppend.php"> <span>入学追加調書</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">person</i> <span>基本登録</span> </a>
@@ -39,17 +39,17 @@
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類１</span> </a>
         <ul class="ml-menu">
-          <li> <a href="content2.php"> <span>content2</span> </a> </li>
+          <li> <a href="Welcome5.php"> <span>Welcome5</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類２</span> </a>
         <ul class="ml-menu">
-          <li> <a href="pagetest2.php"> <span>pagetest2</span> </a> </li>
+          <li> <a href="Welcome6.php"> <span>Welcome6</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">local_printshop</i> <span>名簿印刷</span> </a>
         <ul class="ml-menu">
-          <li> <a href="tabletest.php"> <span>tabletest</span> </a> </li>
+          <li> <a href="Welcome7.php"> <span>Welcome7</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">account_box</i> <span>マスタ管理</span> </a>

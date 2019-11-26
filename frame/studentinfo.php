@@ -7,7 +7,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
 ?>
 <div class="card m-b-10">
   <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>" style="padding-top: 10px; padding-bottom: 10px;">
-    <h2><small class="col-<?= $KODAMA_THEME_COLOR; ?>">Student Info: You will operate the data by this student<?= (isset($strinfo) && !empty($strinfo) ? $strinfo : '') ?>.</small></h2>
+    <h2><small class="col-<?= $KODAMA_THEME_COLOR; ?>"><?= (isset($strinfo) && !empty($strinfo) ? $strinfo : 'Student Info: You will operate the data by this student. <a href = "../page/studenttable.php">Click here choose another student</a>.') ?></small></h2>
   </div>
   <div class="body" style="padding-top: 10px; padding-bottom: 10px;">
     <div id="studentid" hidden="true"><?= isset($StudentInfo) ? $StudentInfo->studentid : ''; ?></div>

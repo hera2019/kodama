@@ -111,7 +111,7 @@ class Class_Data
     if(!empty($context)) {
       $context = substr($context, 0, -1); //去掉最后的逗号
     } else {
-      $message = ' Param error 2!';
+      $message = '';
       return $message;
     }
     
