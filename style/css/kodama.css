@@ -168,14 +168,14 @@ input[type="password"] {
 .kodama-horli {
   list-style: none;
 }
-  .kodama-horli .input-group,
+  .kodama-horli .form-group,
   .kodama-horli .input-group-select {
     width: 45%;
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 20px;
   }
-    .kodama-horli .input-group .input-group-addon,
+    .kodama-horli .form-group .input-group-addon,
     .kodama-horli .input-group-select .input-group-addon {
       width: 24px;
       height: 24px;
@@ -186,13 +186,13 @@ input[type="password"] {
       background-color: transparent;
       border: none;
     }
-      .kodama-horli .input-group .input-group-addon .material-icons, 
+      .kodama-horli .form-group .input-group-addon .material-icons, 
       .kodama-horli .input-group-select .input-group-addon .material-icons {
         width: 24px;
         height: 18px;
         font-size: 18px;
       }
-    .kodama-horli .input-group .form-line, 
+    .kodama-horli .form-group .form-line, 
     .kodama-horli .input-group-select .form-line {
       width: 90%;
       min-width: 200px;
@@ -232,6 +232,7 @@ input[type="password"] {
       vertical-align: middle;
       background-color: transparent;
       border: none;
+      font-weight: bold;
     }
     .kodama-texthorli .input-group .form-line, 
     .kodama-texthorli .input-group-select .form-line {
@@ -248,7 +249,7 @@ input[type="password"] {
         vertical-align: middle;
         min-height: 34.4px;
         border: none;
-        width: 90%;
+        width: 70%;
       }
 
 /* 表格 */

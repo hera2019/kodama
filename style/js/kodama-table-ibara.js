@@ -2,6 +2,8 @@
 var _student_file3 = {
   student: {
   },
+  student2: {
+  },
   studentdata: {
     'text_relationship4': '',
     'text_relationshipname4': '',

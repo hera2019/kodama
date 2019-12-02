@@ -10,6 +10,8 @@ var _student_file1 = {
     'radio_genderfemale': 0,
     'photo_photo': '',
   },
+  student2: {
+  },
   studentdata: {
     'checkbox_furtherjpstudy': false,
     'checkbox_getjpjob': false,

@@ -105,17 +105,18 @@ if($mod != 'add') {
                   <div class='intable'>
                     <div class='row'>
                       <div class='cell'>
-                        <div class="input-group">
+                        <div class="form-group form-float">
                           <span class="input-group-addon"> <i class="material-icons col-rose-red">person</i> </span>
                           <div class="form-line">
-                            <input value="<?= empty($recordstudent) ? '' : $recordstudent->name; ?>" type="text" class="form-control" name="name" placeholder="Name" required autofocus>
+                            <input value="<?= empty($recordstudent) ? '' : $recordstudent->name; ?>" type="text" class="form-control" name="name" required autofocus>
+                            <label class="form-label">Name</label>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class='row'>
                       <div class='cell'>
-                        <div class="input-group">
+                        <div class="form-group">
                           <span class="input-group-addon"> <i class="material-icons col-green">pregnant_woman</i> </span>
                           <div class="form-line">
                             <input name="genderfemale" type="radio" id="radio_001" class="with-gap radio-col-blue" value="0" <?= empty($recordstudent) ? '' : ($recordstudent->genderfemale ? '' : 'checked="checked"'); ?> />
@@ -128,20 +129,22 @@ if($mod != 'add') {
                     </div>
                     <div class='row'>
                       <div class='cell'>
-                        <div class="input-group">
+                        <div class="form-group form-float">
                           <span class="input-group-addon"> <i class="material-icons col-green">today</i> </span>
                           <div class="form-line form-group kodama-datepicker" id="time_001" data-target-input="nearest" style="margin-bottom: 0;">
-                            <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_001" data-toggle="datetimepicker" name="birthday" placeholder="Birthday" style="text-align: left; width: 100%; height: 100%;" value="<?= empty($recordstudent) ? '' : $recordstudent->birthday; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                            <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_001" data-toggle="datetimepicker" name="birthday" style="text-align: left; width: 100%; height: 100%;" value="<?= empty($recordstudent) ? '' : $recordstudent->birthday; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                            <label class="form-label">Birthday</label>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class='row'>
                       <div class='cell'>
-                        <div class="input-group" style="word-wrap: break-word; word-break: break-all;">
+                        <div class="form-group form-float" style="word-wrap: break-word; word-break: break-all;">
                           <span class="input-group-addon"> <i class="material-icons col-green">description</i> </span>
                           <div class="form-line">
-                            <textarea cols="12" rows="4" value="" type="text" class="form-control" name="description" placeholder="Description"><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
+                            <textarea cols="12" rows="4" value="" type="text" class="form-control" name="description"><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
+                            <label class="form-label">Description</label>
                           </div>
                         </div>
                       </div>
@@ -176,7 +179,7 @@ if($mod != 'add') {
                             
               <!-- 循环自动添加控件 -->
               <?php foreach($baseitem as $key => $value): ?>
-              <li class="input-group">
+              <li class="form-group form-float">
                 <span class="input-group-addon"> <i class="material-icons col-green"><?= $value[1]; ?></i> </span>
                 <div class="form-line">
                   <input value="<?php
@@ -185,18 +188,17 @@ if($mod != 'add') {
                       $studentvalue = $students[$key];
                     } else if($mod == 'add' && $key == 'studentnumber') {
                       //查询学号最大值+1
-                      $maxstudentnumber = '';
                       $sql = 'SELECT MAX(studentnumber + 1) AS maxstudentnumber FROM student';
                       $statement = $connection->prepare($sql);
                       $statement->execute();
                       $recordmaxstudentnumber = $statement->fetch( PDO::FETCH_OBJ );
                       if($recordmaxstudentnumber != NULL) {
-                        $maxstudentnumber = $recordmaxstudentnumber->maxstudentnumber;
+                        $studentvalue = $recordmaxstudentnumber->maxstudentnumber;
                       }
-                      $studentvalue = $maxstudentnumber;
                     }
                     echo $studentvalue;
-                    ?>" type="text" class="form-control" name="<?= $key; ?>" placeholder="<?= $value[0]; ?>">
+                    ?>" type="text" class="form-control" name="<?= $key; ?>">
+                  <label class="form-label"><?= $value[0]; ?></label>
                 </div>
               </li>
               <?php endforeach; ?>
@@ -286,7 +288,30 @@ if($mod != 'add') {
 <script src="../style/js/kodama-datetimepicker.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  var g_classesinfo = {};
   g_classesinfo = <?php echo $php_classesinfo; ?>;
+
+  //班级select 联动 教师select，选中班级，自动选择班主任老师 
+  //js或html调用php变量只能放在php文件里面，js文件不可以
+  $('#classID').change(function(){ //选中班级，自动选择班主任老师
+    //$(this).children('option:selected').val();//可以用
+    //$("#classID option:selected").val();//也可以用
+    let classid = $("#classID").val(); //可以用，这就是selected的值
+    //console.log(classid);
+    
+    let classesinfo = g_classesinfo;
+    //console.log(classesinfo);
+    let teacherid = 0;
+    for(let classinfo of classesinfo) {
+      if(classinfo.ID == classid) {
+        teacherid = classinfo.classteacherID;
+        break;
+      }
+    }
+    $('#classteacherID').val(teacherid); //设置select的值
+    //$('#classteacherID').selectpicker('val', teacherid); //设置select的值
+    //$('#classteacherID').selectpicker('refresh'); //必须刷新才能看到结果
+  });
 });
 </script>
 <script src="../style/js/kodama-studentedit.js"></script>

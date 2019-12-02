@@ -90,46 +90,6 @@ class Class_Data
 		return $message;
 	}
   
-	//更新学生信息
-	public function UpdateStudent($studentID, $students)
-	{
-		$message = ' Update students base info failed!';
-		if(empty($studentID) || empty($students))
-		{
-      $message .= ' Param error!';
-      return $message;
-    }
-    
-    $context = '';
-    foreach($students as $key => $value) {
-      if($key == 'birthday' && empty($value)) {
-        $context .= $key . '=null,';
-      } else if($key == 'nationalityregion' && $value == -1) {
-        $context .= $key . '=null,';
-      } else {
-        $context .= $key . '="' . $value . '"' . ',';
-      }
-    }
-    if(!empty($context)) {
-      $context = substr($context, 0, -1); //去掉最后的逗号
-    } else {
-      $message = '';
-      return $message;
-    }
-    
-    $sql = 'UPDATE student SET ' . $context .' WHERE ID=:ID';
-    $statement =  $this->connection->prepare($sql);
-    if ($statement->execute([':ID' => $studentID])) {
-      $message = '';
-    }
-    else {
-      $message .= ' Database operate failed!';
-      ShowErrorCode($statement);
-    }
-		
-		return $message;
-	}
-  
 	//获取一条记录
 	public function GetData($studentID, $fileID, &$data)
 	{
@@ -158,23 +118,5 @@ class Class_Data
     }
     
 		return $message;
-	}
-  
-	//获取学生信息
-	public function GetStudent($studentID, &$students)
-	{
-		if(!empty($studentID))
-		{
-      $sql = 'SELECT * FROM student WHERE ID=:ID';
-      $statement = $this->connection->prepare( $sql );
-      $statement->execute( [ ':ID' => $studentID ] );
-      $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
-      if ( $recordstudent != NULL ) {
-        $students = get_object_vars($recordstudent);
-        return '';
-      }
-      return 'Student base info not found. ';
-    }
-		return 'Student ID not found. ';
 	}
 }

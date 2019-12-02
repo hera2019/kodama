@@ -1,4 +1,5 @@
 <!-- code by zmq -->
+<?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php
 require_once( '../include/include_database.php' );
 require_once( '../include/include_function.php' );
@@ -57,9 +58,14 @@ if ( $recordcolumn == NULL ) {
 <section class="content">
   <div class="container-fluid">
     <div class="signup-box">
+        <?php
+        if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
+          require_once( '../frame/studentinfo.php' );
+        }
+        ?>
       <div class="card">
         <div class="body">
-          <form id="infoform" method="POST" action="../dataproc/student_proc.php">
+          <form id="infoform" method="POST" action="../dataproc/student2_proc.php">
             <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">
               <?php
               if(empty($ID)) {
@@ -89,7 +95,7 @@ if ( $recordcolumn == NULL ) {
                       echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '">';
                     echo '</div>';
                   echo '</li>';
-                } else if($column->DATA_TYPE == 'timestamp') {
+                } else if($column->DATA_TYPE == 'date') {
                   echo '<li class="input-group">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
                     echo '<div class="form-line form-group kodama-datepicker" id="time_' . $column->ORDINAL_POSITION . '" data-target-input="nearest" style="margin-bottom: 0;">';
@@ -102,77 +108,33 @@ if ( $recordcolumn == NULL ) {
                       echo '">';
                     echo '</div>';
                   echo '</li>';
+                } else if(($column->COLUMN_NAME == 'course') || 
+                          ($column->COLUMN_NAME == 'curriculum') || 
+                          ($column->COLUMN_NAME == 'residence') || 
+                          ($column->COLUMN_NAME == 'career')) {
+                  echo '<li class="input-group-select clearfix">';
+                    echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
+                    echo '<div class="form-line">';
+                      echo '<select class="kodama-icon-select" name="' . $column->COLUMN_NAME . '">';
+                        echo '<option value="-1">-- Please select --</option>';
+                        $sql = 'SELECT typeID, typename FROM idconfig WHERE type="' . $column->COLUMN_NAME . '" ORDER BY typeID ASC';
+                        $statement = $connection->prepare($sql);
+                        $statement->execute();
+                        $recordstatus = $statement->fetchAll( PDO::FETCH_OBJ );
+                        foreach($recordstatus as $recordstatus) {
+                          $selected = empty($students) ? '' : ($students[$column->COLUMN_NAME] == $recordstatus->typeID ? ' selected="selected"' : '');
+                          echo '<option value="' . $recordstatus->typeID . '"' . $selected . '>' . $recordstatus->typename . '</option>';
+                        }
+                      echo '</select>';
+                    echo '</div>';
+                  echo '</li>';
                 }
               }
               ?>
-              
-              <li class="input-group-select clearfix">
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="nationalityregion">
-                    <option value="-1">-- Please select nationalityregion --</option>
-                    <?php
-                    $sql = 'SELECT typeID, typename FROM idconfig WHERE type="nationalityregion" ORDER BY typeID ASC';
-                    $statement = $connection->prepare($sql);
-                    $statement->execute();
-                    $recordnationalityregion = $statement->fetchAll( PDO::FETCH_OBJ );
-                    foreach($recordnationalityregion as $recordnationalityregion): ?>
-                    <option value="<?= $recordnationalityregion->typename ?>" <?= empty($recordstudent) ? '' : ($recordstudent->nationalityregion == $recordnationalityregion->typename ? 'selected="selected"' : ''); ?>><?= $recordnationalityregion->typename ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
-              <li class="input-group-select clearfix">
-                <span class="input-group-addon"> <i class="material-icons col-green">class</i> </span>
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="classID" id="classID">
-                    <option value="0">-- Please select class --</option>
-                    <?php
-                    $sql = 'SELECT ID, name, classteacherID FROM class';
-                    $statement = $connection->prepare($sql);
-                    $statement->execute();
-                    $recordclasses = $statement->fetchAll( PDO::FETCH_OBJ );
-                    $php_classesinfo = json_encode($recordclasses);
-                    foreach($recordclasses as $recordclass): ?>
-                    <option value="<?= $recordclass->ID ?>" <?= empty($recordstudent) ? '' : ($recordstudent->classID == $recordclass->ID ? 'selected="selected"' : ''); ?>><?= $recordclass->name ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
-              <li class="input-group-select clearfix">
-                <span class="input-group-addon"> <i class="material-icons col-green">perm_identity</i> </span>
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="classteacherID" id="classteacherID">
-                    <option value="0">-- Please select teacher --</option>
-                    <?php
-                    $sql = 'SELECT ID, name FROM teacher';
-                    $statement = $connection->prepare($sql);
-                    $statement->execute();
-                    $recordteachers = $statement->fetchAll( PDO::FETCH_OBJ );
-                    foreach($recordteachers as $recordteacher): ?>
-                    <option value="<?= $recordteacher->ID ?>" <?= empty($recordstudent) ? '' : ($recordstudent->classteacherID == $recordteacher->ID ? 'selected="selected"' : ''); ?>><?= $recordteacher->name ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
-              <li class="input-group-select clearfix">
-                <span class="input-group-addon"> <i class="material-icons col-green">beenhere</i> </span>
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="status">
-                    <option value="-1">-- Please select status --</option>
-                    <?php
-                    $sql = 'SELECT typeID, typename FROM idconfig WHERE type="status" ORDER BY typeID ASC';
-                    $statement = $connection->prepare($sql);
-                    $statement->execute();
-                    $recordstatus = $statement->fetchAll( PDO::FETCH_OBJ );
-                    foreach($recordstatus as $recordstatus): ?>
-                    <option value="<?= $recordstatus->typeID ?>" <?= empty($recordstudent) ? '' : ($recordstudent->status == $recordstatus->typeID ? 'selected="selected"' : ''); ?>><?= $recordstatus->typename ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
             </div>
             
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
+            <input type="hidden" name="mod" id="mod" value="update" />
             <input type="hidden" name="ID" id="ID" value="<?= $ID; ?>" />
           </form>
         </div>
@@ -186,9 +148,4 @@ if ( $recordcolumn == NULL ) {
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-  g_classesinfo = <?php echo $php_classesinfo; ?>;
-});
-</script>
 <script src="../style/js/kodama-studentedit.js"></script>

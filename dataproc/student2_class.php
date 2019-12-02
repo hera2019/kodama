@@ -5,7 +5,7 @@ require_once '../include/include_function.php';
 
 use PDO;
 
-class Student_Class
+class Student2_Class
 {	
 	protected $connection;
 	
@@ -20,7 +20,7 @@ class Student_Class
 	}
   	
 	//添加一条记录
-	public function AddStudent($sqlarray)
+	public function AddStudent2($ID, $sqlarray)
 	{
 		$message = 'Add record failed!';
 		if(empty($sqlarray))
@@ -33,7 +33,9 @@ class Student_Class
     $context = '';
     foreach($sqlarray as $key => $value) {
       $title .= $key . ',';
-      if($key == 'birthday' && empty($value)) {
+      if(($key == 'passportexpiration'
+         || strstr($key, 'date'))
+        && empty($value)) {
         $context .= 'null,';
       } else {
         $context .= '"' . $value . '"' . ',';
@@ -47,7 +49,7 @@ class Student_Class
       return $message;
     }
     
-    $sql = 'INSERT INTO student('. $title . ') VALUES('. $context . ')';
+    $sql = 'INSERT INTO student2('. $title . ') VALUES('. $context . ')';
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute()) {
@@ -55,14 +57,14 @@ class Student_Class
     }
     else {
       $message = 'Add record failed!';
-      ShowErrorCode($statement);
+      //$message .= ShowErrorCode($statement);
     }
     
 		return $message;
 	}
 
 	//更新一条记录
-	public function UpdateStudent($ID, $sqlarray)
+	public function UpdateStudent2($ID, $sqlarray)
 	{
 		$message = 'update record failed!';
 		if(empty($ID) || empty($sqlarray))
@@ -73,21 +75,22 @@ class Student_Class
     
     //数据表 student
     //查询ID是否存在，不存在则返回错误
-    $sql = "SELECT ID from student WHERE ID = :ID";
+    $sql = "SELECT ID from student2 WHERE ID = :ID";
     $statement = $this->connection->prepare($sql);
     $statement->execute([':ID' => $ID]);
     $record = $statement->fetch( PDO::FETCH_OBJ );
     if ( $record == NULL )
     {
-      $message = 'This record is not exist!';
+      $message = $this->AddStudent2($ID, $sqlarray);
+      //$message = 'This record is not exist!';
       return $message;
     }
     
     $context = '';
     foreach($sqlarray as $key => $value) {
-      if($key == 'birthday' && empty($value)) {
-        $context .= $key . '=null,';
-      } else if($key == 'nationalityregion' && $value == -1) {
+      if(($key == 'passportexpiration'
+         || strstr($key, 'date'))
+         && empty($value)) {
         $context .= $key . '=null,';
       } else {
         $context .= $key . '="' . $value . '"' . ',';
@@ -100,7 +103,7 @@ class Student_Class
       return $message;
     }
     
-    $sql = 'UPDATE student SET ' . $context .' WHERE ID=:ID';
+    $sql = 'UPDATE student2 SET ' . $context .' WHERE ID=:ID';
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute([':ID' => $ID])) {
       $message = '';
@@ -114,11 +117,11 @@ class Student_Class
 	}
   
 	//获取学生信息
-	public function GetStudent($studentID, &$students)
+	public function GetStudent2($studentID, &$students)
 	{
 		if(!empty($studentID))
 		{
-      $sql = 'SELECT * FROM student WHERE ID=:ID';
+      $sql = 'SELECT * FROM student2 WHERE ID=:ID';
       $statement = $this->connection->prepare( $sql );
       $statement->execute( [ ':ID' => $studentID ] );
       $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
@@ -132,7 +135,7 @@ class Student_Class
 	}
   
 	//查询学生信息
-	public function QueryStudent($Param, &$data)
+	public function QueryStudent2($Param, &$data)
 	{
 		$message = 'Query record failed!';
     
@@ -163,7 +166,7 @@ class Student_Class
 	}
   
 	//删除记录
-	public function DeleteStudent($studentIDs)
+	public function DeleteStudent2($studentIDs)
 	{
 		$message = 'Delete record failed!';
 		if(empty($studentIDs))
@@ -173,7 +176,7 @@ class Student_Class
     }
     
     //批量删除DELETE FROM student WHERE ID IN (640,634,633)；
-    $sql = 'DELETE FROM student WHERE ID IN ' . $studentIDs;
+    $sql = 'DELETE FROM student2 WHERE ID IN ' . $studentIDs;
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     $statement->execute();

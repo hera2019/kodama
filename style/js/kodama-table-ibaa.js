@@ -2,6 +2,10 @@
 var _student_file2 = {
   student: {
   },
+  student2: {
+    'text_passportnumber': '',
+    'time_passportexpiration': '',
+  },
   studentdata: {
     'radio_passportyes': 0,
     'radio_passportno': 0,
@@ -12,10 +16,9 @@ var _student_file2 = {
     'radio_jpfamilylivetogether': 0,
     'checkbox_passportapplying': false,
     'text_cellphonenumber': '',
-    'text_internetnumber': '',    
-    'text_passportnumber': '',    
-    'text_visaapplyplace': '',    
-    'text_supportername': '',    
+    'text_internetnumber': '',
+    'text_visaapplyplace': '',
+    'text_supportername': '',
     'text_supportercuraddress': '',
     'text_supporterhouseholdaddress': '',
     'text_supporterphonenumber': '',    
@@ -42,7 +45,6 @@ var _student_file2 = {
     'text_jpfamilycontactnumber': '',
     'text_jpfamilyworkplacename': '',
     'text_jpfamilyhomeaddress': '',
-    'time_passportexpiration': '',
     'time_jpntest': '',
     'time_jptest1': '',
     'time_jptest2': '',

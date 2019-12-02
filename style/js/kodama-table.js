@@ -4,13 +4,17 @@ function saveData(id, fileID, _student_file) {
 
   var data = {
     'student': {},
+    'student2': {},
     'studentdata': {},
   };
   pushStudentData(data.studentdata, _student_file.studentdata);
   console.log(data.studentdata);
   
-  pushStudent(data.student, _student_file.student);
+  pushStudent(data.student, _student_file.student, 'student');
   console.log(data.student);
+  
+  pushStudent(data.student2, _student_file.student2, 'student2');
+  console.log(data.student2);
 
   postSaveData(id, fileID, JSON.stringify(data));
 
@@ -45,12 +49,12 @@ function saveData(id, fileID, _student_file) {
     }  
   }
 
-  function pushStudent(data, filestudent) {
+  function pushStudent(data, filestudent, dbtable) {
     for(var key in filestudent) {
       if(key.search(/text_/) == 0) { //text
         let keyname = key.substring(5);
         if(keyname) {
-          let el = document.getElementById('text_student.' + keyname);
+          let el = document.getElementById('text_' + dbtable + '.' + keyname);
           if(el) {
             data[keyname] = el.innerHTML;
           }
@@ -58,7 +62,7 @@ function saveData(id, fileID, _student_file) {
       } else if(key.search(/select_/) == 0) { //select
         let keyname = key.substring(7);
         if(keyname) {
-          let el = document.getElementById('select_student.' + keyname);
+          let el = document.getElementById('select_' + dbtable + '.' + keyname);
           if(el) {
             data[keyname] = el.value;
           }
@@ -66,7 +70,7 @@ function saveData(id, fileID, _student_file) {
       } else if(key.search(/time_/) == 0) { //time
         let keyname = key.substring(5);
         if(keyname) {
-          let el = document.getElementById('time_student.' + keyname);
+          let el = document.getElementById('time_' + dbtable + '.' + keyname);
           if(el) {
             data[keyname] = el.value;
           }
@@ -74,7 +78,7 @@ function saveData(id, fileID, _student_file) {
       } else if(key.search(/photo_/) == 0) { //photo
         let keyname = key.substring(6);
         if(keyname) {
-          let el = document.getElementById('photo_student.' + keyname);
+          let el = document.getElementById('photo_' + dbtable + '.' + keyname);
           if(el) {
             data[keyname] = el.value;
           }
@@ -82,7 +86,7 @@ function saveData(id, fileID, _student_file) {
       } else if(key.search(/radio_/) == 0) { //radio
         let keyname = key.substring(6);
         if(keyname) {
-          let el = document.getElementById('radio_student.' + keyname);
+          let el = document.getElementById('radio_' + dbtable + '.' + keyname);
           if(el) {
             let els = el.getElementsByTagName("input");
             for (let i = 0; i < els.length; i++) {
@@ -95,7 +99,7 @@ function saveData(id, fileID, _student_file) {
       } else if(key.search(/checkbox_/) == 0) { //checkbox
         let keyname = key.substring(9);
         if(keyname) {
-          let el = document.getElementById('checkbox_student.' + keyname);
+          let el = document.getElementById('checkbox_' + dbtable + '.' + keyname);
           if(el) {
             data[keyname] = el.checked;
           }
@@ -147,7 +151,8 @@ function postGetData(id, fileID, _student_file) {
         document.getElementById('message').innerHTML = jsonStr.message;
       }
 
-      setStudent(jsonStr.student, _student_file.student);
+      setStudent(jsonStr.student, _student_file.student, 'student');
+      setStudent(jsonStr.student2, _student_file.student2, 'student2');
 
       if(jsonStr.studentdata) {
         setStudentData(JSON.parse(jsonStr.studentdata), _student_file.studentdata);
@@ -167,13 +172,13 @@ function postGetData(id, fileID, _student_file) {
     return false;
   }
   
-  function setStudent(student, filestudent) {
+  function setStudent(student, filestudent, dbtable) {
     if(student) {
       for(var key in filestudent) {
         if(key.search(/text_/) == 0) { //text
           let keyname = key.substring(5);
           if(keyname && student[keyname]) {
-            let el = document.getElementById('text_student.' + keyname);
+            let el = document.getElementById('text_' + dbtable + '.' + keyname);
             if(el) {
               el.innerHTML = student[keyname];
             }
@@ -185,7 +190,7 @@ function postGetData(id, fileID, _student_file) {
             let keyname1 = keyname.substring(0, n);
             let keyname2 = keyname.substring(n + 1);          
             if((keyname1 && student[keyname1]) || (keyname2 && student[keyname2])) {
-              let el = document.getElementById('text2_student.' + keyname);
+              let el = document.getElementById('text2_' + dbtable + '.' + keyname);
               if(el) {
                 el.innerHTML = (student[keyname1] ? student[keyname1] : '') + ' ' + (student[keyname2] ? student[keyname2] : '');
               }
@@ -194,7 +199,7 @@ function postGetData(id, fileID, _student_file) {
         } else if(key.search(/select_/) == 0) { //select
           let keyname = key.substring(7);
           if(keyname && student[keyname]) {
-            let el = document.getElementById('select_student.' + keyname);
+            let el = document.getElementById('select_' + dbtable + '.' + keyname);
             if(el) {
               el.value = student[keyname];
             }
@@ -202,7 +207,7 @@ function postGetData(id, fileID, _student_file) {
         } else if(key.search(/time_/) == 0) { //time
           let keyname = key.substring(5);
           if(keyname && student[keyname]) {
-            let el = document.getElementById('time_student.' + keyname);
+            let el = document.getElementById('time_' + dbtable + '.' + keyname);
             if(el) {
               el.value = student[keyname];
             }
@@ -210,7 +215,7 @@ function postGetData(id, fileID, _student_file) {
         } else if(key.search(/radio_/) == 0) { //radio
           let keyname = key.substring(6);
           if(keyname && student[keyname]) {
-            let el = document.getElementById('radio_student.' + keyname);
+            let el = document.getElementById('radio_' + dbtable + '.' + keyname);
             if(el) {
               let els = el.getElementsByTagName("input");
               for (let i = 0; i < els.length; i++) {
@@ -225,7 +230,7 @@ function postGetData(id, fileID, _student_file) {
         } else if(key.search(/photo_/) == 0) { //photo
           let keyname = key.substring(6);
           if(keyname) {
-            let eltext = document.getElementById('photo_student.' + keyname);
+            let eltext = document.getElementById('photo_' + dbtable + '.' + keyname);
             let elimage = document.getElementById('photoimage');
             if(eltext && elimage) {
               if(student[keyname]) {

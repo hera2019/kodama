@@ -83,11 +83,11 @@
                     <label for="radio_0012">有 Yes</label>
                   </td>
                   <th colspan="2">パスポート番号<br>Passport Number</th>
-                  <td colspan="3" class="kodama-depend" id="text_student2.passportnumber"></td>
+                  <td colspan="3" class="kodama-depend" id="text_passportnumber"></td>
                   <th colspan="2">有効期限<br>Date of expiration</th>
                   <td colspan="2" class="kodama-dependcontrol">
                     <div class="form-group kodama-datepicker" id="time_0011" data-target-input="nearest">
-                      <input type="text" id="time_student2.passportexpiration" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_0011" data-toggle="datetimepicker"/>
+                      <input type="text" id="time_passportexpiration" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_0011" data-toggle="datetimepicker"/>
                     </div>
                   </td>
                 </tr>
