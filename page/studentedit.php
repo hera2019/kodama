@@ -20,20 +20,30 @@ $baseitem = [
 ];
 
 $message = '';
-$mod = 'add';
+$mod = 'update';
 $ID = '';
-if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
-  $ID = $_GET[ 'ID' ];
-  $mod = 'update';
-  $sql = 'SELECT * FROM student WHERE ID=:ID';
-  $statement = $connection->prepare( $sql );
-  $statement->execute( [ ':ID' => $ID ] );
-  $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
-  if ( $recordstudent != NULL ) {
-    $students = get_object_vars($recordstudent);
-    console_log($students);
-  } else {
-    $message = "This student not found.";
+if ( isset( $_GET[ 'mod' ] ) && !empty( $_GET[ 'mod' ] ) ) {
+  $mod = $_GET[ 'mod' ];
+}
+if($mod != 'add') {
+  //学生信息
+  if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) ) {
+    $StudentInfoString = $_COOKIE[ 'KODAMA_STUDENT_INFO' ];
+    $StudentInfo = json_decode($StudentInfoString);
+    if (!empty( $StudentInfo ) ) {
+      $ID = $StudentInfo->studentid;
+      $mod = 'update';
+      $sql = 'SELECT * FROM student WHERE ID=:ID';
+      $statement = $connection->prepare( $sql );
+      $statement->execute( [ ':ID' => $ID ] );
+      $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
+      if ( $recordstudent != NULL ) {
+        $students = get_object_vars($recordstudent);
+        console_log($students);
+      } else {
+        $message = "This student not found.";
+      }
+    }
   }
 }
 
@@ -70,7 +80,17 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
         <div class="body">
           <form id="infoform" method="POST" action="../dataproc/student_proc.php">
             <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">
-              <?= $mod == 'update' ? 'Edit' : 'Add'; ?> Student Info: <span class="col-rose-red">red</span> icon indicates required.</font></div>            
+              <?php
+              if($mod == 'update') {
+                if(empty($ID)) {
+                  echo 'Please choose a student first. <span class=\'bg-white\'><a href = "../page/studenttable.php">Click here choose a student.</a></span>';
+                } else {
+                  echo 'Edit Student Info: <span class="col-rose-red">red</span> icon indicates required.';
+                }
+              } else {
+                echo 'Add Student Info: <span class="col-rose-red">red</span> icon indicates required.';
+              }
+              ?></font></div>            
             <div  style="padding-left: 2rem;">
               <div id="message" class="alert-warning align-left col-white" style="line-height: 23px; width: 100%;"><?= $message; ?></div>
               <div id="xhr_progressgrd" class="progress" style="width: 0%;">

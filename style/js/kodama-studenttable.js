@@ -307,15 +307,12 @@ function queryStudent(queryParam) {
 
 function addStudent()
 {
-  window.location.href = "studentedit.php";
+  window.location.href = "studentedit.php?mod=add";
 }
 
 function editStudent()
 {
-  if(_kodama_students.currentstudentid)
-  {
-    window.location.href = "studentedit.php?ID=" + _kodama_students.currentstudentid;
-  }
+  window.location.href = "studentedit.php";
 }
 
 function deleteStudent()

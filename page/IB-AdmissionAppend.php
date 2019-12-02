@@ -79,7 +79,7 @@
                 </tr>
                 <tr>
                   <td colspan="2" class="kodama-fillcontrol" id="radio_passportyes">
-                    <input name="group_0011" type="radio" id="radio_0012" value="1" class="with-gap radio-col-pink"/>
+                    <input name="group_0011" type="radio" id="radio_0012" value="1" class="with-gap radio-col-green"/>
                     <label for="radio_0012">有 Yes</label>
                   </td>
                   <th colspan="2">パスポート番号<br>Passport Number</th>
@@ -93,7 +93,7 @@
                 </tr>
                 <tr>
                   <td colspan="2" class="kodama-fillcontrol" id="radio_passportno">
-                    <input name="group_0011" type="radio" id="radio_0013" value="0" class="with-gap radio-col-grey"/>
+                    <input name="group_0011" type="radio" id="radio_0013" value="0" class="with-gap radio-col-blue-grey"/>
                     <label for="radio_0013">無 No</label>
                   </td>
                   <td colspan="9" class="kodama-fillcontrol text-left">
@@ -187,7 +187,7 @@
                     </div>
                   </td>
                   <td colspan="2" class="kodama-fillcontrol" id="radio_jpntestpass">
-                    <input name="group_0031" type="radio" id="radio_0033" class="with-gap radio-col-grey"/>
+                    <input name="group_0031" type="radio" id="radio_0033" class="with-gap radio-col-blue-grey"/>
                     <label for="radio_0033">不合格</label>
                     <input name="group_0031" type="radio" id="radio_0032" class="with-gap radio-col-green"/>
                     <label for="radio_0032">合格</label>
@@ -204,7 +204,7 @@
                     </div>
                   </td>
                   <td colspan="2" class="kodama-fillcontrol" id="radio_jptest1pass">
-                    <input name="group_0041" type="radio" id="radio_0043" class="with-gap radio-col-grey"/>
+                    <input name="group_0041" type="radio" id="radio_0043" class="with-gap radio-col-blue-grey"/>
                     <label for="radio_0043">不合格</label>
                     <input name="group_0041" type="radio" id="radio_0042" class="with-gap radio-col-green"/>
                     <label for="radio_0042">合格</label>
@@ -221,7 +221,7 @@
                     </div>
                   </td>
                   <td colspan="2" class="kodama-fillcontrol" id="radio_jptest2pass">
-                    <input name="group_0051" type="radio" id="radio_0053" class="with-gap radio-col-grey"/>
+                    <input name="group_0051" type="radio" id="radio_0053" class="with-gap radio-col-blue-grey"/>
                     <label for="radio_0053">不合格</label>
                     <input name="group_0051" type="radio" id="radio_0052" class="with-gap radio-col-green"/>
                     <label for="radio_0052">合格</label>
@@ -277,9 +277,9 @@
                   <td colspan="2" class="kodama-fill" id="text_jpfamilyresidencequalification"></td>
                   <th colspan="2">同居予定<br>Live in Same Place</th>
                   <td colspan="2" class="kodama-fillcontrol" id="radio_jpfamilylivetogether">
-                    <input name="group_0061" type="radio" id="radio_0063" class="with-gap radio-col-grey"/>
+                    <input name="group_0061" type="radio" id="radio_0063" class="with-gap radio-col-blue-grey"/>
                     <label for="radio_0063">無 No</label>
-                    <input name="group_0061" type="radio" id="radio_0062" class="with-gap radio-col-pink"/>
+                    <input name="group_0061" type="radio" id="radio_0062" class="with-gap radio-col-green"/>
                     <label for="radio_0062">有 Yes</label>
                   </td>
                 </tr>

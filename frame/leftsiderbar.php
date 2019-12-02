@@ -5,15 +5,14 @@
     <ul class="list">
       <!-- <li class="header"></li> -->
       <li> <a href="welcome.php"> <i class="material-icons">home</i> <span>Welcome</span> </a> </li>
-      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">school</i> <span>検索</span> </a>
+      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">person</i> <span>学生管理</span> </a>
         <ul class="ml-menu">
           <li> <a href="studenttable.php"> <span>学生情報検索</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>学生詳細情報検索</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>個人別出席状況検索</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>個人別授業料検索</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>個人別教材費検索</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>個人別寮費検索</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>アルバイト検索</span> </a> </li>
+          <li> <a href="studentedit.php"> <span>学生基本情報</span> </a> </li>
+          <li> <a href="studentotherinfo.php"> <span>その他の学生情報</span> </a> </li>
+          <li> <a href="javascript:void(0);"> <span>出席状況</span> </a> </li>
+          <li> <a href="javascript:void(0);"> <span>料金情報</span> </a> </li>
+          <li> <a href="javascript:void(0);"> <span>アルバイト情報</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">people</i> <span>申請者管理</span> </a>
@@ -21,16 +20,7 @@
           <li> <a href="IB-Admission.php"> <span>入学願書</span> </a> </li>
           <li> <a href="IB-AdmissionAppend.php"> <span>入学追加調書</span> </a> </li>
           <li> <a href="IB-AdmissionResumeAppend.php"> <span>履歴書（追加）</span> </a> </li>
-        </ul>
-      </li>
-      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">person</i> <span>基本登録</span> </a>
-        <ul class="ml-menu">
-          <li> <a href="welcome2.php"> <span>Welcome2</span> </a> </li>
-        </ul>
-      </li>
-      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">person_pin</i> <span>日常登録</span> </a>
-        <ul class="ml-menu">
-          <li> <a href="welcome3.php"> <span>Welcome3</span> </a> </li>
+          <li> <a href="IB-AdmissionOtherinfo.php"> <span>入学前その他の情報</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">print</i> <span>集計印刷</span> </a>

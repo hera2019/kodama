@@ -104,6 +104,8 @@ class Class_Data
     foreach($students as $key => $value) {
       if($key == 'birthday' && empty($value)) {
         $context .= $key . '=null,';
+      } else if($key == 'nationalityregion' && $value == -1) {
+        $context .= $key . '=null,';
       } else {
         $context .= $key . '="' . $value . '"' . ',';
       }

@@ -127,7 +127,7 @@
                   <th class="col-xs-1" colspan="1">5</th>
                   <th class="col-xs-2" colspan="2">配偶者の有無<br>Married status</th>
                   <td class="col-xs-1 kodama-fillcontrol" colspan="2" id="radio_married">
-                    <input name="group_0101" type="radio" id="radio_0102" class="with-gap radio-col-grey" />
+                    <input name="group_0101" type="radio" id="radio_0102" class="with-gap radio-col-blue-grey" />
                     <label for="radio_0102">無 Single</label>
                     <input name="group_0101" type="radio" id="radio_0103" class="with-gap radio-col-green" />
                     <label for="radio_0103">有 Married</label>
@@ -339,7 +339,7 @@
                   <th class="col-xs-1" colspan="1" rowspan="4">9</th>
                   <th class="col-xs-5 text-right" colspan="5">職歴　Occupation career</th>                  
                   <td class="col-xs-2 kodama-fillcontrol text-left" colspan="2" id="radio_occupation">
-                    <input name="group_0681" type="radio" id="radio_0682" class="with-gap radio-col-grey" />
+                    <input name="group_0681" type="radio" id="radio_0682" class="with-gap radio-col-blue-grey" />
                     <label for="radio_0682">無 No</label>
                     <input name="group_0681" type="radio" id="radio_0683" class="with-gap radio-col-green" />
                     <label for="radio_0683">有 Yes</label>
@@ -388,7 +388,7 @@
                   <th class="col-xs-1" colspan="1" rowspan="4">10</th>
                   <th class="col-xs-5 text-right" colspan="5">出入国歴 Previous stay in japan</th>               
                   <td class="col-xs-2 kodama-fillcontrol text-left" colspan="2" id="radio_prevjp">
-                    <input name="group_0791" type="radio" id="radio_0792" class="with-gap radio-col-grey" />
+                    <input name="group_0791" type="radio" id="radio_0792" class="with-gap radio-col-blue-grey" />
                     <label for="radio_0792">無 No</label>
                     <input name="group_0791" type="radio" id="radio_0793" class="with-gap radio-col-green" />
                     <label for="radio_0793">有 Yes</label>

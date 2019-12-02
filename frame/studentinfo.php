@@ -1,5 +1,5 @@
 <?php
-//主题色彩
+//学生信息
 if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) ) {
   $StudentInfoString = $_COOKIE[ 'KODAMA_STUDENT_INFO' ];
   $StudentInfo = json_decode($StudentInfoString);
