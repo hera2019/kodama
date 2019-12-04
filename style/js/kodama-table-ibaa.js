@@ -63,6 +63,8 @@ $(document).ready(function () {
 });
 
 function saveData_002() {
+  document.getElementById('message').innerHTML = "Saving data...";
+
   var id = document.getElementById('studentid').innerHTML;
   saveData(id , 2, _student_file2);
 }

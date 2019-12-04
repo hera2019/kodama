@@ -119,6 +119,8 @@ $(document).ready(function () {
 });
 
 function saveData_001() {
+  document.getElementById('message').innerHTML = "Saving data...";
+
   var id = document.getElementById('studentid').innerHTML;
   saveData(id , 1, _student_file1);
 }

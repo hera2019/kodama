@@ -10,7 +10,11 @@
 <!-- Top Bar -->
 <nav class="navbar">
   <div class="container-fluid">
-    <div class="navbar-header"> <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a> <a href="javascript:void(0);" class="bars"></a> <a class="navbar-brand" href="javascript:window.location.href='../index.php';"><img src="../style/images/kodama-navilogo.png" width="173" height="36" style="margin: -8px 0 0 0;"/></a> </div>
+    <div class="navbar-header">
+      <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+      <a href="javascript:void(0);" class="bars"></a>
+      <a class="navbar-brand" href="javascript:window.location.href='../index.php';">
+        <img src="../style/images/kodama-navilogo.png" width="173" height="36" style="margin: -8px 0 0 0;"/></a> </div>
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown" style="margin: 10px 0 0 0; padding: 0;">

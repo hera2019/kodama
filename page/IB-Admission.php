@@ -59,7 +59,7 @@
                   </th>
                 </tr>
                 <tr>
-                  <th class="col-xs-12 text-left" colspan="12" id="export">Tip: Use CTRL+ENTER to wrap in the input box. Modifying the light blue table data will change the basic information.</th>
+                  <th class="text-left" colspan="12" id="export">Tip: <span style="background-color: #fffede;">Light yellow</span> table need to be filled in. Use CTRL+ENTER to wrap in the input box. Modifying the <span style="background-color: #EDFCFF;">light blue</span> table data will change the basic information.</th>
                 </tr>
                 <tr>
                   <th class="col-xs-1" colspan="1">1</th>
