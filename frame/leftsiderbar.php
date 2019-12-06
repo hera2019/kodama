@@ -11,8 +11,8 @@
           <li> <a href="studentedit.php"> <span>学生基本情報</span> </a> </li>
           <li> <a href="studentotherinfo.php"> <span>その他の学生情報</span> </a> </li>
           <li> <a href="javascript:void(0);"> <span>出席状況</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>料金情報</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>アルバイト情報</span> </a> </li>
+          <li> <a href="studentfee.php"> <span>料金情報</span> </a> </li>
+          <!-- <li> <a href="javascript:void(0);"> <span>アルバイト情報</span> </a> </li> -->
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">people</i> <span>申請者管理</span> </a>

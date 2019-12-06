@@ -150,7 +150,7 @@
                   <th colspan="11">保護者</th>
                 </tr>
                 <tr>
-                  <th colspan="2">保護著名字</th>
+                  <th colspan="2">保護者名字</th>
                   <td colspan="3" class="kodama-fill" id="text_protectorname"></td>
                   <th colspan="2">聯繫電話</th>
                   <td colspan="4" class="kodama-fill" id="text_protectorphone"></td>
