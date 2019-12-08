@@ -29,3 +29,13 @@ kodamafunc.getCookie = function(cname) {
   }
   return "";
 }
+
+kodamafunc.isJsonString = function(str) {
+  try {
+    if (typeof JSON.parse(str) == "object") {
+      return true;
+    }
+  } catch(e) {
+  }
+  return false;
+}

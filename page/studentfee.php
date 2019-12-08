@@ -5,6 +5,7 @@
 <?php require_once('../include/include_database.php'); ?>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
+<link href="../style/css/jquery-editable-select.css" rel="stylesheet" />
 </head>
 
 <section class="content">
@@ -39,13 +40,13 @@
               <caption><div class="text-left alert-warning align-left col-white" id="message"></div></caption>
               <thead>
                 <tr>
-                  <th class="col-xs-2">料金種類</th>
-                  <th class="col-xs-2">入金日</th>
-                  <th class="col-xs-1">期間</th>
-                  <th class="col-xs-1">金額（円）</th>
-                  <th class="col-xs-2">有効期限</th>
-                  <th class="col-xs-2">担当</th>
-                  <th class="col-xs-2">備考</th>
+                  <th class="col-xs-2 text-center">料金種類</th>
+                  <th class="col-xs-2 text-center">入金日</th>
+                  <th class="col-xs-2 text-center">期間</th>
+                  <th class="col-xs-1 text-center">金額（円）</th>
+                  <th class="col-xs-2 text-center">有効期限</th>
+                  <th class="col-xs-2 text-center">担当</th>
+                  <th class="col-xs-1 text-center">備考</th>
                 </tr>
               </thead>
               <tbody>
@@ -64,7 +65,6 @@
                 <tr>
                   <td class="kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="feetype" id="select_<?= $i; ?>_feetype">
-                        <option class="kodama-select" value="-1">Select fee</option>
                         <?php foreach($recordfee as $recordfee1): ?>
                         <option class="kodama-select" value="<?= $recordfee1->typeID; ?>"><?= $recordfee1->typename; ?></option>
                         <?php endforeach; ?>
@@ -75,7 +75,16 @@
                       <input type="text" id="time_<?= $i; ?>_paymentdate" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0011" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="kodama-fill" id="text_<?= $i; ?>_period"></td>
+                  <td class="kodama-fillcontrol" style="padding: 0px 10px;">
+                    
+                    <select class="kodama-select kodama-editable-select" name="period" id="select_<?= $i; ?>_period">
+                      <option class="kodama-select" value="二年">二年</option>
+                      <option class="kodama-select" value="一年">一年</option>
+                      <option class="kodama-select" value="6ヶ月">6ヶ月</option>
+                      <option class="kodama-select" value="3ヶ月">3ヶ月</option>
+                      <option class="kodama-select" value="1ヶ月">1ヶ月</option>
+                    </select>
+                  </td>
                   <td class="kodama-fill" id="text_<?= $i; ?>_moneyamount"></td>
                   <td class="kodama-fillcontrol">
                     <div class="form-group kodama-datepicker" id="time_<?= $i; ?>_0012" data-target-input="nearest">
@@ -84,7 +93,6 @@
                   </td>
                   <td class="kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="teacher" id="select_<?= $i; ?>_teacherID">
-                        <option class="kodama-select" value="-1">Select teacher</option>
                         <?php foreach($recordteacher as $recordteacher1): ?>
                         <option class="kodama-select" value="<?= $recordteacher1->ID; ?>"><?= $recordteacher1->name; ?></option>
                         <?php endforeach; ?>
@@ -112,4 +120,5 @@
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
+<script src="../style/js/jquery-editable-select.js"></script>
 <script src="../style/js/kodama-table-studentfee.js"></script>

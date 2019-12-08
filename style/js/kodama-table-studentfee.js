@@ -2,7 +2,7 @@
 var _studentfee = {
   'select_feetype': '',
   'time_paymentdate': '',
-  'text_period': '',
+  'select_period': '',
   'text_moneyamount': '',
   'time_expirationdate': '',
   'select_teacherID': '',
@@ -12,6 +12,10 @@ var _studentfee = {
 
 $(function () {
   $('#mainTable').editableTableWidget();
+  $('.kodama-editable-select').editableSelect({
+    effects: 'default',
+    filter: false,
+  });
 });
 
 $(document).ready(function () {
@@ -106,7 +110,7 @@ function saveData(id, studentfee) {
     }  
   }
 }
-
+  
 function postSaveData(id, postData) {
   // 提交数据函数  
   $.ajax({
@@ -116,16 +120,24 @@ function postSaveData(id, postData) {
     /* 提交的数据，必须使用key/value的形式，如"key=value"，
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
     data: "mod=update&studentID=" + id + "&data=" + postData,
-    success: function (message) {
-      // 提交成功后的回调，msg变量是php输出的内容
-      document.getElementById('message').innerHTML = message;
-  
-      postGetData(id, _studentfee);
+    success: function (postdata) {
+      // 提交成功后的回调，postdata变量是php输出的内容
+      if(kodamafunc.isJsonString(postdata)) {
+        var jsonStr = JSON.parse(postdata);
+        if(jsonStr.message) {
+          document.getElementById('message').innerHTML = jsonStr.message;
+        }
+      } else {
+        document.getElementById('message').innerHTML = postdata;
+      }
+      
+      // reload
+      postGetData(id, _studentfee, true);
     }
   });
 }
 
-function postGetData(id, studentfee) {  
+function postGetData(id, studentfee, nomsg=false) {  
   for(let i=1; i<=12; i++) {
     resetRecord(studentfee, i);
   }
@@ -140,40 +152,28 @@ function postGetData(id, studentfee) {
     data: "mod=get&studentID=" + id,
     success: function (postdata) {
       // 提交成功后的回调，postdata变量是php输出的内容
-      //setData2(postdata); //遍历数据推送到元素
-      setData(postdata, studentfee); //遍历元素取数据
+      setData(postdata, studentfee, nomsg); //遍历元素取数据
     }
   });
 
-  function setData(postdata, studentfee) {
+  function setData(postdata, studentfee, nomsg) {
     //console.log(postdata);
-    if(isJsonString(postdata)) {
+    if(kodamafunc.isJsonString(postdata)) {
       var jsonStr = JSON.parse(postdata);
-      //jsonStr = postdata;//eval(postdata);
-      if(jsonStr.message) {
-        document.getElementById('message').innerHTML = jsonStr.message;
-      }
-      if(jsonStr.result == 200 && jsonStr.data) {        
+      if(jsonStr.result == 200 && jsonStr.data) {
         let jsondata = JSON.parse(jsonStr.data);
         for(let i=1; i<=12; i++) {
           setRecord(jsondata['record' + i], studentfee, i);
         }
-      } else {
-        document.getElementById('message').innerHTML = postdata;
       }
+      if(jsonStr.message && (jsonStr.result != 200 || !nomsg)) { //save后reload，不显示get成功信息
+        document.getElementById('message').innerHTML = jsonStr.message;
+      }
+    } else {
+      document.getElementById('message').innerHTML = postdata;
     }
   }
 
-  function isJsonString(str) {
-    try {
-      if (typeof JSON.parse(str) == "object") {
-        return true;
-      }
-    } catch(e) {
-    }
-    return false;
-  }
-  
   function setRecord(data, studentfee, recordindex) {
     if(data) {
       for(var key in studentfee) {
@@ -267,7 +267,7 @@ function postGetData(id, studentfee) {
         if(keyname) {
           let el = document.getElementById('select_' + recordindex + '_' + keyname);
           if(el) {
-            el.value = '-1';
+            el.value = '';
           }
         }
       } else if(key.search(/time_/) == 0) { //time

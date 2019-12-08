@@ -33,9 +33,7 @@ class Studentfee_Class
     $context = $studentID . ',';
     foreach($array as $key => $value) {
       $title .= $key . ',';
-      if(($key == 'passportexpiration'
-         || strstr($key, 'date'))
-        && empty($value)) {
+      if(strstr($key, 'date') && empty($value)) {
         $context .= 'null,';
       } else {
         $context .= '"' . $value . '"' . ',';
@@ -50,7 +48,6 @@ class Studentfee_Class
     }
     
     $sql = 'INSERT INTO Studentfee('. $title . ') VALUES('. $context . ')';
-    //echo $sql;
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute()) {
@@ -73,21 +70,25 @@ class Studentfee_Class
       $message = 'Param error!';
       return $message;
     }
-    if($sqlarray->feetype < 0) {
+    
+    $ID = $sqlarray->ID;
+    if($sqlarray->feetype == '' || $sqlarray->feetype < 0) {
+      if($ID > 0) {
+        $this->DeleteStudentfee($ID);
+      }
       return "";
     }
     //数据表 studentfee
-    $ID = $sqlarray->ID;
     $array = array();
     $array["feetype"] = $sqlarray->feetype;
     $array["paymentdate"] = $sqlarray->paymentdate == '' ? null : $sqlarray->paymentdate;
     $array["period"] = $sqlarray->period;
     $array["moneyamount"] = $sqlarray->moneyamount;
     $array["expirationdate"] = $sqlarray->expirationdate == '' ? null : $sqlarray->expirationdate;
-    $array["teacherID"] = $sqlarray->teacherID;
+    $array["teacherID"] = $sqlarray->teacherID == '' ? 0 : $sqlarray->teacherID;
     $array["description"] = $sqlarray->description;
     //print_r($array);
-    if(!empty($iD)) {
+    if(!empty($ID)) {
       //查询ID是否存在，不存在则返回错误
       $sql = "SELECT ID from Studentfee WHERE ID = :ID";
       $statement = $this->connection->prepare($sql);
@@ -106,9 +107,7 @@ class Studentfee_Class
     
     $context = 'studentID=' . $studentID . ',';
     foreach($array as $key => $value) {
-      if(($key == 'passportexpiration'
-         || strstr($key, 'date'))
-         && empty($value)) {
+      if(strstr($key, 'date') && empty($value)) {
         $context .= $key . '=null,';
       } else {
         $context .= $key . '="' . $value . '"' . ',';
@@ -139,7 +138,7 @@ class Studentfee_Class
 	{
 		if(!empty($studentID))
 		{
-      $sql = 'SELECT * FROM Studentfee WHERE studentID=:studentID ORDER BY ID DESC';
+      $sql = 'SELECT * FROM Studentfee WHERE studentID=:studentID ORDER BY ID ASC';
       $statement = $this->connection->prepare( $sql );
       $statement->execute( [ ':studentID' => $studentID ] );
       $recordstudent = $statement->fetchAll( PDO::FETCH_OBJ );
@@ -187,17 +186,16 @@ class Studentfee_Class
 	}
   
 	//删除记录
-	public function DeleteStudentfee($studentIDs)
+	public function DeleteStudentfee($ID)
 	{
 		$message = 'Delete record failed!';
-		if(empty($studentIDs))
+		if(empty($ID))
 		{
       $message = 'Param error!';
       return $message;
     }
     
-    //批量删除DELETE FROM student WHERE ID IN (640,634,633)；
-    $sql = 'DELETE FROM Studentfee WHERE ID IN ' . $studentIDs;
+    $sql = 'DELETE FROM Studentfee WHERE ID =' . $ID;
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     $statement->execute();
