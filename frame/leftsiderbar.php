@@ -10,8 +10,8 @@
           <li> <a href="studenttable.php"> <span>学生情報検索</span> </a> </li>
           <li> <a href="studentedit.php"> <span>学生基本情報</span> </a> </li>
           <li> <a href="studentotherinfo.php"> <span>その他の学生情報</span> </a> </li>
-          <li> <a href="javascript:void(0);"> <span>出席状況</span> </a> </li>
-          <li> <a href="studentfee.php"> <span>料金情報</span> </a> </li>
+          <li> <a href="studentattend.php"> <span>出席状況</span> </a> </li>
+          <li> <a href="studentfee.php"> <span>入金情報</span> </a> </li>
           <!-- <li> <a href="javascript:void(0);"> <span>アルバイト情報</span> </a> </li> -->
         </ul>
       </li>

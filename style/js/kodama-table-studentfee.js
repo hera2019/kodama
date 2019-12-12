@@ -1,3 +1,5 @@
+//最大记录数
+var g_feerecordnum = 12;
 //信息ID
 var _studentfee = {
   'select_feetype': '',
@@ -43,7 +45,7 @@ function saveData(id, studentfee) {
   let data = {};
   let record = {};
   
-  for(let i=1; i<=12; i++) {
+  for(let i=1; i<=g_feerecordnum; i++) {
     pushRecord(record, studentfee, i);
     data["record" + i] = {};
     $.extend(data["record" + i], record);
@@ -138,7 +140,7 @@ function postSaveData(id, postData) {
 }
 
 function postGetData(id, studentfee, nomsg=false) {  
-  for(let i=1; i<=12; i++) {
+  for(let i=1; i<=g_feerecordnum; i++) {
     resetRecord(studentfee, i);
   }
   // 提交数据函数  
@@ -162,7 +164,7 @@ function postGetData(id, studentfee, nomsg=false) {
       var jsonStr = JSON.parse(postdata);
       if(jsonStr.result == 200 && jsonStr.data) {
         let jsondata = JSON.parse(jsonStr.data);
-        for(let i=1; i<=12; i++) {
+        for(let i=1; i<=g_feerecordnum; i++) {
           setRecord(jsondata['record' + i], studentfee, i);
         }
       }

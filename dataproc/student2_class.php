@@ -45,7 +45,7 @@ class Student2_Class
       $title = substr($title, 0, -1); //去掉最后的逗号
       $context = substr($context, 0, -1); //去掉最后的逗号
     } else {
-      $message = 'Param error 2!';
+      $message = '';//'Param error 2!';
       return $message;
     }
     
@@ -99,7 +99,7 @@ class Student2_Class
     if(!empty($context)) {
       $context = substr($context, 0, -1); //去掉最后的逗号
     } else {
-      $message = 'Param error 2!';
+      $message = '';//'Param error 2!';
       return $message;
     }
     

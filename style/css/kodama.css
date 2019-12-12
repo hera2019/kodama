@@ -270,6 +270,30 @@ input[type="password"] {
   margin-bottom: 0;
 }
 
+/* 对齐表格 */
+.kodama-table {
+  font-size: 14px;
+  color: #555;
+  vertical-align: middle; 
+}
+.kodama-table > thead > tr > th {
+  word-wrap: break-word;
+  word-break: break-all;
+  table-layout: fixed;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #fff;
+}
+.kodama-table > tbody > tr > th,
+.kodama-table > tbody > tr > td {
+  word-wrap: break-word;
+  word-break: break-all;
+  table-layout: fixed;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #dfdfdf;
+}
+
 /* DataTable */
 .dataTable > tbody > tr.selected.odd {
   background-color: #2196F3;

@@ -158,7 +158,7 @@ class Studentfee_Class
 	public function QueryStudentfee($Param, &$data)
 	{
 		$message = 'Query record failed!';
-    
+    /*
     $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, s.password AS password, s.nickname AS nickname, s.lastname AS lastname, s.firstname AS firstname, s.birthday AS birthday, s.genderfemale AS genderfemale, s.phonenumber AS phonenumber, s.description AS description, c.name AS classname, t.name AS classteachername, i.typename AS statusname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID LEFT JOIN teacher AS t ON s.classteacherID = t.ID LEFT JOIN idconfig AS i ON (type="status" AND s.status = i.typeID)';
     $sql .= $Param;
     $statement = $this->connection->prepare($sql);
@@ -181,7 +181,7 @@ class Studentfee_Class
       $message = 'Record not found!';
       return $message;
     }
-    
+    */
 		return $message;
 	}
   

@@ -19,7 +19,7 @@
         ?>
         <div class="card">
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
-            <h2>料金情報<small></small></h2>
+            <h2>入金情報<small></small></h2>
             <ul class="header-button">
               <li><a href="javascript:void(0);" onclick="refreshFee();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
@@ -39,8 +39,8 @@
             <table id="mainTable" class="kodama-formtable table table-bordered kodama-formtable-bordered text-center">
               <caption><div class="text-left alert-warning align-left col-white" id="message"></div></caption>
               <thead>
-                <tr>
-                  <th class="col-xs-2 text-center">料金種類</th>
+                <tr class="bg-<?= $KODAMA_THEME_COLOR; ?>">
+                  <th class="col-xs-2 text-center">入金種類</th>
                   <th class="col-xs-2 text-center">入金日</th>
                   <th class="col-xs-2 text-center">期間</th>
                   <th class="col-xs-1 text-center">金額（円）</th>
@@ -61,7 +61,8 @@
                 $statement->execute();
                 $recordteacher = $statement->fetchAll( PDO::FETCH_OBJ );
                 
-                for($i=1; $i<=12; $i++): ?>
+                $php_feerecordnum = 12;
+                for($i=1; $i<=$php_feerecordnum; $i++): ?>
                 <tr>
                   <td class="kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="feetype" id="select_<?= $i; ?>_feetype">
@@ -122,3 +123,8 @@
 <script src="../style/js/kodama-datetimepicker.js"></script>
 <script src="../style/js/jquery-editable-select.js"></script>
 <script src="../style/js/kodama-table-studentfee.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  g_feerecordnum = <?php echo $php_feerecordnum; ?>;
+});
+</script>

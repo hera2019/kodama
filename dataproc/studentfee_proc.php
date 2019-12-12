@@ -8,7 +8,7 @@ class RtInfo {
   public $data = '';
 }
 
-$message = 'Student other info operate failed: param error.';
+$message = 'Student fee info operate failed.';
 $rtinfo = new RtInfo();
 $rtinfo->result = 201;
 $rtinfo->message = $message;
@@ -18,7 +18,7 @@ $mod = GetParam('mod');
 if (!empty($mod))
 {
   if($mod == 'add')
-  {
+  {/*
     $ID = GetParam('ID');
     if(!empty($ID))
     {
@@ -42,7 +42,7 @@ if (!empty($mod))
           return $message;
         }
       }
-    }
+    }*/
   }
   else if($mod == 'update')
   {
@@ -89,7 +89,7 @@ if (!empty($mod))
     }
   }
   else if($mod == 'query')
-  {
+  {/*
     $Param = GetParam('param');
     $data = '';
     $cls = new Studentfee_Class($connection);
@@ -106,10 +106,10 @@ if (!empty($mod))
       echo $res;
       return $res;
     }
-    $message = '[{"ID":"","studentnumber":"","name":"' . $message . '","classname":""}]';
+    $message = '[{"ID":"","studentnumber":"","name":"' . $message . '","classname":""}]';*/
   }
   else if($mod == 'delete')
-  {
+  {/*
     $Param = GetParam('param');
     if(!empty($Param))
     {
@@ -143,7 +143,7 @@ if (!empty($mod))
           return $message;
         }
       }
-    }
+    }*/
   }
 }
 

@@ -25,6 +25,11 @@ function saveData(id, fileID, _student_file) {
         if(el) {
           data[key] = el.innerHTML;
         }
+      } else if(key.search(/select_/) == 0) { //select
+        let el = document.getElementById(key);
+        if(el) {
+          data[key] = el.value;
+        }
       } else if(key.search(/time_/) == 0) { //time
         let el = document.getElementById(key);
         if(el) {
@@ -258,6 +263,13 @@ function postGetData(id, fileID, _student_file) {
             let el = document.getElementById(key);
             if(el) {
               el.innerHTML = studentdata[key];
+            }
+          }
+        } else if(key.search(/select_/) == 0) { //select
+          if(studentdata[key]) {
+            let el = document.getElementById(key);
+            if(el) {
+              el.value = studentdata[key];
             }
           }
         } else if(key.search(/time_/) == 0) { //time
