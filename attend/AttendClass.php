@@ -20,20 +20,20 @@ class AttendClass
 	}
 	
 	//添加一条刷卡记录
-	public function AddAttendRecord($userID = NULL)
+	public function AddAttendRecord($studentID = NULL)
 	{
 		$message = 'check in failed';
-		if($userID != NULL && $userID != '' && $userID != 0)
+		if($studentID != NULL && $studentID != '' && $studentID != 0)
 		{
 			$time = time();
 			$currenttime = date('Y-m-d H:i:s', $time);
 			$curday = date('Y-m-d', $time);
-			$whichtime = 'time1';
-			$sql = "SELECT * from attendance WHERE userID = :userID AND date_format(time1,'%Y-%m-%d') = :curday";
+			$whichtime = 'time11';
+			$sql = "SELECT * from attendance WHERE studentID = :studentID AND date_format(time11,'%Y-%m-%d') = :curday";
 			$statement = $this->connection->prepare($sql);
-			$statement->execute([':userID' => $userID, ':curday' => $curday]);
+			$statement->execute([':studentID' => $studentID, ':curday' => $curday]);
 			$record = $statement->fetch(PDO::FETCH_OBJ);
-			if($record == NULL || $record->time1 == NULL ||  $record->time1 == '') //first time of this day
+			if($record == NULL || $record->time11 == NULL ||  $record->time11 == '') //first time of this day
 			{
 				$hour = date("H", $time); //是否迟到
 				if($hour < 8) {
@@ -43,9 +43,9 @@ class AttendClass
 					$property = 6;
 				}
 				
-				$sql = 'INSERT INTO attendance(userID, ' . $whichtime . ', property) VALUES(:userID, :currenttime, :property)';
+				$sql = 'INSERT INTO attendance(studentID, ' . $whichtime . ', property) VALUES(:studentID, :currenttime, :property)';
 				$statement =  $this->connection->prepare($sql);
-				if ($statement->execute([':userID' => $userID, ':currenttime' => $currenttime, ':property' => $property])) {
+				if ($statement->execute([':studentID' => $studentID, ':currenttime' => $currenttime, ':property' => $property])) {
 					$message = '';
 				}
 				else {
@@ -57,61 +57,61 @@ class AttendClass
 			{
 				$update = true;
 				$ID = $record->ID;
-				if($record->time2 == NULL)
+				if($record->time12 == NULL)
 				{
-					if($time - strtotime($record->time1) < 120)
+					if($time - strtotime($record->time11) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time2';
+					$whichtime = 'time12';
 				}
-				else if($record->time3 == NULL)
+				else if($record->time21 == NULL)
 				{
-					if($time - strtotime($record->time2) < 120)
+					if($time - strtotime($record->time12) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time3';
+					$whichtime = 'time21';
 				}
-				else if($record->time4 == NULL)
+				else if($record->time22 == NULL)
 				{
-					if($time - strtotime($record->time3) < 120)
+					if($time - strtotime($record->time21) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time4';
+					$whichtime = 'time22';
 				}
-				else if($record->time5 == NULL)
+				else if($record->time31 == NULL)
 				{
-					if($time - strtotime($record->time4) < 120)
+					if($time - strtotime($record->time22) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time5';
+					$whichtime = 'time31';
 				}
-				else if($record->time6 == NULL)
+				else if($record->time32 == NULL)
 				{
-					if($time - strtotime($record->time5) < 120)
+					if($time - strtotime($record->time31) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time6';
+					$whichtime = 'time32';
 				}
-				else if($record->time7 == NULL)
+				else if($record->time41 == NULL)
 				{
-					if($time - strtotime($record->time6) < 120)
+					if($time - strtotime($record->time32) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time7';
+					$whichtime = 'time41';
 				}
-				else if($record->time8 == NULL)
+				else if($record->time42 == NULL)
 				{
-					if($time - strtotime($record->time7) < 120)
+					if($time - strtotime($record->time41) < 120)
 					{
 						$update = false;
 					}
-					$whichtime = 'time8';
+					$whichtime = 'time42';
 				}
 				else
 				{

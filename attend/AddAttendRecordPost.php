@@ -7,9 +7,9 @@ use Attend\AttendClass;
 $message = 'check in failed: not got student id';
 if (isset ($_POST['studentID']))
 {
-	$userID = $_POST['studentID'];
+	$studentID = $_POST['studentID'];
 	$attend = new AttendClass($connection);
-	$message = $attend->AddAttendRecord($userID);
+	$message = $attend->AddAttendRecord($studentID);
 	
 	if($message == '')
 	{

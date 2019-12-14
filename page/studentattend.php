@@ -25,7 +25,7 @@
                 </div>
               </a></li>
               <li><a href="javascript:void(0);"Modify>
-                <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">person</i> </div>
+                <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">mode_edit</i> </div>
                 <div class="kodama-menu-info">
                   <h4>Modify</h4>
                 </div>
@@ -33,7 +33,7 @@
             </ul>
           </div>
           <div class="body">
-            <table class="kodama-table">
+            <table class="kodama-table table-striped table-hover">
               <caption><div class="text-left alert-warning align-left col-white" id="message"></div></caption>
               <thead class="bg-<?= $KODAMA_THEME_COLOR; ?>">
                 <tr>
@@ -95,7 +95,7 @@
                   $year1 = $year2 - 2;
                 }
                 
-                $sql = 'SELECT attendance.recordtime AS recordtime, attendance.ID AS ID, attendproperty.ID AS propertyID, attendproperty.property AS propertyname FROM attendance LEFT JOIN attendproperty ON attendance.property = attendproperty.ID WHERE userID=:ID';
+                $sql = 'SELECT attendance.recordtime AS recordtime, attendance.ID AS ID, attendproperty.ID AS propertyID, attendproperty.property AS propertyname FROM attendance LEFT JOIN attendproperty ON attendance.property = attendproperty.ID WHERE studentID=:ID';
                 $statement = $connection->prepare($sql);
                 $statement->execute( [ ':ID' => $studentID ] );
                 $recordattend = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -191,9 +191,8 @@
   </div>
 </section>
 
-<!-- Editable Table Js -->
 <script type="text/javascript">
 $(document).ready(function(){
-  g_feerecordnum = <?php echo $php_feerecordnum; ?>;
+  //g_feerecordnum = <?php echo $php_feerecordnum; ?>;
 });
 </script>

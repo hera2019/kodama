@@ -2,7 +2,7 @@
 require_once '../include/include_database.php';
 require_once 'AttendClass.php';
 
-use Attend\ AttendClass;
+use Attend\AttendClass;
 
 //define ('ATTEND_ADD_ATTEND_RECORD_PARENT_URL', 'queryrecord.php');
 
