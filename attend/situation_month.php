@@ -4,9 +4,12 @@ require_once '../include/include_database.php';
 $classtimenum = 1;
 $classtime11 = '08:00:00';
 $classtime12 = '12:00:00';
+$hours1 = 4;
 $aheadperiod = 60;
 $delayperiod = 60;
-$sql = 'SELECT * FROM  classtime';
+$allowlate = 0;
+$allowearly = 0;
+$sql = 'SELECT * FROM classtime';
 $statement = $connection->prepare( $sql );
 $statement->execute();
 $record3 = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
@@ -14,14 +17,20 @@ if ( $record3 != NULL && $record3->num != 0 ) {
   $classtimenum = $record3->num;
   $classtime11 = $record3->time11;
   $classtime12 = $record3->time12;
+  $hours1 = $record3->hours1;
   $classtime21 = $record3->time21;
   $classtime22 = $record3->time22;
+  $hours2 = $record3->hours2;
   $classtime31 = $record3->time31;
   $classtime32 = $record3->time32;
+  $hours3 = $record3->hours3;
   $classtime41 = $record3->time41;
   $classtime42 = $record3->time42;
+  $hours4 = $record3->hours4;
   $aheadperiod = $record3->aheadperiod;
   $delayperiod = $record3->delayperiod;
+  $allowlate = $record3->allowlate;
+  $allowearly = $record3->allowearly;
 }
 
 //判断当前时间是否上课时间
@@ -50,6 +59,61 @@ function checkIsBetweenTime( $start, $end, $cur = NULL ) {
 }
 
 $time = time();
+$currenttime = date( 'Y-m-d H:i:s', $time );
+$lastID = 0;
+$lasttime = '2019-07-01 00:00:00';
+$sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
+$statement = $connection->prepare( $sql );
+$statement->execute();
+$recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
+if($recordlastrecord) {
+  $lastID = $recordlastrecord->recordID;
+  echo $lastID . ': lastID<br>';
+  if($recordlastrecord->recordtime) {
+    $lasttime = $recordlastrecord->recordtime;
+  }
+}
+
+if($lastID > 0) {
+  $sql = 'SELECT * from attendance WHERE ID > ' . $lastID;
+} else {
+  $sql = 'SELECT * from attendance WHERE recordtime > "' . $lasttime . '"';
+}
+$statement = $connection->prepare( $sql );
+$statement->execute();
+$recordattendance = $statement->fetchAll(PDO::FETCH_OBJ);
+foreach($recordattendance as $recordattendance) {
+  $studentID = $recordattendance->studentID;
+  echo $studentID . ': studentID<br>';
+  $property = $recordattendance->property;
+  $timerecord = strtotime($recordattendance->time11);
+  $date = date( 'Y-m-01', $timerecord );
+  $dateNo = date( 'd', $timerecord ) + 0;
+  
+  $sql = "SELECT * from situationmonth WHERE studentID=:studentID AND date=:date";
+  $statement = $connection->prepare( $sql );
+  $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
+  $recordsituationmonth = $statement->fetch(PDO::FETCH_OBJ);
+  if($recordsituationmonth) {
+    $sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.d' . $dateNo . '", :property), recordtime=:recordtime WHERE ID=:ID';
+    $statement = $connection->prepare( $sql );
+    if ( $statement->execute( [ ':property' => $property, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {echo ': UPDATE ok<br>';} else {echo ShowErrorCode( $statement );
+    }
+  } else {
+    $sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("d' . $dateNo . '", :property), :date)';
+    $statement = $connection->prepare( $sql );
+    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $property, ':date' => $date ] ) ) {echo ': INSERT ok<br>';} else {echo ShowErrorCode( $statement );
+    }
+  }
+}
+if($recordattendance) {
+  $sql = 'UPDATE lastrecord SET recordID=:recordID, recordtime=:recordtime WHERE tablename="attendance"';
+  $statement = $connection->prepare( $sql );
+  $statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
+}
+return;
+
+
 $classindex = 0;
 $classstart = $classtime11;
 $classend = $classtime12;
@@ -91,19 +155,18 @@ if ( $classindex == 0 ) {
   return; //非上课时间
 }
 
-$currenttime = date( 'Y-m-d H:i:s', $time );
 //签到时间段：$classstart-$aheadperiod到$classend之间
 $currentday = date( 'Y-m-d', $time );
 $starttime = $currentday . ' ' . date( 'H:i:s', strtotime( $classstart ) );
 $endtime = $currentday . ' ' . date( 'H:i:s', strtotime( $classend ) );
 
 //判断当前上课时间classschedule记录是否已生成，已生成则退出
-$sql = "SELECT * FROM  classschedule WHERE recordtime between :starttime and :endtime";
+$sql = "SELECT * FROM  classsituation WHERE recordtime between :starttime and :endtime";
 $statement = $connection->prepare( $sql );
 $statement->execute( [ ':starttime' => $starttime, ':endtime' => $endtime ] );
 $record4 = $statement->fetchAll( PDO::FETCH_OBJ );
 
-$starttime = $currentday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $aheadperiod * 60 ); //提前aheadperiod分钟签到
+$starttime = $currentday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $aheadperiod * 60 + $allowlate * 60 ); //提前aheadperiod分钟签到，允许迟到allowlate分钟
 //echo $classstart . ' ' . $aheadperiod . ' ' . $classend . '<br>';
 //echo $starttime . ' ' . $endtime . '<br>';
 //查询班级ID、学生人数
@@ -157,14 +220,14 @@ foreach ( $record1 as $record2 ) {
     //echo $checkinnum . '  ' . $property . '<br>';
     if ( !$bFind ) //生成
     {
-      $sql = 'INSERT INTO classschedule(classID, classindex, studentnum, checkinnum, property) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property)';
+      $sql = 'INSERT INTO classsituation(classID, classindex, studentnum, checkinnum, property) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property)';
       $statement = $connection->prepare( $sql );
       if ( $statement->execute( [ ':classID' => $classID, ':classindex' => $classindex, ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property ] ) ) {} else {
         ShowErrorCode( $statement );
       }
     } elseif ( $property != $record6->property ) //修改
     {
-      $sql = 'UPDATE classschedule SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, recordtime=:recordtime  WHERE ID=:ID';
+      $sql = 'UPDATE classsituation SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, recordtime=:recordtime  WHERE ID=:ID';
       $statement = $connection->prepare( $sql );
       if ( $statement->execute( [ ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':recordtime' => $currenttime, ':ID' => $record6->ID ] ) ) {} else {
         ShowErrorCode( $statement );
