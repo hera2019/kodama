@@ -276,7 +276,8 @@ input[type="password"] {
   color: #555;
   vertical-align: middle; 
 }
-.kodama-table > thead > tr > th {
+.kodama-table > thead > tr > th,
+.kodama-table > tfoot > tr > th {
   word-wrap: break-word;
   word-break: break-all;
   table-layout: fixed;

@@ -33,31 +33,6 @@ if ( $record3 != NULL && $record3->num != 0 ) {
   $allowearly = $record3->allowearly;
 }
 
-//判断当前时间是否上课时间
-/**
- * 判断当前的时分是否在指定的时间段内
- * @param $start 开始时分  eg:10:30:00
- * @param $end  结束时分   eg:15:30:00
- * @author:zmq
- * @date:2019/8/12 14:34
- * @return: bool  1：在范围内，0:没在范围内
- */
-function checkIsBetweenTime( $start, $end, $cur = NULL ) {
-  if ( $cur == NULL ) {
-    $date = date( 'H:i:s' );
-  } else {
-    $date = date( 'H:i:s', $cur );
-  }
-  $curTime = strtotime( $date ); //当前时分秒
-  $assignTime1 = strtotime( $start ); //获得指定秒钟时间戳，00:00:00
-  $assignTime2 = strtotime( $end ); //获得指定秒钟时间戳，01:00:00
-  $result = 0;
-  if ( $curTime > $assignTime1 && $curTime < $assignTime2 ) {
-    $result = 1;
-  }
-  return $result;
-}
-
 $time = time();
 $currenttime = date( 'Y-m-d H:i:s', $time );
 $lastID = 0;
@@ -84,155 +59,107 @@ $statement->execute();
 $recordattendance = $statement->fetchAll(PDO::FETCH_OBJ);
 foreach($recordattendance as $recordattendance) {
   $studentID = $recordattendance->studentID;
-  echo $studentID . ': studentID<br>';
   $property = $recordattendance->property;
   $timerecord = strtotime($recordattendance->time11);
   $date = date( 'Y-m-01', $timerecord );
   $dateNo = date( 'd', $timerecord ) + 0;
+  $classindex = GetClassIndex($recordattendance->time11, $classtimenum, $aheadperiod,
+                              $classtime11, $classtime12,
+                              $classtime21, $classtime22,
+                              $classtime31, $classtime32,
+                              $classtime41, $classtime42);
+  if($classindex == 0) {
+    continue;
+  }
+  $propertykey = 'd' . $dateNo . 'c' . $classindex;
+  //echo $studentID.' '.$date.' '.$propertykey . ': studentID<br>';
   
   $sql = "SELECT * from situationmonth WHERE studentID=:studentID AND date=:date";
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
   $recordsituationmonth = $statement->fetch(PDO::FETCH_OBJ);
   if($recordsituationmonth) {
-    $sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.d' . $dateNo . '", :property), recordtime=:recordtime WHERE ID=:ID';
+    $sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.' . $propertykey . '", :property), recordtime=:recordtime WHERE ID=:ID';
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':property' => $property, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {echo ': UPDATE ok<br>';} else {echo ShowErrorCode( $statement );
+    if ( $statement->execute( [ ':property' => $property, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {} else {echo ShowErrorCode( $statement );
     }
   } else {
-    $sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("d' . $dateNo . '", :property), :date)';
+    $sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("' . $propertykey . '", :property), :date)';
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $property, ':date' => $date ] ) ) {echo ': INSERT ok<br>';} else {echo ShowErrorCode( $statement );
+    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $property, ':date' => $date ] ) ) {} else {echo ShowErrorCode( $statement );
     }
   }
 }
 if($recordattendance) {
   $sql = 'UPDATE lastrecord SET recordID=:recordID, recordtime=:recordtime WHERE tablename="attendance"';
   $statement = $connection->prepare( $sql );
-  $statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
+  //$statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
 }
 return;
 
 
-$classindex = 0;
-$classstart = $classtime11;
-$classend = $classtime12;
-//判断第几课时段
-if ( $classtimenum >= 4 ) {
-  $isBetweenTime = checkIsBetweenTime( $classtime41, $classtime42, $time );
-  if ( $isBetweenTime ) {
-    $classindex = 4;
-    $classstart = $classtime41;
-    $classend = $classtime42;
+//判断当前时间是否上课时间
+/**
+ * 判断当前的时分是否在指定的时间段内
+ * @param $start 开始时分  eg:10:30:00
+ * @param $end  结束时分   eg:15:30:00
+ * @author:zmq
+ * @date:2019/8/12 14:34
+ * @return: bool  1：在范围内，0:没在范围内
+ */
+function IsBetweenTime( $start, $end, $time, $aheadperiod ) {
+  $date = date( 'H:i:s', strtotime( $time ) );
+  $curTime = strtotime( $date ); //当前时分秒
+  $assignTime1 = strtotime( $start ) - $aheadperiod * 60; //获得指定秒钟时间戳，00:00:00
+  $assignTime2 = strtotime( $end ); //获得指定秒钟时间戳，01:00:00
+  $result = false;
+  if ( $curTime > $assignTime1 && $curTime < $assignTime2 ) {
+    $result = true;
   }
-}
-if ( $classtimenum >= 3 ) {
-  $isBetweenTime = checkIsBetweenTime( $classtime31, $classtime32, $time );
-  if ( $isBetweenTime ) {
-    $classindex = 3;
-    $classstart = $classtime31;
-    $classend = $classtime32;
-  }
-}
-if ( $classtimenum >= 2 ) {
-  $isBetweenTime = checkIsBetweenTime( $classtime21, $classtime22, $time );
-  if ( $isBetweenTime ) {
-    $classindex = 2;
-    $classstart = $classtime21;
-    $classend = $classtime22;
-  }
-}
-if ( $classtimenum >= 1 ) {
-  $isBetweenTime = checkIsBetweenTime( $classtime11, $classtime12, $time );
-  if ( $isBetweenTime ) {
-    $classindex = 1;
-    $classstart = $classtime11;
-    $classend = $classtime12;
-  }
-}
-if ( $classindex == 0 ) {
-  echo "非上课时间";
-  return; //非上课时间
+  return $result;
 }
 
-//签到时间段：$classstart-$aheadperiod到$classend之间
-$currentday = date( 'Y-m-d', $time );
-$starttime = $currentday . ' ' . date( 'H:i:s', strtotime( $classstart ) );
-$endtime = $currentday . ' ' . date( 'H:i:s', strtotime( $classend ) );
-
-//判断当前上课时间classschedule记录是否已生成，已生成则退出
-$sql = "SELECT * FROM  classsituation WHERE recordtime between :starttime and :endtime";
-$statement = $connection->prepare( $sql );
-$statement->execute( [ ':starttime' => $starttime, ':endtime' => $endtime ] );
-$record4 = $statement->fetchAll( PDO::FETCH_OBJ );
-
-$starttime = $currentday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $aheadperiod * 60 + $allowlate * 60 ); //提前aheadperiod分钟签到，允许迟到allowlate分钟
-//echo $classstart . ' ' . $aheadperiod . ' ' . $classend . '<br>';
-//echo $starttime . ' ' . $endtime . '<br>';
-//查询班级ID、学生人数
-$sql = 'SELECT ID FROM class';
-$statement = $connection->prepare( $sql );
-$statement->execute();
-$record1 = $statement->fetchAll( PDO::FETCH_OBJ );
-foreach ( $record1 as $record2 ) {
-  $classID = $record2->ID;
-  $sql = "SELECT COUNT(*) from student WHERE classID=:classID";
-  $statement = $connection->prepare( $sql );
-  $statement->execute( [ ':classID' => $classID ] );
-  $studentnum = $statement->fetchColumn();
-  echo $classID . '  ' . $studentnum . '<br>';
-  if ( $studentnum > 0 && $classID > 0 ) {
-    $bFind = FALSE;
-    $record5 = $record4;
-    foreach ( $record5 as $record6 ) {
-      if ( $classindex == $record6->classindex && $classID == $record6->classID ) {
-        $bFind = TRUE;
-        break; //已生成则继续循环
-      }
-    }
-
-    //查询当课段签到人数，提前60分钟签到（可设定），签到时间段：$classstart-$aheadperiod到$classend之间        
-    //$sql = "SELECT COUNT(*) from attendance LEFT JOIN user on attendance.userID = user.ID 
-    //    WHERE date_format(time1,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') 
-    //    AND user.classID = :classID";
-    //time1 >= between :starttime AND time1 <= :endtime
-    $sql = "SELECT COUNT(*) from attendance LEFT JOIN student on attendance.studentID=student.ID
-            WHERE time11 between :starttime and :endtime
-            AND student.classID = :classID";
-    $statement = $connection->prepare( $sql );
-    $statement->execute( [ ':classID' => $classID, ':starttime' => $starttime, ':endtime' => $endtime ] );
-    //$record = $statement->fetch(PDO::FETCH_OBJ);
-    $checkinnum = $statement->fetchColumn(); //取得欄位1 的值  (也就是count(*))
-    echo $checkinnum . '<br>';
-    //echo $studentnum . '<br>';
-    if ( $checkinnum == 0 ) {
-      $property = 7; //休
-    } elseif ( $checkinnum / $studentnum > 0.5 ) //>50%自动判断为有课
-    {
-      $property = 1; //出
-    }
-    else //<50%提醒负责人确认
-    {
-      $property = 0;
-      //提醒负责人确认
-
-    }
-    //echo $checkinnum . '  ' . $property . '<br>';
-    if ( !$bFind ) //生成
-    {
-      $sql = 'INSERT INTO classsituation(classID, classindex, studentnum, checkinnum, property) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property)';
-      $statement = $connection->prepare( $sql );
-      if ( $statement->execute( [ ':classID' => $classID, ':classindex' => $classindex, ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property ] ) ) {} else {
-        ShowErrorCode( $statement );
-      }
-    } elseif ( $property != $record6->property ) //修改
-    {
-      $sql = 'UPDATE classsituation SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, recordtime=:recordtime  WHERE ID=:ID';
-      $statement = $connection->prepare( $sql );
-      if ( $statement->execute( [ ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':recordtime' => $currenttime, ':ID' => $record6->ID ] ) ) {} else {
-        ShowErrorCode( $statement );
-      }
+function GetClassIndex( $time, $classtimenum, $aheadperiod,
+                        $classtime11, $classtime12,
+                        $classtime21, $classtime22,
+                        $classtime31, $classtime32,
+                        $classtime41, $classtime42 ) {
+  $classindex = 0;
+  $classstart = $classtime11;
+  $classend = $classtime12;
+  //判断第几课时段
+  if ( $classtimenum >= 4 ) {
+    $isBetweenTime = IsBetweenTime( $classtime41, $classtime42, $time, $aheadperiod );
+    if ( $isBetweenTime ) {
+      $classindex = 4;
+      $classstart = $classtime41;
+      $classend = $classtime42;
     }
   }
+  if ( $classtimenum >= 3 ) {
+    $isBetweenTime = IsBetweenTime( $classtime31, $classtime32, $time, $aheadperiod );
+    if ( $isBetweenTime ) {
+      $classindex = 3;
+      $classstart = $classtime31;
+      $classend = $classtime32;
+    }
+  }
+  if ( $classtimenum >= 2 ) {
+    $isBetweenTime = IsBetweenTime( $classtime21, $classtime22, $time, $aheadperiod );
+    if ( $isBetweenTime ) {
+      $classindex = 2;
+      $classstart = $classtime21;
+      $classend = $classtime22;
+    }
+  }
+  if ( $classtimenum >= 1 ) {
+    $isBetweenTime = IsBetweenTime( $classtime11, $classtime12, $time, $aheadperiod );
+    if ( $isBetweenTime ) {
+      $classindex = 1;
+      $classstart = $classtime11;
+      $classend = $classtime12;
+    }
+  }
+  return $classindex;
 }
 ?>
