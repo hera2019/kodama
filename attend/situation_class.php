@@ -4,7 +4,7 @@ require_once '../include/include_database.php';
 $classtimenum = 1;
 $classtime11 = '08:00:00';
 $classtime12 = '12:00:00';
-$hours1 = 4;
+$minutes1 = 240;
 $aheadperiod = 60;
 $delayperiod = 60;
 $allowlate = 0;
@@ -17,16 +17,16 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
   $classtimenum = $recordclasstime->num;
   $classtime11 = $recordclasstime->time11;
   $classtime12 = $recordclasstime->time12;
-  $hours1 = $recordclasstime->hours1;
+  $minutes1 = $recordclasstime->minutes1;
   $classtime21 = $recordclasstime->time21;
   $classtime22 = $recordclasstime->time22;
-  $hours2 = $recordclasstime->hours2;
+  $minutes2 = $recordclasstime->minutes2;
   $classtime31 = $recordclasstime->time31;
   $classtime32 = $recordclasstime->time32;
-  $hours3 = $recordclasstime->hours3;
+  $minutes3 = $recordclasstime->minutes3;
   $classtime41 = $recordclasstime->time41;
   $classtime42 = $recordclasstime->time42;
-  $hours4 = $recordclasstime->hours4;
+  $minutes4 = $recordclasstime->minutes4;
   $aheadperiod = $recordclasstime->aheadperiod;
   $delayperiod = $recordclasstime->delayperiod;
   $allowlate = $recordclasstime->allowlate;
@@ -50,7 +50,7 @@ if($recordlastrecord) {
 }
 
 if($lastID > 0) {
-  $sql = 'SELECT recordtime from attendance WHERE ID > ' . $lastID . ' ORDER BY ID ASC';
+  $sql = 'SELECT recordtime FROM attendance WHERE ID > ' . $lastID . ' ORDER BY ID ASC';
 }
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -72,7 +72,6 @@ foreach ( $recordclass as $recordclass ) {
   $statement->execute( [ ':classID' => $classID ] );
   $studentnum = $statement->fetchColumn();
   if ( $studentnum > 0 && $classID > 0 ) {
-    $bFind = FALSE;
     
     $lasttime = date( 'Y-m-d', strtotime($lasttime) );
     $nexttime = strtotime($lasttime);
@@ -82,6 +81,7 @@ foreach ( $recordclass as $recordclass ) {
       //echo $thatday . ' : thatday<br>';
       
       for($j=0; $j<$classtimenum; $j++) {
+        $bFind = FALSE;
         $classindex = $j + 1;
         if($j == 0) {
           $classstart = $classtime11;

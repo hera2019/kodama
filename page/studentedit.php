@@ -314,5 +314,5 @@ $(document).ready(function(){
   });
 });
 </script>
-<script src="../style/js/kodama-studentedit.js"></script>
+<script src="../style/js/kodama-formajaxsubmit.js"></script>
 <script src="../style/js/kodama-photoupload.js"></script>

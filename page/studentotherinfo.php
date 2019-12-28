@@ -1,24 +1,10 @@
+<head>
 <!-- code by zmq -->
 <?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php
 require_once( '../include/include_database.php' );
 require_once( '../include/include_function.php' );
 require_once( 'frame.php' );
-
-$baseitem = [
-  //'nickname' => array('Nickname', 'face'),
-  'lastname' => array('Lastname', 'contacts'),
-  'firstname' => array('Firstname', 'contacts'),
-  'lastnamefurigana' => array('Lastname Furigana', 'contacts'),
-  'firstnamefurigana' => array('Firstname Furigana', 'contacts'),
-  'lastnamealphabet' => array('Lastname Alphabet', 'contacts'),
-  'firstnamealphabet' => array('Firstname Alphabet', 'contacts'),
-  'lastnamemotherland' => array('Lastname Motherland', 'contacts'),
-  'firstnamemotherland' => array('Firstname Motherland', 'contacts'),
-  'studentnumber' => array('Student Number', 'format_list_numbered'),
-  'applicationnumber' => array('Application Number', 'format_list_numbered'),
-  'phonenumber' => array('Phone Number', 'local_phone'),
-];
 
 $message = '';
 $ID = '';
@@ -49,7 +35,7 @@ $recordcolumn = $statement->fetchAll( PDO::FETCH_OBJ );
 if ( $recordcolumn == NULL ) {
   $message = "table student2 column info not found.";
 }
-?><head>
+?>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
@@ -148,4 +134,4 @@ if ( $recordcolumn == NULL ) {
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
-<script src="../style/js/kodama-studentedit.js"></script>
+<script src="../style/js/kodama-formajaxsubmit.js"></script>

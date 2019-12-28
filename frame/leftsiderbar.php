@@ -23,6 +23,13 @@
           <li> <a href="IB-AdmissionOtherinfo.php"> <span>入学前その他の情報</span> </a> </li>
         </ul>
       </li>
+      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">beenhere</i> <span>出席管理</span> </a>
+        <ul class="ml-menu">
+          <li> <a href="classtime.php"> <span>クラス時間修正</span> </a> </li>
+          <li> <a href="classsituation.php"> <span>クラスのスケジュール修正</span> </a> </li>
+          <li> <a href="checkinrecord.php"> <span>チェックイン記録</span> </a> </li>
+        </ul>
+      </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">print</i> <span>集計印刷</span> </a>
         <ul class="ml-menu">
           <li> <a href="welcome4.php"> <span>Welcome4</span> </a> </li>

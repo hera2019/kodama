@@ -42,7 +42,7 @@ require_once( '../include/include_database.php' );
               </a></li>
               <li class="kodama-checkbox">
                   <input type="checkbox" id="checkbox_multiselect" class="filled-in chk-col-purple"/>
-                  <label for="checkbox_multiselect">Multiple Selection</label>
+                  <label for="checkbox_multiselect">複選</label>
               </li>
             </ul>
             <div class="collapse m-t-10" id="collapseExample">

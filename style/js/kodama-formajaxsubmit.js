@@ -8,6 +8,7 @@ function ajaxSubmit(frm, fn) {
     success: fn
   });
 }
+
 //将form中的值转换为键值对。
 function getFormJson(frm) {
   var o = {};
@@ -24,6 +25,7 @@ function getFormJson(frm) {
   });
   return o;
 }
+
 //调用
 $(document).ready(function(){
   $('#infoform').bind('submit', function() {
@@ -31,9 +33,15 @@ $(document).ready(function(){
       data = JSON.parse(data);
       if(data.result == 200) {
         //history.back();
-        document.getElementById('message').innerHTML = data.message;
+        var el = document.getElementById('message');
+        if(el) {
+          el.innerHTML = data.message;
+        }
       } else {
-        document.getElementById('message').innerHTML = data.message + ' error code: ' + data.result;
+        el = document.getElementById('message');
+        if(el) {
+          el.innerHTML = data.message + ' error code: ' + data.result;
+        }
       }
     });
     return false;
