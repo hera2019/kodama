@@ -149,7 +149,7 @@ function cancelSelect() {
       els[i].checked = false;
       let id = els[i].id;
       if(id != 'checkbox_hc1' && id != 'checkbox_hc2') {
-        studentid = id.replace(/checkboxi_/, "");
+        let studentid = id.replace(/checkboxi_/, "");
         selectStudent(studentid, false);
       }
     }
@@ -269,6 +269,7 @@ function queryStudent(queryParam) {
     responsive: true,
     select: true,
     order: [[ 1, 'desc' ]],
+    pageLength: 25,
     "ajax": {
       "type": "POST",
       "url": '../dataproc/student_proc.php',
@@ -322,7 +323,6 @@ function deleteStudent()
   {
     var text = "You will not be able to recover this record!";
     var btntext = "Yes, delete it!";
-    var param = "";
     showConfirmMessage(text, btntext, JSON.stringify(_kodama_students.studentID));
   }
   

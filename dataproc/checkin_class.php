@@ -33,21 +33,23 @@ class Checkin_Class
     $context = '';
     foreach($sqlarray as $key => $value) {
       $title .= $key . ',';
-      if($key == 'birthday' && empty($value)) {
+      if(strstr($key, 'time') && empty($value)) {
         $context .= 'null,';
       } else {
         $context .= '"' . $value . '"' . ',';
       }
     }
     if(!empty($title) && !empty($context)) {
-      $title = substr($title, 0, -1); //去掉最后的逗号
-      $context = substr($context, 0, -1); //去掉最后的逗号
+      $title .= 'manualmodified';
+      $context .= '"1"';
+      //$title = substr($title, 0, -1); //去掉最后的逗号
+      //$context = substr($context, 0, -1); //去掉最后的逗号
     } else {
       $message = '';//'Param error 2!';
       return $message;
     }
     
-    $sql = 'INSERT INTO Checkin('. $title . ') VALUES('. $context . ')';
+    $sql = 'INSERT INTO attendance('. $title . ') VALUES('. $context . ')';
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute()) {
@@ -73,7 +75,7 @@ class Checkin_Class
     
     //数据表 Checkin
     //查询ID是否存在，不存在则返回错误
-    $sql = "SELECT ID from Checkin WHERE ID = :ID";
+    $sql = "SELECT ID from attendance WHERE ID = :ID";
     $statement = $this->connection->prepare($sql);
     $statement->execute([':ID' => $ID]);
     $record = $statement->fetch( PDO::FETCH_OBJ );
@@ -85,29 +87,28 @@ class Checkin_Class
     
     $context = '';
     foreach($sqlarray as $key => $value) {
-      if($key == 'birthday' && empty($value)) {
-        $context .= $key . '=null,';
-      } else if($key == 'nationalityregion' && $value == -1) {
+      if(strstr($key, 'time') && empty($value)) {
         $context .= $key . '=null,';
       } else {
         $context .= $key . '="' . $value . '"' . ',';
       }
     }
     if(!empty($context)) {
-      $context = substr($context, 0, -1); //去掉最后的逗号
+      $context .= 'manualmodified="1"';
+      //$context = substr($context, 0, -1); //去掉最后的逗号
     } else {
       $message = '';//'Param error 2!';
       return $message;
     }
     
-    $sql = 'UPDATE Checkin SET ' . $context .' WHERE ID=:ID';
+    $sql = 'UPDATE attendance SET ' . $context .' WHERE ID=:ID';
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute([':ID' => $ID])) {
       $message = '';
     }
     else {
       $message = 'Update record failed!';
-      ShowErrorCode($statement);
+      $message .= ShowErrorCode($statement);
     }
 		
 		return $message;
@@ -118,7 +119,7 @@ class Checkin_Class
 	{
 		if(!empty($checkinID))
 		{
-      $sql = 'SELECT * FROM checkin WHERE ID=:ID';
+      $sql = 'SELECT * FROM attendance WHERE ID=:ID';
       $statement = $this->connection->prepare( $sql );
       $statement->execute( [ ':ID' => $checkinID ] );
       $recordcheckin = $statement->fetch( PDO::FETCH_OBJ );
@@ -126,17 +127,17 @@ class Checkin_Class
         $checkins = get_object_vars($recordcheckin);
         return '';
       }
-      return 'checkin base info not found. ';
+      return 'checkin record not found. ';
     }
 		return 'checkin ID not found. ';
 	}
   
-	//查询学生信息
-	public function QueryClasssituation($Param, &$data)
+	//查询学生签到信息
+	public function QueryCheckin($Param, &$data)
 	{
 		$message = 'Query record failed!';
     
-    $sql = 'SELECT *, s.ID AS ID, s.classindex AS classindex, CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, s.recordtime AS recordtime, s.manualmodified AS manualmodified, c.name AS classname, s.property AS property FROM situationclass AS s LEFT JOIN class AS c ON s.classID = c.ID';
+    $sql = 'SELECT *, a.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, c.name AS classname FROM attendance AS a LEFT JOIN student AS s ON a.studentID=s.ID LEFT JOIN class AS c ON s.classID=c.ID';
     $sql .= $Param;
     $statement = $this->connection->prepare($sql);
     $statement->execute();
@@ -163,19 +164,19 @@ class Checkin_Class
 	}
   
 	//删除记录
-	public function DeleteCheckin($checkinIDs)
+	public function DeleteCheckin($recordIDs)
 	{
 		$message = 'Delete record failed!';
-		if(empty($checkinIDs))
+		if(empty($recordIDs))
 		{
       $message = 'Param error!';
       return $message;
     }
     
-    //批量删除DELETE FROM checkin WHERE ID IN (640,634,633)；
-    $sql = 'DELETE FROM checkin WHERE ID IN ' . $checkinIDs;
+    //批量删除DELETE FROM student WHERE ID IN (640,634,633)；
+    $sql = 'DELETE FROM attendance WHERE ID IN ' . $recordIDs;
     //console_log($sql);
-    $statement =  $this->connection->prepare($sql);
+    $statement = $this->connection->prepare($sql);
     $statement->execute();
     $count = $statement->rowCount();
     if($count > 0) {
@@ -183,6 +184,62 @@ class Checkin_Class
     }
     else {
       $message = 'No record has been deleted!';
+      ShowErrorCode($statement);
+    }
+    
+		return $message;
+	}
+  
+	//查询上课时间信息
+	public function QueryClasssituation($Param, &$data)
+	{
+		$message = 'Query record failed!';
+    
+    $sql = 'SELECT *, s.ID AS ID, s.classindex AS classindex, LEFT(s.checkinnum * 100 / s.studentnum, 5) AS checkinpercent, s.recordtime AS recordtime, s.manualmodified AS manualmodified, c.name AS classname, s.property AS property FROM situationclass AS s LEFT JOIN class AS c ON s.classID = c.ID'; //CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, 
+    $sql .= $Param;
+    $statement = $this->connection->prepare($sql);
+    $statement->execute();
+    $record = $statement->fetchAll( PDO::FETCH_OBJ );
+    if ( $record != NULL )
+    {
+      $message = '';
+      $all = array();
+      foreach($record as $record)
+      {
+        $all[] = $record;
+      }
+      $data = json_encode($all);
+		  return $message;
+    }
+    else
+    {
+      //ShowErrorCode($statement);
+      $message = 'Record not found!';
+      return $message;
+    }
+    
+		return $message;
+	}
+  
+	//修改上课时间记录
+	public function editClasssituation($checkinIDs, $property)
+	{
+		$message = 'Update record failed!';
+		if(empty($checkinIDs))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    //批量删除DELETE FROM checkin WHERE ID IN (640,634,633);
+    $sql = 'UPDATE situationclass SET property="' . $property . '", manualmodified="1" WHERE ID IN ' . $checkinIDs;
+    //console_log($sql);
+    $statement = $this->connection->prepare($sql);
+    if($statement->execute()) {
+      $message = '';
+    }
+    else {
+      $message = 'No record has been updated!';
       ShowErrorCode($statement);
     }
 		

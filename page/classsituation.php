@@ -17,16 +17,16 @@ require_once( 'frame.php' );
             <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student table<small>Choose student first before operate.</small></h2>
             <ul class="header-button">
               <li><a href="../attend/situation_class.php">
-                <div class="kodama-icon-circle bg-green"> <i class="material-icons">person_add</i> </div>
+                <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">person_add</i> </div>
                 <div class="kodama-menu-info"><h4>Build</h4></div>
               </a></li>
-              <li><a href="javascript:void(0);" onclick="editStudent();">
-                <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">person</i> </div>
-                <div class="kodama-menu-info"><h4>置為:通常のクラス</h4></div>
+              <li><a href="javascript:void(0);" onclick="setClassProperty(1);">
+                <div class="kodama-icon-circle bg-green"> <i class="material-icons">person</i> </div>
+                <div class="kodama-menu-info"><h4>置為:授業</h4></div>
               </a></li>
-              <li><a href="javascript:void(0);" onclick="editStudent();">
+              <li><a href="javascript:void(0);" onclick="setClassProperty(7);">
                 <div class="kodama-icon-circle bg-red"> <i class="material-icons">person</i> </div>
-                <div class="kodama-menu-info"><h4>置為:休校日</h4></div>
+                <div class="kodama-menu-info"><h4>置為:なし</h4></div>
               </a></li>
               <li class="kodama-checkbox">
                   <input type="checkbox" id="checkbox_multiselect" class="filled-in chk-col-purple"/>
@@ -51,7 +51,7 @@ require_once( 'frame.php' );
                     </th>
                     <th class="col-xs-2">クラス名</th>
                     <th class="col-xs-1">クラス索引</th>
-                    <th class="col-xs-2">チェックイン</th>
+                    <th class="col-xs-2">チェックイン率</th>
                     <th class="col-xs-2">クラス属性</th>
                     <th class="col-xs-2">記録時間</th>
                     <th class="col-xs-2">生成する</th>
@@ -67,7 +67,7 @@ require_once( 'frame.php' );
                     </th>
                     <th>クラス名</th>
                     <th>クラス索引</th>
-                    <th>チェックイン</th>
+                    <th>チェックイン率</th>
                     <th>クラス属性</th>
                     <th>記録時間</th>
                     <th>生成する</th>
