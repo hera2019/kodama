@@ -3,6 +3,10 @@
 <?php
 require_once( 'frame.php' );
 require_once( '../include/include_database.php' );
+$studentID = '';
+if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
+  $studentID = $_GET[ 'ID' ];
+}
 ?>
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
@@ -20,6 +24,10 @@ require_once( '../include/include_database.php' );
               <li><a href="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info"><h4>Query</h4></div>
+              </a></li>
+              <li><a href="../attend/situation_build.php">
+                <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>
+                <div class="kodama-menu-info"><h4>Build</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="addRecord();">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">person_add</i> </div>
@@ -147,4 +155,9 @@ require_once( '../include/include_database.php' );
 <!-- Jquery DataTable Plugin Js --> 
 <script src="../style/js/jquery.dataTables.js"></script>
 <script src="../style/js/dataTables.bootstrap.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  _kodama_students.currentstudentid = <?php echo $studentID; ?>;
+});
+</script>
 <script src="../style/js/kodama-checkinrecord.js"></script>

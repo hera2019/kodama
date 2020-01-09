@@ -58,7 +58,7 @@ $recordattendance = $statement->fetch(PDO::FETCH_OBJ);
 if($recordattendance) {
   $lasttime = $recordattendance->recordtime;
 }
-echo $lastID . ' ' . $lasttime . ': lastID lasttime<br>';
+//echo $lastID . ' ' . $lasttime . ': lastID lasttime<br>';
 
 //查询班级ID、学生人数
 $sql = 'SELECT ID FROM class';
@@ -137,16 +137,16 @@ foreach ( $recordclass as $recordclass ) {
           //提醒负责人确认
 
         }
-        echo $studentnum . '  ' . $checkinnum . '  ' . $property . '  ' . $recordtime . '<br>';
+        //echo $studentnum . '  ' . $checkinnum . '  ' . $property . '  ' . $recordtime . '<br>';
         if ( !$bFind ) { //生成
-          echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
+          //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
           $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :recordtime)';
           $statement = $connection->prepare( $sql );
           if ( $statement->execute( [ ':classID' => $classID, ':classindex' => $classindex, ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':recordtime' => $recordtime ] ) ) {} else {
             ShowErrorCode( $statement );
           }
         } elseif ( $property != $recordsituationclass->property ) { //修改
-          echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': UPDATE<br>';
+          //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': UPDATE<br>';
           $sql = 'UPDATE situationclass SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, recordtime=:recordtime  WHERE ID=:ID';
           $statement = $connection->prepare( $sql );
           if ( $statement->execute( [ ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':recordtime' => $recordtime, ':ID' => $recordsituationclass->ID ] ) ) {} else {

@@ -43,7 +43,7 @@ $statement->execute();
 $recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
 if($recordlastrecord) {
   $lastID = $recordlastrecord->recordID;
-  echo $lastID . ': lastID<br>';
+  //echo $lastID . ': lastID<br>';
   if($recordlastrecord->recordtime) {
     $lasttime = $recordlastrecord->recordtime;
   }
@@ -74,29 +74,42 @@ foreach($recordattendance as $recordattendance) {
   $propertykey = 'd' . $dateNo . 'c' . $classindex;
   //echo $studentID.' '.$date.' '.$propertykey . ': studentID<br>';
   
-  $sql = "SELECT * from situationmonth WHERE studentID=:studentID AND date=:date";
+  $sql = "SELECT ID, property from situationmonth WHERE studentID=:studentID AND date=:date";
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
   $recordsituationmonth = $statement->fetch(PDO::FETCH_OBJ);
   if($recordsituationmonth) {
-    $sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.' . $propertykey . '", :property), recordtime=:recordtime WHERE ID=:ID';
+    //$sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.' . $propertykey . '", :property), recordtime=:recordtime WHERE ID=:ID'; //mysql5.7以上版本支持JSON，bluehost服务器mysql目前版本是5.6.41-84.1
+    $propertyarray = array();
+    if(!empty($recordsituationmonth->property)) {
+      $propertyarray = json_decode($recordsituationmonth->property, true);
+    }
+    $propertyarray[$propertykey] = $property;
+    $propertytext = json_encode($propertyarray);
+    $sql = 'UPDATE situationmonth SET property=:property, recordtime=:recordtime WHERE ID=:ID';
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':property' => $property, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {} else {echo ShowErrorCode( $statement );
+    if ( $statement->execute( [ ':property' => $propertytext, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
+    } else {
+      echo ShowErrorCode( $statement );
     }
   } else {
-    $sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("' . $propertykey . '", :property), :date)';
+    //$sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("' . $propertykey . '", :property), :date)'; //mysql5.7以上版本支持JSON，bluehost服务器mysql目前版本是5.6.41-84.1
+    $propertyarray = array();
+    $propertyarray[$propertykey] = $property;
+    $propertytext = json_encode($propertyarray);
+    $sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, :property, :date)';
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $property, ':date' => $date ] ) ) {} else {echo ShowErrorCode( $statement );
+    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':date' => $date ] ) ) {      
+    } else {
+      echo ShowErrorCode( $statement );
     }
   }
 }
 if($recordattendance) {
   $sql = 'UPDATE lastrecord SET recordID=:recordID, recordtime=:recordtime WHERE tablename="attendance"';
   $statement = $connection->prepare( $sql );
-  //$statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
+  $statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
 }
-return;
-
 
 //判断当前时间是否上课时间
 /**

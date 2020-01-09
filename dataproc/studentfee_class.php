@@ -47,7 +47,7 @@ class Studentfee_Class
       return $message;
     }
     
-    $sql = 'INSERT INTO Studentfee('. $title . ') VALUES('. $context . ')';
+    $sql = 'INSERT INTO studentfee('. $title . ') VALUES('. $context . ')';
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute()) {
@@ -90,7 +90,7 @@ class Studentfee_Class
     //print_r($array);
     if(!empty($ID)) {
       //查询ID是否存在，不存在则返回错误
-      $sql = "SELECT ID from Studentfee WHERE ID = :ID";
+      $sql = "SELECT ID from studentfee WHERE ID = :ID";
       $statement = $this->connection->prepare($sql);
       $statement->execute([':ID' => $ID]);
       $record = $statement->fetch( PDO::FETCH_OBJ );
@@ -120,7 +120,7 @@ class Studentfee_Class
       return $message;
     }
     
-    $sql = 'UPDATE Studentfee SET ' . $context .' WHERE ID=:ID';
+    $sql = 'UPDATE studentfee SET ' . $context .' WHERE ID=:ID';
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute([':ID' => $ID])) {
       $message = '';
@@ -138,7 +138,7 @@ class Studentfee_Class
 	{
 		if(!empty($studentID))
 		{
-      $sql = 'SELECT * FROM Studentfee WHERE studentID=:studentID ORDER BY ID ASC';
+      $sql = 'SELECT * FROM studentfee WHERE studentID=:studentID ORDER BY ID ASC';
       $statement = $this->connection->prepare( $sql );
       $statement->execute( [ ':studentID' => $studentID ] );
       $recordstudent = $statement->fetchAll( PDO::FETCH_OBJ );
@@ -195,7 +195,7 @@ class Studentfee_Class
       return $message;
     }
     
-    $sql = 'DELETE FROM Studentfee WHERE ID =' . $ID;
+    $sql = 'DELETE FROM studentfee WHERE ID =' . $ID;
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     $statement->execute();

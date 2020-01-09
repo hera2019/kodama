@@ -1,7 +1,8 @@
 var _kodama_students = {
   studentID: {},
-  currentstudentid: '',
+  currentrecordid: '',
   multiselect: false,
+  currentstudentid: '',
 };
 
 $(document).ready(function () {
@@ -29,7 +30,11 @@ $(document).ready(function () {
     return false;
   });
   
-  queryStudent('');
+  let queryParam = " WHERE 1=1";
+  if(_kodama_students.currentstudentid) {
+    queryParam = ' WHERE studentID=' + '"' + _kodama_students.currentstudentid + '"';
+  }
+  queryStudent(queryParam);
 });
 
 $(function () {  
@@ -130,7 +135,7 @@ function cancelSelect() {
 }
 
 function cancelSelectData() {
-  _kodama_students.currentstudentid = '';
+  _kodama_students.currentrecordid = '';
 }
 
 function selectStudent(studentid, selected) {
@@ -142,7 +147,7 @@ function showStudent(studentid, selected) {
   if(table) {
     let datas = table.rows(['.selected']).data();
     let data = datas[0];
-    let id = _kodama_students.currentstudentid;
+    let id = _kodama_students.currentrecordid;
     if(selected) {
       if(studentid != '') {
         id = studentid;
@@ -158,9 +163,9 @@ function showStudent(studentid, selected) {
     }
     if(data) { //把学生信息显示到Student Info
       let info = {};
-      _kodama_students.currentstudentid = data["ID"];
+      _kodama_students.currentrecordid = data["ID"];
     } else {
-      _kodama_students.currentstudentid = '';
+      _kodama_students.currentrecordid = '';
     }
   }
 }
@@ -241,9 +246,9 @@ function addRecord()
 
 function editRecord()
 {
-  if(_kodama_students.currentstudentid)
+  if(_kodama_students.currentrecordid)
   {
-    window.location.href = "checkinedit.php?ID=" + _kodama_students.currentstudentid;
+    window.location.href = "checkinedit.php?ID=" + _kodama_students.currentrecordid;
   }
 }
 
@@ -300,7 +305,7 @@ function postDeleteRecord(param) {
         let table = $('.dataTable').DataTable();
         if(table) {
           table.rows(['.selected']).remove().draw();
-          _kodama_students.currentstudentid = '';
+          _kodama_students.currentrecordid = '';
           for(let key in _kodama_students.studentID) {
             _kodama_students.studentID[key] = false;
           }

@@ -25,29 +25,24 @@
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">beenhere</i> <span>出席管理</span> </a>
         <ul class="ml-menu">
-          <li> <a href="classtime.php"> <span>クラス時間修正</span> </a> </li>
           <li> <a href="classsituation.php"> <span>クラスのスケジュール修正</span> </a> </li>
           <li> <a href="checkinrecord.php"> <span>チェックイン記録</span> </a> </li>
+          <li> <a href="classtime.php"> <span>クラス時間修正</span> </a> </li>
         </ul>
-      </li>
+      </li><!--
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">print</i> <span>集計印刷</span> </a>
         <ul class="ml-menu">
           <li> <a href="welcome4.php"> <span>Welcome4</span> </a> </li>
         </ul>
       </li>
-      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類１</span> </a>
-        <ul class="ml-menu">
-          <li> <a href="Welcome5.php"> <span>Welcome5</span> </a> </li>
-        </ul>
-      </li>
-      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類２</span> </a>
-        <ul class="ml-menu">
-          <li> <a href="Welcome6.php"> <span>Welcome6</span> </a> </li>
-        </ul>
-      </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">local_printshop</i> <span>名簿印刷</span> </a>
         <ul class="ml-menu">
           <li> <a href="Welcome7.php"> <span>Welcome7</span> </a> </li>
+        </ul>
+      </li>-->
+      <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類</span> </a>
+        <ul class="ml-menu">
+          <li> <a href="Welcome6.php"> <span>Welcome</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">account_box</i> <span>マスタ管理</span> </a>

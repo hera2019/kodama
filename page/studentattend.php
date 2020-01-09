@@ -16,15 +16,19 @@
         ?>
         <div class="card">
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
-            <h2>入金情報<small></small></h2>
+            <h2>出席状況<small></small></h2>
             <ul class="header-button">
-              <li><a href="javascript:void(0);"Modify>
+              <li><a href="javascript:location.reload();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info">
                   <h4>Reload</h4>
                 </div>
               </a></li>
-              <li><a href="javascript:void(0);"Modify>
+              <li><a href="../attend/situation_build.php">
+                <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>
+                <div class="kodama-menu-info"><h4>Build</h4></div>
+              </a></li>
+              <li><a href="../page/checkinrecord.php?ID=<?= $studentID = isset($StudentInfo) ? $StudentInfo->studentid : ''; ?>">
                 <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">mode_edit</i> </div>
                 <div class="kodama-menu-info">
                   <h4>Modify</h4>
@@ -274,7 +278,7 @@
 </section>
 
 <script type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function() {
   //g_feerecordnum = <?php echo $php_feerecordnum; ?>;
 });
 </script>

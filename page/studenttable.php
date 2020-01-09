@@ -56,6 +56,12 @@ require_once( '../include/include_database.php' );
                       </div>
                     </li>
                     <li class="input-group">
+                      <span class="input-group-addon"> <i class="material-icons col-orange">format_list_numbered</i> </span>
+                      <div class="form-line">
+                        <input value="" type="text" class="form-control" name="s.studentnumber" placeholder="Student Number">
+                      </div>
+                    </li>
+                    <li class="input-group">
                       <span class="input-group-addon"> <i class="material-icons col-orange">pregnant_woman</i> </span>
                       <div class="form-line">
                         <input name="s.genderfemale" type="radio" id="radio_000" class="with-gap radio-col-grey" value="-1" checked="checked" />
@@ -66,14 +72,6 @@ require_once( '../include/include_database.php' );
                         <label for="radio_002">女 Female</label>
                       </div>
                     </li>
-
-                    <li class="input-group">
-                      <span class="input-group-addon"> <i class="material-icons col-orange">format_list_numbered</i> </span>
-                      <div class="form-line">
-                        <input value="" type="text" class="form-control" name="s.studentnumber" placeholder="Student Number">
-                      </div>
-                    </li>
-
                     <li class="input-group-select clearfix">
                       <span class="input-group-addon"> <i class="material-icons col-orange">account_balance</i> </span>
                       <div class="form-line">

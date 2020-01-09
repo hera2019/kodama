@@ -16,8 +16,8 @@ require_once( 'frame.php' );
           <div class="kodama-header">
             <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student table<small>Choose student first before operate.</small></h2>
             <ul class="header-button">
-              <li><a href="../attend/situation_class.php">
-                <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">person_add</i> </div>
+              <li><a href="../attend/situation_build.php">
+                <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>
                 <div class="kodama-menu-info"><h4>Build</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="setClassProperty(1);">
