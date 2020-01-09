@@ -20,10 +20,10 @@ if (!empty($mod))
   {
     $sqlarray = array();
     foreach($_POST as $key => $value) {
-      if($key != 'mod' && $key != 'ID') {
+      if($key != 'mod') {
         $sqlarray[$key] = $value;
       }
-    }    
+    }
 
     if(!empty($sqlarray))
     {

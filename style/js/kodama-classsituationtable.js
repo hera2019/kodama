@@ -157,7 +157,7 @@ function queryClasssituation(queryParam) {
         render: function (data, type, obj, meta) {
           let ret = '<span class="col-black">なし</span>';
           if(data == 0) {
-            ret = '<span class="col-orange">不明</span>';
+            ret = '<span class="col-red">不明</span>';
           } else if(data == 1) {
             ret = '<span class="col-green">授業</span>';
           }

@@ -89,7 +89,7 @@ $(function () {
     format: 'YYYY-MM-DD HH:mm:ss',
     locale: 'ja',
     firstDay: 0,
-    //viewMode: 'times',
+    viewMode: 'times',
     buttons: {
         showToday: true,
         showClear: true,

@@ -31,33 +31,54 @@ class Checkin_Class
     
     $title = '';
     $context = '';
+    $studentIDs = [];
     foreach($sqlarray as $key => $value) {
-      $title .= $key . ',';
       if(strstr($key, 'time') && empty($value)) {
+        $title .= $key . ',';
         $context .= 'null,';
+      } elseif($key == 'ID') { //studentID
+        if(!empty($value)) {
+          $studentIDs = json_decode($value);
+        }
       } else {
+        $title .= $key . ',';
         $context .= '"' . $value . '"' . ',';
       }
     }
+    $title1 = '';
+    $context1 = '';
     if(!empty($title) && !empty($context)) {
       $title .= 'manualmodified';
       $context .= '"1"';
       //$title = substr($title, 0, -1); //去掉最后的逗号
       //$context = substr($context, 0, -1); //去掉最后的逗号
+      foreach($studentIDs as $key1 => $value1) {
+        if($value1 == true) {
+          $title1 = $title . ',studentID';
+          $context2 = $context . ',"' . $key1 . '"';
+
+          if(empty($context1)) {
+            $context1 .= $context2;
+          } else {
+            $context1 .= '),(' . $context2;
+          }
+        }
+      }
     } else {
       $message = '';//'Param error 2!';
       return $message;
     }
     
-    $sql = 'INSERT INTO attendance('. $title . ') VALUES('. $context . ')';
+    $sql = 'INSERT INTO attendance('. $title1 . ') VALUES('. $context1 . ')';
     //console_log($sql);
+    $message .= $sql;
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute()) {
       $message = '';
     }
     else {
       $message = 'Add record failed!';
-      ShowErrorCode($statement);
+      $message .= ShowErrorCode($statement);
     }
     
 		return $message;
