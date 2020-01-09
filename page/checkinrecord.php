@@ -19,7 +19,7 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="kodama-header">
-            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student table<small>Choose student first before operate.</small></h2>
+            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Checkin Record<small>Choose record first before operate.</small></h2>
             <ul class="header-button">
               <li><a href="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>

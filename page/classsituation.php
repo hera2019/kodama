@@ -14,7 +14,7 @@ require_once( 'frame.php' );
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="kodama-header">
-            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student table<small>Choose student first before operate.</small></h2>
+            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Class Situation<small>Choose record first before operate.</small></h2>
             <ul class="header-button">
               <li><a href="../attend/situation_build.php">
                 <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>

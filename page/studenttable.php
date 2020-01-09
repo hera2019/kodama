@@ -22,7 +22,7 @@ require_once( '../include/include_database.php' );
         ?>
         <div class="card">
           <div class="kodama-header">
-            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student table<small>Choose student first before operate.</small></h2>
+            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student Table<small>Choose student first before operate.</small></h2>
             <ul class="header-button">
               <li><a href="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>

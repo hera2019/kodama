@@ -227,7 +227,7 @@
 
                     $attendpercent = "";
                     if($allday > 0) {
-                      $attendpercent = ($attendday + $lateday) / $allday * 100 . "%";
+                      $attendpercent = round(($attendday + $lateday) / $allday * 100) . "%";
                     }
                     echo '<td>' . $allday * 4 . '</td>';
                     echo '<td class="col-green">' . $attendday * 4 . '</td>';
@@ -241,9 +241,7 @@
 
                     echo '</tr>';
                   }
-                }
-                
-                //$recordteacher = $statement->fetchAll( PDO::FETCH_OBJ );
+                }                
                 ?>
                 <tr>
                   <td class="bg-pink"></td>
