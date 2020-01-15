@@ -69,18 +69,33 @@ if ( $recordcolumn == NULL ) {
               <?php
               foreach($recordcolumn as $column) {
                 if($column->DATA_TYPE == 'text') {
-                  echo '<li class="input-group">';
-                    echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
-                    echo '<div class="form-line">';
-                    echo '<input value="';
-                      $studentvalue = '';
-                      if(!empty($students)) {
-                        $studentvalue = $students[$column->COLUMN_NAME];
-                      }
-                      echo $studentvalue;
-                      echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '">';
-                    echo '</div>';
-                  echo '</li>';
+                  if($column->COLUMN_NAME == 'residenceperiod') {                    
+                    echo '<li class="input-group">';
+                      echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
+                      echo '<div class="form-line">';
+                      echo '<input value="';
+                        $studentvalue = '';
+                        if(!empty($students)) {
+                          $studentvalue = $students[$column->COLUMN_NAME];
+                        }
+                        echo $studentvalue;
+                        echo '" type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月">';
+                      echo '</div>';
+                    echo '</li>';
+                  } else {
+                    echo '<li class="input-group">';
+                      echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
+                      echo '<div class="form-line">';
+                      echo '<input value="';
+                        $studentvalue = '';
+                        if(!empty($students)) {
+                          $studentvalue = $students[$column->COLUMN_NAME];
+                        }
+                        echo $studentvalue;
+                        echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '">';
+                      echo '</div>';
+                    echo '</li>';
+                  }
                 } else if($column->DATA_TYPE == 'date') {
                   echo '<li class="input-group">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
@@ -135,3 +150,11 @@ if ( $recordcolumn == NULL ) {
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
 <script src="../style/js/kodama-formajaxsubmit.js"></script>
+<!-- Input Mask Plugin Js -->
+<script src="../style/js/jquery.inputmask.bundle.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  var $maskedInput = $('.kodama-texthorli');
+  $maskedInput.find('.residenceperiod-mask').inputmask('9年mヶ月');
+});
+</script>

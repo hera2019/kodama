@@ -1,6 +1,6 @@
 <?php
 header("content-Type: text/html; charset=utf-8");
-require_once( '../config/config.php' );
+require_once(dirname(__FILE__) . '/../config/config.php' );
 $options = [];
 //try {
 $connection = new PDO($dsn, $username, $password, $options);

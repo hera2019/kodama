@@ -10,8 +10,14 @@
           <li> <a href="studenttable.php"> <span>学生情報検索</span> </a> </li>
           <li> <a href="studentedit.php"> <span>学生基本情報</span> </a> </li>
           <li> <a href="studentotherinfo.php"> <span>その他の学生情報</span> </a> </li>
-          <li> <a href="studentattend.php"> <span>出席状況</span> </a> </li>
+          <li> <a href="Welcome7.php"> <span>成績情報</span> </a> </li>
+          <li> <a href="studentattend.php"> <span>出席情報</span> </a> </li>
           <li> <a href="studentfee.php"> <span>入金情報</span> </a> </li>
+          <li> <a href="Welcome1.php"> <span>面談履歷</span> </a> </li>
+          <li> <a href="Welcome2.php"> <span>作品集</span> </a> </li>
+          <li> <a href="Welcome3.php"> <span>賞罰</span> </a> </li>
+          <li> <a href="Welcome4.php"> <span>進學·就職</span> </a> </li>
+          <li> <a href="Welcome5.php"> <span>メモ</span> </a> </li>
           <!-- <li> <a href="javascript:void(0);"> <span>アルバイト情報</span> </a> </li> -->
         </ul>
       </li>
@@ -42,7 +48,7 @@
       </li>-->
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類</span> </a>
         <ul class="ml-menu">
-          <li> <a href="Welcome6.php"> <span>Welcome</span> </a> </li>
+          <li> <a href="PDFWriteGradeAttend.php"> <span>学業成績及び出席状況証明書</span> </a> </li>
         </ul>
       </li>
       <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">account_box</i> <span>マスタ管理</span> </a>
