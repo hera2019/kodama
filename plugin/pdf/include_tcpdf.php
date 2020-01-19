@@ -29,5 +29,14 @@ class TextArea {
   function Height() {
     return $this->bottom - $this->top;
   }
+  function Date($date) {
+    if(!empty($date)) {
+      $this->text = date('Y年m月d日', strtotime($date));
+    } else {
+      $this->text = '';
+    }
+    
+    return $this->text;
+  }
 }
 ?>

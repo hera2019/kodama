@@ -4,55 +4,62 @@ require_once '../include/include_database.php';
 $classtimenum = 1;
 $classtime11 = '08:00:00';
 $classtime12 = '12:00:00';
-$minutes1 = 240;
+$lessons1 = 4;
 $aheadperiod = 60;
 $delayperiod = 60;
 $allowlate = 0;
 $allowearly = 0;
-$sql = 'SELECT * FROM classtime';
+$sql = 'SELECT * FROM  classtime';
 $statement = $connection->prepare( $sql );
 $statement->execute();
-$record3 = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
-if ( $record3 != NULL && $record3->num != 0 ) {
-  $classtimenum = $record3->num;
-  $classtime11 = $record3->time11;
-  $classtime12 = $record3->time12;
-  $minutes1 = $record3->minutes1;
-  $classtime21 = $record3->time21;
-  $classtime22 = $record3->time22;
-  $minutes2 = $record3->minutes2;
-  $classtime31 = $record3->time31;
-  $classtime32 = $record3->time32;
-  $minutes3 = $record3->minutes3;
-  $classtime41 = $record3->time41;
-  $classtime42 = $record3->time42;
-  $minutes4 = $record3->minutes4;
-  $aheadperiod = $record3->aheadperiod;
-  $delayperiod = $record3->delayperiod;
-  $allowlate = $record3->allowlate;
-  $allowearly = $record3->allowearly;
+$recordclasstime = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
+if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
+  $classtimenum = $recordclasstime->num;
+  $classtime11 = $recordclasstime->time11;
+  $classtime12 = $recordclasstime->time12;
+  $lessons1 = $recordclasstime->lessons1;
+  $classtime21 = $recordclasstime->time21;
+  $classtime22 = $recordclasstime->time22;
+  $lessons2 = $recordclasstime->lessons2;
+  $classtime31 = $recordclasstime->time31;
+  $classtime32 = $recordclasstime->time32;
+  $lessons3 = $recordclasstime->lessons3;
+  $classtime41 = $recordclasstime->time41;
+  $classtime42 = $recordclasstime->time42;
+  $lessons4 = $recordclasstime->lessons4;
+  $aheadperiod = $recordclasstime->aheadperiod;
+  $delayperiod = $recordclasstime->delayperiod;
+  $allowlate = $recordclasstime->allowlate;
+  $allowearly = $recordclasstime->allowearly;
 }
 
 $time = time();
 $currenttime = date( 'Y-m-d H:i:s', $time );
-$lastID = 0;
-$lasttime = '2019-07-01 00:00:00';
-$sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
-$statement = $connection->prepare( $sql );
-$statement->execute();
-$recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
-if($recordlastrecord) {
-  $lastID = $recordlastrecord->recordID;
-  //echo $lastID . ': lastID<br>';
-  if($recordlastrecord->recordtime) {
-    $lasttime = $recordlastrecord->recordtime;
-  }
-}
-
-if($lastID > 0) {
-  $sql = 'SELECT * from attendance WHERE ID > ' . $lastID;
+$sql = 'SELECT *, a.ID AS ID, s.classID AS classID from attendance AS a LEFT JOIN student AS s ON a.studentID=s.ID';
+if($REBUILD_ALL) {
+  $sql2 = 'UPDATE situationmonth SET attendlesson=0';
+  $statement = $connection->prepare( $sql2 );
+  $statement->execute();
 } else {
-  $sql = 'SELECT * from attendance WHERE recordtime > "' . $lasttime . '"';
+  $lastID = 0;
+  $lasttime = '2019-07-01 00:00:00';
+  $sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
+  $statement = $connection->prepare( $sql );
+  $statement->execute();
+  $recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
+  if($recordlastrecord) {
+    $lastID = $recordlastrecord->recordID;
+    //echo $lastID . ': lastID<br>';
+    if($recordlastrecord->recordtime) {
+      $lasttime = $recordlastrecord->recordtime;
+    }
+  }
+  
+  if($lastID > 0) {
+    $sql .= ' WHERE a.ID > ' . $lastID;
+  } else {
+    $sql .= ' WHERE a.recordtime > "' . $lasttime . '"';
+  }
 }
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -71,10 +78,31 @@ foreach($recordattendance as $recordattendance) {
   if($classindex == 0) {
     continue;
   }
+  if($classindex == 1) {
+    $lessons = $lessons1;
+  } else if($classindex == 2) {
+    $lessons = $lessons2;
+  } else if($classindex == 3) {
+    $lessons = $lessons3;
+  } else if($classindex == 4) {
+    $lessons = $lessons4;
+  }
+  $monthclasslesson = 0;
+  $classID = $recordattendance->classID;
+  if(isset($classlesson) && isset($classlesson[$classID]) && isset($classlesson[$classID]) && isset($classlesson[$classID][$date])) {
+    $monthclasslesson = $classlesson[$classID][$date];
+  } else {
+    continue;
+  }
   $propertykey = 'd' . $dateNo . 'c' . $classindex;
-  //echo $studentID.' '.$date.' '.$propertykey . ': studentID<br>';
+
+  //统计签到课时数
+  $attendlesson = 0;
+  if($property == 1 || $property == 6) {
+    $attendlesson = $lessons;
+  }
   
-  $sql = "SELECT ID, property from situationmonth WHERE studentID=:studentID AND date=:date";
+  $sql = "SELECT ID, property, attendlesson from situationmonth WHERE studentID=:studentID AND date=:date";
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
   $recordsituationmonth = $statement->fetch(PDO::FETCH_OBJ);
@@ -84,11 +112,17 @@ foreach($recordattendance as $recordattendance) {
     if(!empty($recordsituationmonth->property)) {
       $propertyarray = json_decode($recordsituationmonth->property, true);
     }
+    //统计签到课时数
+    if(!empty($recordsituationmonth->attendlesson)) {
+      $attendlesson = $attendlesson + $recordsituationmonth->attendlesson;
+    }
+
     $propertyarray[$propertykey] = $property;
     $propertytext = json_encode($propertyarray);
-    $sql = 'UPDATE situationmonth SET property=:property, recordtime=:recordtime WHERE ID=:ID';
+    $sql = 'UPDATE situationmonth SET property=:property, attendlesson=:attendlesson, classlesson=:classlesson, recordtime=:recordtime WHERE ID=:ID';
+    //echo $propertytext . ' ' . $attendlesson . ': month UPDATE<br>';
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':property' => $propertytext, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
+    if ( $statement->execute( [ ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
     } else {
       echo ShowErrorCode( $statement );
     }
@@ -97,9 +131,9 @@ foreach($recordattendance as $recordattendance) {
     $propertyarray = array();
     $propertyarray[$propertykey] = $property;
     $propertytext = json_encode($propertyarray);
-    $sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, :property, :date)';
+    $sql = 'INSERT INTO situationmonth(studentID, property, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':date' => $date ] ) ) {      
+    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':date' => $date ] ) ) {      
     } else {
       echo ShowErrorCode( $statement );
     }

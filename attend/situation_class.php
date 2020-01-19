@@ -4,7 +4,7 @@ require_once '../include/include_database.php';
 $classtimenum = 1;
 $classtime11 = '08:00:00';
 $classtime12 = '12:00:00';
-$minutes1 = 240;
+$lessons1 = 4;
 $aheadperiod = 60;
 $delayperiod = 60;
 $allowlate = 0;
@@ -17,16 +17,16 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
   $classtimenum = $recordclasstime->num;
   $classtime11 = $recordclasstime->time11;
   $classtime12 = $recordclasstime->time12;
-  $minutes1 = $recordclasstime->minutes1;
+  $lessons1 = $recordclasstime->lessons1;
   $classtime21 = $recordclasstime->time21;
   $classtime22 = $recordclasstime->time22;
-  $minutes2 = $recordclasstime->minutes2;
+  $lessons2 = $recordclasstime->lessons2;
   $classtime31 = $recordclasstime->time31;
   $classtime32 = $recordclasstime->time32;
-  $minutes3 = $recordclasstime->minutes3;
+  $lessons3 = $recordclasstime->lessons3;
   $classtime41 = $recordclasstime->time41;
   $classtime42 = $recordclasstime->time42;
-  $minutes4 = $recordclasstime->minutes4;
+  $lessons4 = $recordclasstime->lessons4;
   $aheadperiod = $recordclasstime->aheadperiod;
   $delayperiod = $recordclasstime->delayperiod;
   $allowlate = $recordclasstime->allowlate;
@@ -34,23 +34,27 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
 }
 
 $time = time();
-$currenttime = date( 'Y-m-d H:i:s', $time );
 //签到时间段：$classstart-$aheadperiod到$classend之间
-$lastID = 0;
 $lasttime = '2019-07-01 00:00:00';
-$sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
-$statement = $connection->prepare( $sql );
-$statement->execute();
-$recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
-if($recordlastrecord) {
-  $lastID = $recordlastrecord->recordID;
-  if($recordlastrecord->recordtime) {
-    $lasttime = $recordlastrecord->recordtime;
-  }
-}
 
-if($lastID > 0) {
-  $sql = 'SELECT recordtime FROM attendance WHERE ID > ' . $lastID . ' ORDER BY ID ASC';
+if($REBUILD_ALL) {
+  $sql = 'SELECT recordtime FROM attendance ORDER BY ID ASC LIMIT 1';
+} else {
+  $lastID = 0;
+  $sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
+  $statement = $connection->prepare( $sql );
+  $statement->execute();
+  $recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
+  if($recordlastrecord) {
+    $lastID = $recordlastrecord->recordID;
+    if($recordlastrecord->recordtime) {
+      $lasttime = $recordlastrecord->recordtime;
+    }
+  }
+  
+  if($lastID > 0) {
+    $sql = 'SELECT recordtime FROM attendance WHERE ID > ' . $lastID . ' ORDER BY ID ASC LIMIT 1';
+  }
 }
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -61,6 +65,10 @@ if($recordattendance) {
 //echo $lastID . ' ' . $lasttime . ': lastID lasttime<br>';
 
 //查询班级ID、学生人数
+$classlesson = array
+( //classID
+  array(), // 日期，年月01日，'Y-m-01'
+);
 $sql = 'SELECT ID FROM class';
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -86,15 +94,19 @@ foreach ( $recordclass as $recordclass ) {
         if($j == 0) {
           $classstart = $classtime11;
           $classend = $classtime12;
+          $lessons = $lessons1;
         } else if($j == 1) {
           $classstart = $classtime21;
           $classend = $classtime22;
+          $lessons = $lessons2;
         } else if($j == 2) {
           $classstart = $classtime31;
           $classend = $classtime32;
+          $lessons = $lessons3;
         } else if($j == 3) {
           $classstart = $classtime41;
           $classend = $classtime42;
+          $lessons = $lessons4;
         }
 
         $recordtime = $thatday . ' ' . date( 'H:i:s', strtotime( $classstart ) );
@@ -114,7 +126,19 @@ foreach ( $recordclass as $recordclass ) {
             break; //已生成则继续循环
           }
         }
+        
+        $lessonday = date( 'Y-m-01', $nexttime );
+        
         if($bFind && $recordsituationclass && $recordsituationclass->manualmodified) {
+          if($recordsituationclass->property == 1) {
+            if(isset($classlesson[$classID]) && isset($classlesson[$classID]) && isset($classlesson[$classID][$lessonday])) {
+              $classlesson[$classID][$lessonday] += $lessons;
+            }
+            else {
+              $classlesson[$classID][$lessonday] = $lessons;
+            }
+          }
+          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson1<br>';
           continue;
         }
 
@@ -131,25 +155,32 @@ foreach ( $recordclass as $recordclass ) {
           continue;
         } elseif ( $checkinnum / $studentnum > 0.5 ) {//>50%自动判断为有课
           $property = 1; //出
+          if(isset($classlesson[$classID]) && isset($classlesson[$classID]) && isset($classlesson[$classID][$lessonday])) {
+            $classlesson[$classID][$lessonday] += $lessons;
+          }
+          else {
+            $classlesson[$classID][$lessonday] = $lessons;
+          }
         }
         else { //<50%提醒负责人确认
           $property = 0;
           //提醒负责人确认
 
         }
-        //echo $studentnum . '  ' . $checkinnum . '  ' . $property . '  ' . $recordtime . '<br>';
+        //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson2<br>';
+        //echo $studentnum . '  ' . $checkinnum . '  ' . $property . '  ' . $lessons . '  ' . $recordtime . '<br>';
         if ( !$bFind ) { //生成
           //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
-          $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :recordtime)';
+          $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, lessons, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :lessons, :recordtime)';
           $statement = $connection->prepare( $sql );
-          if ( $statement->execute( [ ':classID' => $classID, ':classindex' => $classindex, ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':recordtime' => $recordtime ] ) ) {} else {
+          if ( $statement->execute( [ ':classID' => $classID, ':classindex' => $classindex, ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':lessons' => $lessons, ':recordtime' => $recordtime ] ) ) {} else {
             ShowErrorCode( $statement );
           }
-        } elseif ( $property != $recordsituationclass->property ) { //修改
-          //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': UPDATE<br>';
-          $sql = 'UPDATE situationclass SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, recordtime=:recordtime  WHERE ID=:ID';
+        } else { //修改if ( $property != $recordsituationclass->property )
+          //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . '  ' . $lessons . ': UPDATE<br>';
+          $sql = 'UPDATE situationclass SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, lessons=:lessons, recordtime=:recordtime WHERE ID=:ID';
           $statement = $connection->prepare( $sql );
-          if ( $statement->execute( [ ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':recordtime' => $recordtime, ':ID' => $recordsituationclass->ID ] ) ) {} else {
+          if ( $statement->execute( [ ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':lessons' => $lessons, ':recordtime' => $recordtime, ':ID' => $recordsituationclass->ID ] ) ) {} else {
             ShowErrorCode( $statement );
           }
         }

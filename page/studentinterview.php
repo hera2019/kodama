@@ -44,60 +44,42 @@
           <div class="body">
             <table id="mainTable" class="kodama-formtable table table-bordered kodama-formtable-bordered text-center">
               <caption><div class="text-left alert-warning align-left col-white" id="message"></div></caption>
-              <thead>
-                <tr class="bg-<?= $KODAMA_THEME_COLOR; ?>">
-                  <th class="col-xs-2 text-center">入金種類</th>
-                  <th class="col-xs-2 text-center">入金日</th>
-                  <th class="col-xs-2 text-center">期間</th>
-                  <th class="col-xs-1 text-center">金額（円）</th>
-                  <th class="col-xs-2 text-center">有効期限</th>
-                  <th class="col-xs-2 text-center">担当</th>
-                  <th class="col-xs-1 text-center">備考</th>
+              <thead><tr></tr></thead>
+              <?php
+              $sql = 'SELECT ID, name FROM class';
+              $statement = $connection->prepare($sql);
+              $statement->execute();
+              $recordclass = $statement->fetchAll( PDO::FETCH_OBJ );
+
+              $sql = 'SELECT ID, name FROM teacher ORDER BY ID ASC';
+              $statement = $connection->prepare($sql);
+              $statement->execute();
+              $recordteacher = $statement->fetchAll( PDO::FETCH_OBJ );
+                
+              for($i=1; $i<=24; $i++): ?>
+              <tbody id=recordrow<?= $i; ?><?= $i == 1 ? '' : " hidden=\"hidden\""; ?>>
+                <tr>
+                  <th class="col-xs-2">タイトル</th>
+                  <td class="col-xs-2 kodama-fill" id="text_<?= $i; ?>_title"></td>
                 </tr>
-              </thead>
-              <tbody>
-                <?php
-                $sql = 'SELECT typeID, typename FROM idconfig WHERE type="fee" ORDER BY typeID ASC';
-                $statement = $connection->prepare($sql);
-                $statement->execute();
-                $recordfee = $statement->fetchAll( PDO::FETCH_OBJ );
-                
-                $sql = 'SELECT ID, name FROM teacher ORDER BY ID ASC';
-                $statement = $connection->prepare($sql);
-                $statement->execute();
-                $recordteacher = $statement->fetchAll( PDO::FETCH_OBJ );
-                
-                for($i=1; $i<=24; $i++): ?>
-                <tr id=recordrow<?= $i; ?><?= $i == 1 ? '' : " hidden=\"hidden\""; ?>>
-                  <td class="kodama-fillcontrol" style="padding: 0px 10px;">
-                      <select class="kodama-select" name="feetype" id="select_<?= $i; ?>_feetype">
+                <tr>
+                  <th class="col-xs-2">クラス</th>
+                  <td class="col-xs-2 kodama-fillcontrol" style="padding: 0px 10px;">
+                      <select class="kodama-select" name="feetype" id="select_<?= $i; ?>_classID">
                         <option class="kodama-select" value="-1">- - - -</option>
-                        <?php foreach($recordfee as $recordfee1): ?>
-                        <option class="kodama-select" value="<?= $recordfee1->typeID; ?>"><?= $recordfee1->typename; ?></option>
+                        <?php foreach($recordclass as $recordclass1): ?>
+                        <option class="kodama-select" value="<?= $recordclass1->ID; ?>"><?= $recordclass1->name; ?></option>
                         <?php endforeach; ?>
                       </select>
                   </td>
-                  <td class="kodama-fillcontrol">
-                    <div class="form-group kodama-datepicker" id="time_<?= $i; ?>_0011" data-target-input="nearest">
-                      <input type="text" id="time_<?= $i; ?>_paymentdate" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0011" data-toggle="datetimepicker"/>
-                    </div>
-                  </td>
-                  <td class="kodama-fillcontrol" style="padding: 0px 10px;">                    
-                    <select class="kodama-select kodama-editable-select" name="period" id="select_<?= $i; ?>_period">
-                      <option class="kodama-select" value="二年">二年</option>
-                      <option class="kodama-select" value="一年">一年</option>
-                      <option class="kodama-select" value="6ヶ月">6ヶ月</option>
-                      <option class="kodama-select" value="3ヶ月">3ヶ月</option>
-                      <option class="kodama-select" value="1ヶ月">1ヶ月</option>
-                    </select>
-                  </td>
-                  <td class="kodama-fill" id="text_<?= $i; ?>_moneyamount"></td>
-                  <td class="kodama-fillcontrol">
-                    <div class="form-group kodama-datepicker" id="time_<?= $i; ?>_0012" data-target-input="nearest">
-                      <input type="text" id="time_<?= $i; ?>_expirationdate" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0012" data-toggle="datetimepicker"/>
-                    </div>
-                  </td>
-                  <td class="kodama-fillcontrol" style="padding: 0px 10px;">
+                  <th class="col-xs-2">更新日時</th>
+                  <th class="col-xs-2 kodama-fill" id="text_<?= $i; ?>_recordtime"></td>
+                  <th class="col-xs-2">累計出席率</th>
+                  <th class="col-xs-2 kodama-fill" id="text_<?= $i; ?>_attendance"></td>
+                </tr>
+                <tr>
+                  <th class="col-xs-2">実施者</th>
+                  <td class="col-xs-2 kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="teacher" id="select_<?= $i; ?>_teacherID">
                         <option class="kodama-select" value="-1">- - - -</option>
                         <?php foreach($recordteacher as $recordteacher1): ?>
@@ -105,8 +87,28 @@
                         <?php endforeach; ?>
                       </select>
                   </td>
-                  <td class="kodama-fill" id="text_<?= $i; ?>_description"></td>
+                  <th class="col-xs-2">日時</th>
+                  <td class="col-xs-2 kodama-fillcontrol">
+                    <div class="form-group kodama-datepicker" id="time_<?= $i; ?>_0011" data-target-input="nearest">
+                      <input type="text" id="time_<?= $i; ?>_interviewtime" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0011" data-toggle="datetimepicker"/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="col-xs-2">出席状況</th>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="5" id="text_<?= $i; ?>_attendancestatus"></td>
+                </tr>
+                <tr>
+                  <th class="col-xs-2">進路</th>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="5" id="text_<?= $i; ?>_course" style="vertical-align: top; height: 100px;"></td>
+                </tr>
+                <tr>
+                  <th class="col-xs-2">その他</th>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="5" id="text_<?= $i; ?>_other" style="vertical-align: top; height: 100px;"></td>
+                </tr>
+                <tr>
                   <td class="kodama-fill" id="text_<?= $i; ?>_ID" hidden="hidden"></td>
+                  <th class="col-xs-12" colspan="6"></th>
                 </tr>
                 <?php endfor; ?>
               </tbody>
@@ -131,14 +133,16 @@
 <script src="../style/js/kodama-table-student-datasave.js"></script>
 <script type="text/javascript">
 var _studentrecord = {
-  'select_feetype': '',
-  'time_paymentdate': '',
-  'select_period': '',
-  'text_moneyamount': '',
-  'time_expirationdate': '',
+  'text_title': '',
+  'select_classID': '',
+  'time_interviewtime': '',
+  'text_attendance': '',
   'select_teacherID': '',
-  'text_description': '',
+  'text_attendancestatus': '',
+  'text_course': '',
+  'text_other': '',
+  'time_recordtime': '',
   'text_ID': '',
 };
-g_records.itemname = 'fee';
+g_records.itemname = 'interview';
 </script>

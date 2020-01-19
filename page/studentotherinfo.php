@@ -8,7 +8,7 @@ require_once( 'frame.php' );
 
 $message = '';
 $ID = '';
-  //学生信息
+//学生信息
 if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) ) {
   $StudentInfoString = $_COOKIE[ 'KODAMA_STUDENT_INFO' ];
   $StudentInfo = json_decode($StudentInfoString);
@@ -44,14 +44,14 @@ if ( $recordcolumn == NULL ) {
 <section class="content">
   <div class="container-fluid">
     <div class="signup-box">
-        <?php
-        if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
-          require_once( '../frame/studentinfo.php' );
-        }
-        ?>
+      <?php
+      if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
+        require_once( '../frame/studentinfo.php' );
+      }
+      ?>
       <div class="card">
         <div class="body">
-          <form id="infoform" method="POST" action="../dataproc/student2_proc.php">
+          <form id="infoform" method="POST" action="../dataproc/student_proc.php">
             <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">
               <?php
               if(empty($ID)) {
@@ -69,33 +69,22 @@ if ( $recordcolumn == NULL ) {
               <?php
               foreach($recordcolumn as $column) {
                 if($column->DATA_TYPE == 'text') {
-                  if($column->COLUMN_NAME == 'residenceperiod') {                    
-                    echo '<li class="input-group">';
-                      echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
-                      echo '<div class="form-line">';
-                      echo '<input value="';
-                        $studentvalue = '';
-                        if(!empty($students)) {
-                          $studentvalue = $students[$column->COLUMN_NAME];
-                        }
-                        echo $studentvalue;
-                        echo '" type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月">';
-                      echo '</div>';
-                    echo '</li>';
-                  } else {
-                    echo '<li class="input-group">';
-                      echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
-                      echo '<div class="form-line">';
-                      echo '<input value="';
-                        $studentvalue = '';
-                        if(!empty($students)) {
-                          $studentvalue = $students[$column->COLUMN_NAME];
-                        }
-                        echo $studentvalue;
-                        echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '">';
-                      echo '</div>';
-                    echo '</li>';
-                  }
+                  echo '<li class="input-group">';
+                    echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
+                    echo '<div class="form-line">';
+                    echo '<input value="';
+                      $studentvalue = '';
+                      if(!empty($students)) {
+                        $studentvalue = $students[$column->COLUMN_NAME];
+                      }
+                      echo $studentvalue;
+                    if($column->COLUMN_NAME == 'residenceperiod') {
+                      echo '" type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月">';
+                    } else {
+                      echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '">';
+                    }
+                    echo '</div>';
+                  echo '</li>';
                 } else if($column->DATA_TYPE == 'date') {
                   echo '<li class="input-group">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
@@ -135,7 +124,7 @@ if ( $recordcolumn == NULL ) {
             </div>
             
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
-            <input type="hidden" name="mod" id="mod" value="update" />
+            <input type="hidden" name="mod" id="mod" value="update2" />
             <input type="hidden" name="ID" id="ID" value="<?= $ID; ?>" />
           </form>
         </div>

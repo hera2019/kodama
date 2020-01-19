@@ -1,15 +1,7 @@
 //最大记录数
-var g_feerecordnum = 12;
-//信息ID
-var _studentfee = {
-  'select_feetype': '',
-  'time_paymentdate': '',
-  'select_period': '',
-  'text_moneyamount': '',
-  'time_expirationdate': '',
-  'select_teacherID': '',
-  'text_description': '',
-  'text_ID': '',
+var g_records = {
+  num: 1,
+  itemname: '',
 };
 
 $(function () {
@@ -21,40 +13,45 @@ $(function () {
 });
 
 $(document).ready(function () {
-  refreshFee();
+  refreshRecord();
 });
 
-function saveFee() {
-  document.getElementById('message').innerHTML = "Saving data...";
-
-  var id = document.getElementById('studentid').innerHTML;
-  saveData(id, _studentfee);
+function newRecord() {
+  g_records.num += 1;
+  $("#recordrow" + g_records.num).removeAttr('hidden');
 }
 
-function refreshFee() {
+function refreshRecord() {
   document.getElementById('message').innerHTML = "Loading data...";
 
   var id = document.getElementById('studentid').innerHTML;
-  postGetData(id, _studentfee);
+  postGetData(id, _studentrecord);
 }
 
-function saveData(id, studentfee) {
+function saveRecord() {
+  document.getElementById('message').innerHTML = "Saving data...";
+
+  var id = document.getElementById('studentid').innerHTML;
+  saveData(id, _studentrecord);
+}
+
+function saveData(id, studentrecord) {
 
   document.getElementById('message').innerHTML = "Saving data...";
   
   let data = {};
   let record = {};
   
-  for(let i=1; i<=g_feerecordnum; i++) {
-    pushRecord(record, studentfee, i);
+  for(let i=1; i<=g_records.num; i++) {
+    pushRecord(record, studentrecord, i);
     data["record" + i] = {};
     $.extend(data["record" + i], record);
   }
   console.log(data);
-  postSaveData(id, JSON.stringify(data));  
+  postSaveData(id, encodeURIComponent(JSON.stringify(data)));
 
-  function pushRecord(data, studentfee, recordindex) {
-    for(var key in studentfee) {
+  function pushRecord(data, studentrecord, recordindex) {
+    for(var key in studentrecord) {
       if(key.search(/text_/) == 0) { //text
         let keyname = key.substring(5);
         if(keyname) {
@@ -118,10 +115,10 @@ function postSaveData(id, postData) {
   $.ajax({
     // 调用jquery的ajax方法  
     type: "POST", // 设置ajax方法提交数据的形式  
-    url: "../dataproc/studentfee_proc.php", // 把数据提交到php
+    url: "../dataproc/studentitemdata_proc.php", // 把数据提交到php
     /* 提交的数据，必须使用key/value的形式，如"key=value"，
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
-    data: "mod=update&studentID=" + id + "&data=" + postData,
+    data: "mod=update" + g_records.itemname + "&studentID=" + id + "&data=" + postData,
     success: function (postdata) {
       // 提交成功后的回调，postdata变量是php输出的内容
       if(kodamafunc.isJsonString(postdata)) {
@@ -134,38 +131,39 @@ function postSaveData(id, postData) {
       }
       
       // reload
-      postGetData(id, _studentfee, true);
+      postGetData(id, _studentrecord, true);
     }
   });
 }
 
-function postGetData(id, studentfee, nomsg=false) {  
-  for(let i=1; i<=g_feerecordnum; i++) {
-    resetRecord(studentfee, i);
+function postGetData(id, studentrecord, nomsg=false) {  
+  for(let i=1; i<=g_records.num; i++) {
+    resetRecord(studentrecord, i);
   }
+  g_records.num = 1;
   // 提交数据函数  
   $.ajax({
     // 调用jquery的ajax方法  
     type: "POST", // 设置ajax方法提交数据的形式  
-    url: "../dataproc/studentfee_proc.php", // 把数据提交到php  
+    url: "../dataproc/studentitemdata_proc.php", // 把数据提交到php  
 
     /* 提交的数据，必须使用key/value的形式，如"key=value"， 
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
-    data: "mod=get&studentID=" + id,
+    data: "mod=get" + g_records.itemname + "&studentID=" + id,
     success: function (postdata) {
       // 提交成功后的回调，postdata变量是php输出的内容
-      setData(postdata, studentfee, nomsg); //遍历元素取数据
+      setData(postdata, studentrecord, nomsg); //遍历元素取数据
     }
   });
 
-  function setData(postdata, studentfee, nomsg) {
+  function setData(postdata, studentrecord, nomsg) {
     //console.log(postdata);
     if(kodamafunc.isJsonString(postdata)) {
       var jsonStr = JSON.parse(postdata);
       if(jsonStr.result == 200 && jsonStr.data) {
         let jsondata = JSON.parse(jsonStr.data);
-        for(let i=1; i<=g_feerecordnum; i++) {
-          setRecord(jsondata['record' + i], studentfee, i);
+        for(let i=1; i<=g_records.num; i++) {
+          setRecord(jsondata['record' + i], studentrecord, i);
         }
       }
       if(jsonStr.message && (jsonStr.result != 200 || !nomsg)) { //save后reload，不显示get成功信息
@@ -176,9 +174,10 @@ function postGetData(id, studentfee, nomsg=false) {
     }
   }
 
-  function setRecord(data, studentfee, recordindex) {
+  function setRecord(data, studentrecord, recordindex) {
     if(data) {
-      for(var key in studentfee) {
+      newRecord();
+      for(var key in studentrecord) {
         if(key.search(/text_/) == 0) { //text
           let keyname = key.substring(5);
           if(keyname && data[keyname]) {
@@ -254,8 +253,8 @@ function postGetData(id, studentfee, nomsg=false) {
     }    
   }
   
-  function resetRecord(studentfee, recordindex) {
-    for(var key in studentfee) {
+  function resetRecord(studentrecord, recordindex) {
+    for(var key in studentrecord) {
       if(key.search(/text_/) == 0) { //text
         let keyname = key.substring(5);
         if(keyname) {

@@ -4,7 +4,8 @@ require_once '../include/include_database.php';
 require_once '../include/include_function.php';
 
 use PDO;
-
+class Attend {
+}
 class Student_Class
 {	
 	protected $connection;
@@ -147,7 +148,31 @@ class Student_Class
       $all = array();
       foreach($record as $record)
       {
-        $all[] = $record;
+        //至今日
+        $attend = new Attend();
+        $sql2 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID';
+        $statement = $this->connection->prepare($sql2);
+        $statement->execute([':ID' => $record->ID]);
+        $record2 = $statement->fetch( PDO::FETCH_OBJ );
+        $attend->attendancebeforeday = '';
+        if(!empty($record2->cl)) {
+          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl);
+        }
+        //前月截止
+        $time = time();
+        $thismonth = date( 'Y-m-01', $time );
+        $sql3 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID AND date<:thismonth';
+        $statement = $this->connection->prepare($sql3);
+        $statement->execute([':ID' => $record->ID, ':thismonth' => $thismonth]);
+        $record3 = $statement->fetch( PDO::FETCH_OBJ );
+        $attend->attendancebeforemonth = '';
+        if(!empty($record3->cl)) {
+          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl);
+        }
+        
+        $obj_merged = (object) array_merge((array)$record, (array)$attend);
+        
+        $all[] = $obj_merged;
       }
       $data = json_encode($all);
 		  return $message;
@@ -174,6 +199,148 @@ class Student_Class
     
     //批量删除DELETE FROM student WHERE ID IN (640,634,633)；
     $sql = 'DELETE FROM student WHERE ID IN ' . $studentIDs;
+    //console_log($sql);
+    $statement =  $this->connection->prepare($sql);
+    $statement->execute();
+    $count = $statement->rowCount();
+    if($count > 0) {
+      $message = '';
+    }
+    else {
+      $message = 'No record has been deleted!';
+      ShowErrorCode($statement);
+    }
+		
+		return $message;
+	}
+  
+	//添加一条记录
+	public function AddStudent2($ID, $sqlarray)
+	{
+		$message = 'Add record failed!';
+		if(empty($sqlarray))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    $title = '';
+    $context = '';
+    foreach($sqlarray as $key => $value) {
+      $title .= $key . ',';
+      if(($key == 'passportexpiration'
+         || strstr($key, 'date'))
+        && empty($value)) {
+        $context .= 'null,';
+      } else {
+        $context .= '"' . $value . '"' . ',';
+      }
+    }
+    if(!empty($title) && !empty($context)) {
+      $title = substr($title, 0, -1); //去掉最后的逗号
+      $context = substr($context, 0, -1); //去掉最后的逗号
+    } else {
+      $message = '';//'Param error 2!';
+      return $message;
+    }
+    
+    $sql = 'INSERT INTO student2('. $title . ') VALUES('. $context . ')';
+    //console_log($sql);
+    $statement =  $this->connection->prepare($sql);
+    if ($statement->execute()) {
+      $message = '';
+    }
+    else {
+      $message = 'Add record failed!';
+      //$message .= ShowErrorCode($statement);
+    }
+    
+		return $message;
+	}
+
+	//更新一条记录
+	public function UpdateStudent2($ID, $sqlarray)
+	{
+		$message = 'update record failed!';
+		if(empty($ID) || empty($sqlarray))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    //数据表 student
+    //查询ID是否存在，不存在则返回错误
+    $sql = "SELECT ID from student2 WHERE ID = :ID";
+    $statement = $this->connection->prepare($sql);
+    $statement->execute([':ID' => $ID]);
+    $record = $statement->fetch( PDO::FETCH_OBJ );
+    if ( $record == NULL )
+    {
+      $message = $this->AddStudent2($ID, $sqlarray);
+      //$message = 'This record is not exist!';
+      return $message;
+    }
+    
+    $context = '';
+    foreach($sqlarray as $key => $value) {
+      if(($key == 'passportexpiration'
+         || strstr($key, 'date'))
+         && empty($value)) {
+        $context .= $key . '=null,';
+      } else {
+        $context .= $key . '="' . $value . '"' . ',';
+      }
+    }
+    if(!empty($context)) {
+      $context = substr($context, 0, -1); //去掉最后的逗号
+    } else {
+      $message = '';//'Param error 2!';
+      return $message;
+    }
+    
+    $sql = 'UPDATE student2 SET ' . $context .' WHERE ID=:ID';
+    $statement =  $this->connection->prepare($sql);
+    if ($statement->execute([':ID' => $ID])) {
+      $message = '';
+    }
+    else {
+      $message = 'Update record failed!';
+      ShowErrorCode($statement);
+    }
+		
+		return $message;
+	}
+  
+	//获取学生信息
+	public function GetStudent2($studentID, &$students)
+	{
+		if(!empty($studentID))
+		{
+      $sql = 'SELECT * FROM student2 WHERE ID=:ID';
+      $statement = $this->connection->prepare( $sql );
+      $statement->execute( [ ':ID' => $studentID ] );
+      $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
+      if ( $recordstudent != NULL ) {
+        $students = get_object_vars($recordstudent);
+        return '';
+      }
+      return 'Student base info not found. ';
+    }
+		return 'Student ID not found. ';
+	}
+  
+	//删除记录
+	public function DeleteStudent2($studentIDs)
+	{
+		$message = 'Delete record failed!';
+		if(empty($studentIDs))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    //批量删除DELETE FROM student WHERE ID IN (640,634,633)；
+    $sql = 'DELETE FROM student2 WHERE ID IN ' . $studentIDs;
     //console_log($sql);
     $statement =  $this->connection->prepare($sql);
     $statement->execute();

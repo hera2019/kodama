@@ -1,14 +1,14 @@
 <?php 
 // check param
-$ID = '';
+$studentID = '';
 if(isset($_GET['ID']) && !empty($_GET['ID'])) {
-  $ID = $_GET['ID'];
+  $studentID = $_GET['ID'];
 } elseif ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) ) {
   $StudentInfoString = $_COOKIE[ 'KODAMA_STUDENT_INFO' ];
   $StudentInfo = json_decode($StudentInfoString);
-  $ID = $StudentInfo->studentid;
+  $studentID = $StudentInfo->studentid;
 }
-if(empty($ID)) :?>
+if(empty($studentID)) :?>
 <?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php require_once( 'frame.php' ); ?>
 <section class="content">
@@ -100,7 +100,7 @@ if (@file_exists(dirname(__FILE__).'/TCPDF/examples/lang/jpn.php')) {
 // set default font subsetting mode
 $pdf->setFontSubsetting(true);
 // set font
-$pdf->SetFont('droidsansfallback', '', 10);	//完美显示汉字：cid0cs//droidsansfallback//stsongstdlight 
+$pdf->SetFont('droidsansfallback', '', 10.5);	//完美显示汉字：cid0cs//droidsansfallback//stsongstdlight 
 																	//只能部分显示汉字：hysmyeongjostdmedium//kozgopromedium//kozminproregul//msungstdlight//
 // add a page
 //$pdf->AddPage();
@@ -132,38 +132,46 @@ $textarea = array(
   'passportnumber' => new TextArea(47.1, 99.4, 73.9, 107.4),
   'residencenumber' => new TextArea(109.5, 99.4, 139, 107.4),
   'visapermitnumber' => new TextArea(167, 99.4, 196.5, 107.4),
+  'scoretalk' => new TextArea(37.3, 195.8, 59.6, 203.8),
+  'scoreword' => new TextArea(60.1, 195.8, 82.4, 203.8),
+  'scoregrammar' => new TextArea(82.9, 195.8, 105.2, 203.8),
+  'scoreread' => new TextArea(105.8, 195.8, 128, 203.8),
+  'scorewrite' => new TextArea(128.6, 195.8, 150.8, 203.8),
+  'scorelisten' => new TextArea(151.4, 195.8, 173.7, 203.8),
+  'scoresynthesis' => new TextArea(174.2, 195.8, 196.5, 203.8),
+  'description' => new TextArea(37.3, 212.9, 196.5, 244.3, '', true, 'L', 'T'),
+  'schoolinfo' => new TextArea(20, 253, 190, 275, '', true, 'L', 'T'),
 );
 
 //数据库操作
 $sql = 'SELECT * FROM student WHERE ID=:ID';
 $statement = $connection->prepare($sql);
-$statement->execute([':ID' => $ID ]);
+$statement->execute([':ID' => $studentID ]);
 $student = $statement->fetch(PDO::FETCH_OBJ);
 $sql = 'SELECT *, s.ID AS ID, i.typename AS residencename, i2.typename AS coursename FROM student2 AS s LEFT JOIN idconfig AS i ON i.type="residence" AND i.typeID=s.residence LEFT JOIN idconfig AS i2 ON i2.type="course" AND i2.typeID=s.course WHERE s.ID=:ID';
 $statement = $connection->prepare($sql);
-$statement->execute([':ID' => $ID ]);
+$statement->execute([':ID' => $studentID ]);
 $student2 = $statement->fetch(PDO::FETCH_OBJ);
+$sql = 'SELECT * FROM studentscore WHERE studentID=:ID ORDER by ID DESC LIMIT 1';
+$statement = $connection->prepare($sql);
+$statement->execute([':ID' => $studentID ]);
+$studentscore = $statement->fetch(PDO::FETCH_OBJ);
 foreach($textarea as $key => $textobj) {
-  $txt = $student->nationalityregion;
   if($key == 'No') {
-  } elseif($key == 'studentnumber') {
+  } elseif($key == 'studentnumber' && !empty($student)) {
     $textobj->text = $student->studentnumber;
   } elseif($key == 'period') {
     $time = time();
-    $sql = 'SELECT classstartdate, graduationdate, withdrawaldate FROM student2 WHERE ID=:ID';
-    $statement = $connection->prepare($sql);
-    $statement->execute( [ ':ID' => $ID ] );
-    $recordclassstartdate = $statement->fetch( PDO::FETCH_OBJ );
     $startdate = $time - 2*365*24*3600;
     $enddate = $time;
-    if(!empty($recordclassstartdate)) {
-      $startdate = strtotime($recordclassstartdate->classstartdate);
+    if(!empty($student2)) {
+      $startdate = strtotime($student2->classstartdate);
       if(empty($startdate) || $time < $startdate) {
         $startdate = $time;
       }
-      $enddate = strtotime($recordclassstartdate->graduationdate);
+      $enddate = strtotime($student2->graduationdate);
       if(empty($enddate)) {
-        $enddate = strtotime($recordclassstartdate->withdrawaldate);
+        $enddate = strtotime($student2->withdrawaldate);
         if(empty($enddate)) {
           $enddate = $time;
         } elseif($time < $enddate) {
@@ -174,30 +182,28 @@ foreach($textarea as $key => $textobj) {
       }
     }
     $textobj->text = date('Y年m月', $startdate) . ' 至 ' . date('Y年m月', $enddate);
-  } elseif($key == 'name') {
+  } elseif($key == 'name' && !empty($student)) {
     $textobj->text = $student->lastname . " " . $student->firstname;
-  } elseif($key == 'nationalityregion') {
+  } elseif($key == 'nationalityregion' && !empty($student)) {
     $textobj->text = $student->nationalityregion;
   } elseif($key == 'builddate') {
     $textobj->text = date('Y年m月d日', time());
-  } elseif($key == 'furigananame') {
+  } elseif($key == 'furigananame' && !empty($student)) {
     $textobj->text = $student->lastnamefurigana . " " . $student->firstnamefurigana;
-  } elseif($key == 'alphabetname') {
+  } elseif($key == 'alphabetname' && !empty($student)) {
     $textobj->text = $student->lastnamealphabet . " " . $student->firstnamealphabet;
-  } elseif($key == 'genderfemale') {
+  } elseif($key == 'genderfemale' && !empty($student)) {
     if($student->genderfemale == 1) {
       $textobj->text = '女';
     } else if($student->genderfemale == 0) {
       $textobj->text = '男';
     }
-  } elseif($key == 'birthday') {
-    if(!empty($student->birthday)) {
-      $textobj->text = date('Y年m月d日', strtotime($student->birthday));
-    }
+  } elseif($key == 'birthday' && !empty($student)) {
+    $textobj->Date($student->birthday);
   } elseif($key == 'postcode') {
     $sql = 'SELECT data FROM studentdata WHERE fileID=4 AND studentID=:ID';
     $statement = $connection->prepare($sql);
-    $statement->execute( [ ':ID' => $ID ] );
+    $statement->execute( [ ':ID' => $studentID ] );
     $recordstudentdata4 = $statement->fetch( PDO::FETCH_OBJ );
     if(!empty($recordstudentdata4) && !empty($recordstudentdata4->data)) {
       $objstudentdata4 = json_decode($recordstudentdata4->data);
@@ -209,16 +215,16 @@ foreach($textarea as $key => $textobj) {
     } else {
       $sql = 'SELECT data FROM studentdata WHERE fileID=4 AND studentID=:ID';
       $statement = $connection->prepare($sql);
-      $statement->execute( [ ':ID' => $ID ] );
+      $statement->execute( [ ':ID' => $studentID ] );
       $recordstudentdata4 = $statement->fetch( PDO::FETCH_OBJ );
       if(!empty($recordstudentdata4) && !empty($recordstudentdata4->data)) {
         $objstudentdata4 = json_decode($recordstudentdata4->data);
         $textobj->text = $objstudentdata4->text_address;
       }
     }
-  } elseif($key == 'residence') {
+  } elseif($key == 'residence' && !empty($student2)) {
     $textobj->text = $student2->residencename;
-  } elseif($key == 'residenceperiod') {
+  } elseif($key == 'residenceperiod' && !empty($student2)) {
     $str = $student2->residenceperiod;
     $str1 = explode('年', $str, 2);
     $stryear = $str1[0];
@@ -236,22 +242,51 @@ foreach($textarea as $key => $textobj) {
       $strmonth = '';
     }
     $textobj->text = $stryear . $strmonth;
-  } elseif($key == 'residencedate') {
-    $textobj->text = date('Y年m月d日', strtotime($student2->residencedate));
-  } elseif($key == 'course') {
+  } elseif($key == 'residencedate' && !empty($student2)) {
+    $textobj->Date($student2->residencedate);
+  } elseif($key == 'course' && !empty($student2)) {
     $textobj->text = $student2->coursename;
-  } elseif($key == 'japanentrydate') {
-    $textobj->text = date('Y年m月d日', strtotime($student2->japanentrydate));
-  } elseif($key == 'schoolentrydate') {
-    $textobj->text = date('Y年m月d日', strtotime($student2->schoolentrydate));
-  } elseif($key == 'scheduledcompletiondate') {
-    $textobj->text = date('Y年m月d日', strtotime($student2->scheduledcompletiondate));
-  } elseif($key == 'passportnumber') {
+  } elseif($key == 'japanentrydate' && !empty($student2)) {
+    $textobj->Date($student2->japanentrydate);
+  } elseif($key == 'schoolentrydate' && !empty($student2)) {
+    $textobj->Date($student2->schoolentrydate);
+  } elseif($key == 'scheduledcompletiondate' && !empty($student2)) {
+    $textobj->Date($student2->scheduledcompletiondate);
+  } elseif($key == 'passportnumber' && !empty($student2)) {
     $textobj->text = $student2->passportnumber;
-  } elseif($key == 'residencenumber') {
+  } elseif($key == 'residencenumber' && !empty($student2)) {
     $textobj->text = $student2->residencenumber;
-  } elseif($key == 'visapermitnumber') {
+  } elseif($key == 'visapermitnumber' && !empty($student2)) {
     $textobj->text = $student2->visapermitnumber;
+  } elseif($key == 'scoretalk' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scoretalk;
+  } elseif($key == 'scoreword' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scoreword;
+  } elseif($key == 'scoregrammar' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scoregrammar;
+  } elseif($key == 'scoreread' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scoreread;
+  } elseif($key == 'scorewrite' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scorewrite;
+  } elseif($key == 'scorelisten' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scorelisten;
+  } elseif($key == 'scoresynthesis' && !empty($studentscore)) {
+    $textobj->text = $studentscore->scoresynthesis;
+  } elseif($key == 'description' && !empty($student)) {
+    $textobj->text = $student->description;
+  } elseif($key == 'schoolinfo') {
+    $sql = 'SELECT * FROM school';
+    $statement = $connection->prepare($sql);
+    $statement->execute();
+    $schoolinfo = $statement->fetch(PDO::FETCH_OBJ);
+    $pdf->SetFont('droidsansfallback', '', 14);
+    $pdf->SetXY($textobj->left, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $schoolinfo->name, 0, 0, $textobj->align, 0, '', 0, false, 'T', 'T');
+    $pdf->SetFont('droidsansfallback', '', 10.5);
+    $textobj->top = $textobj->top + 7;
+    $textobj->text = $schoolinfo->postcode;
+    $textobj->text .= "\n" . $schoolinfo->address;
+    $textobj->text .= "\n" . $schoolinfo->contact;
   }
   
   //write text
@@ -266,7 +301,141 @@ foreach($textarea as $key => $textobj) {
   }
 }
 
+//write attend info
+require_once( '../attend/getstudentmonthattand.php' );
+$attendarea = array(
+  'year1' => new TextArea(14.5, 117.7, 40.6, 125.7),
+  'year2' => new TextArea(14.5, 143.3, 40.6, 151.3),
+  'month1' => new TextArea(41.2, 117.7, 52.1, 125.7),
+  'month2' => new TextArea(41.2, 143.3, 52.1, 151.3),
+  'class1' => new TextArea(41.2, 126.2, 52.1, 134.2),
+  'class2' => new TextArea(41.2, 151.8, 52.1, 159.8),
+  'attend1' => new TextArea(41.2, 134.8, 52.1, 142.8),
+  'attend2' => new TextArea(41.2, 160.4, 52.1, 168.4),
+  'classall1' => new TextArea(179.5, 126.2, 196.5, 134.2),
+  'classall2' => new TextArea(179.5, 151.8, 196.5, 159.8),
+  'attendall1' => new TextArea(179.5, 134.8, 196.5, 142.8),
+  'attendall2' => new TextArea(179.5, 160.4, 196.5, 168.4),
+  'percent' => new TextArea(168, 170.8, 178, 174.6),
+);
+
+//计算全部课时
+$alldaywhole = 0;
+//计算每日签到
+$attenddaywhole = 0;
+$absentdaywhole = 0;
+$latedaywhole = 0;
+for($i=0; $i<2; $i++) {
+  $year = $year1 + $i;
+  $textobj = $attendarea['year' . ($i+1)];
+  $textobj->text = $year . '年';
+  $pdf->SetXY($textobj->left, $textobj->top);
+  $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+
+  //计算全部课时
+  $alldayoneyear = 0;
+  //计算每日签到
+  $attenddayoneyear = 0;
+  $absentdayoneyear = 0;
+  $latedayoneyear = 0;
+  for($j=0; $j<12; $j++) {
+    $textobj = $attendarea['month' . ($i+1)];
+    $month = $month1 + $j;
+    if($month > 12) {
+      $month = $month - 12;
+      $year = $year1 + $i + 1;
+    }
+    $textobj->text = $month;
+    $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+
+    //计算全部课时
+    $allday = 0;
+    //计算每日签到
+    $attendday = 0;
+    $absentday = 0;
+    $lateday = 0;
+    for($k=1; $k<=31; $k++) {
+      $property = 0;
+      $propertyname = "";
+      for($l=1; $l<=4; $l++) {
+        $propertykey = 'd' . $k . 'c' . $l;
+
+        //每日上课课时
+        if(isset($classrec[$year]) && isset($classrec[$year][$month]) && isset($classrec[$year][$month][$propertykey])) {
+          //$echo .= $year . ' ' . $month . ' ' . $propertykey . ' ' . $classrec[$year][$month][$propertykey] . " property 2 <br>";
+          if($classrec[$year][$month][$propertykey] == 1) {
+            $allday = $allday + 1;
+            if(!isset($attendrec[$year]) || !isset($attendrec[$year][$month]) || !isset($attendrec[$year][$month][$propertykey])) {
+              $attendrec[$year][$month][$propertykey] = 2;
+            }
+
+            //每日出勤情况
+            if(isset($attendrec[$year]) && isset($attendrec[$year][$month]) && isset($attendrec[$year][$month][$propertykey])) {
+              $property1 = $attendrec[$year][$month][$propertykey];
+              $arraypriority = array(1=>2, 5, 4, 3, 7, 6, 1);
+              $priority = array_search($property, $arraypriority);
+              $priority1 = array_search($property1, $arraypriority);
+              if($priority < $priority1) {
+                $property = $property1;
+              }
+            }
+          }
+        }
+      }
+      $propertyname = $arrayproperty[$property];
+      if($property == 1) { //'出'
+        $attendday = $attendday + 1;
+      } else if($property == 2) { //'欠'
+        $absentday = $absentday + 1;
+      } else if($property == 6) { //'遅'
+        $lateday = $lateday + 1;
+      }
+    }
+
+    $attendpercent = "";
+    if($allday > 0) {
+      $attendpercent = round(($attendday + $lateday) / $allday * 100) . "%";
+    }
+    
+    $textobj = $attendarea['class' . ($i+1)];
+    $textobj->text = $allday * 4;
+    $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+    
+    $textobj = $attendarea['attend' . ($i+1)];
+    $textobj->text = ($attendday + $lateday) * 4;
+    $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+    
+    $alldayoneyear = $alldayoneyear + $allday;
+    $attenddayoneyear = $attenddayoneyear + $attendday;
+    $absentdayoneyear = $absentdayoneyear + $absentday;
+    $latedayoneyear = $latedayoneyear + $lateday;
+  }
+  $textobj = $attendarea['classall' . ($i+1)];
+  $textobj->text = $alldayoneyear * 4;
+  $pdf->SetXY($textobj->left, $textobj->top);
+  $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+
+  $textobj = $attendarea['attendall' . ($i+1)];
+  $textobj->text = ($attenddayoneyear + $latedayoneyear) * 4;
+  $pdf->SetXY($textobj->left, $textobj->top);
+  $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+
+  $alldaywhole = $alldaywhole + $alldayoneyear;
+  $attenddaywhole = $attenddaywhole + $attenddayoneyear;
+  $absentdaywhole = $absentdaywhole + $absentdayoneyear;
+  $latedaywhole = $latedaywhole + $latedayoneyear;
+}
+
+$textobj = $attendarea['percent'];
+$textobj->text = round(($attenddaywhole + $latedaywhole) / $alldaywhole * 100) . "%";
+$pdf->SetXY($textobj->left, $textobj->top);
+$pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+
 // ---------------------------------------------------------
+//PDF filename build
 $timetxt = date('Ymd_His', time());
 $outfilename = 'PDF001_' . $timetxt . '.pdf';
 ob_end_clean();

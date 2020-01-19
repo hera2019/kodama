@@ -66,6 +66,29 @@ if (!empty($mod))
       }
     }
   }
+  else if($mod == 'updatedescription')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $description = GetParam('description');
+      $sqlarray = array();
+      $sqlarray['description'] = $description;
+      if(!empty($sqlarray))
+      {
+        $classdata = new Student_Class($connection);
+        $message = $classdata->UpdateStudent($ID, $sqlarray);
+
+        if($message == '')
+        {
+          $rtinfo->result = 200;
+          $rtinfo->message = "Update student description successfully!";
+          echo json_encode($rtinfo);
+          return $message;
+        }
+      }
+    }
+  }
   else if($mod == 'query')
   {
     $Param = GetParam('param');
@@ -117,6 +140,33 @@ if (!empty($mod))
         {
           $rtinfo->result = 200;
           $rtinfo->message = "Delete student successfully!";
+          echo json_encode($rtinfo);
+          return $message;
+        }
+      }
+    }
+  }
+  else if($mod == 'update2')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $sqlarray = array();
+      foreach($_POST as $key => $value) {
+        if($key != 'mod') {
+          $sqlarray[$key] = $value;
+        }
+      }    
+
+      if(!empty($sqlarray))
+      {
+        $classdata = new Student_Class($connection);
+        $message = $classdata->UpdateStudent2($ID, $sqlarray);
+
+        if($message == '')
+        {
+          $rtinfo->result = 200;
+          $rtinfo->message = "Update student info successfully!";
           echo json_encode($rtinfo);
           return $message;
         }

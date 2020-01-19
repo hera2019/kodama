@@ -63,7 +63,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
           <th class="col-xs-1" colspan="1">性别</th>
           <td class="col-xs-1" colspan="1" id="genderfemale"><?= isset($StudentInfo) ? $StudentInfo->genderfemale : ''; ?></td>
           <th class="col-xs-1" colspan="1">累计出席率(昨日まで)</th>
-          <td class="col-xs-1" colspan="1" id="attendancebeforeday"></td>
+          <td class="col-xs-1" colspan="1" id="attendancebeforeday"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ''; ?></td>
         </tr>
         <tr>
           <th class="col-xs-1" colspan="1">母国语(姓・名)</th>
@@ -71,7 +71,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
           <th class="col-xs-1" colspan="1">携帶電話番号</th>
           <td class="col-xs-1" colspan="1" id="phonenumber"><?= isset($StudentInfo) ? $StudentInfo->phonenumber : ''; ?></td>
           <th class="col-xs-1" colspan="1">累计出席率(前月まで)</th>
-          <td class="col-xs-1" colspan="1" id="attendancebeforemonth"></td>
+          <td class="col-xs-1" colspan="1" id="attendancebeforemonth"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforemonth : ''; ?></td>
         </tr>
         <tr>
           <th class="col-xs-1" colspan="1">要注意事項</th>

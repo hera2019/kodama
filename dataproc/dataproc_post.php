@@ -3,8 +3,6 @@ require_once 'class_data.php';
 use NS_Kodama_DB\Class_Data;
 require_once 'student_class.php';
 use NS_Kodama_DB\Student_Class;
-require_once 'student2_class.php';
-use NS_Kodama_DB\Student2_Class;
 
 $message = 'Param error! Do you choose a student first?';
 $mod = GetParam('mod');
@@ -37,7 +35,7 @@ if (!empty($mod) && !empty($studentID) && !empty($fileID))
       if($dataobj && $dataobj->student && $dataobj->studentdata) {
         $studentclass = new Student_Class($connection);
         $studentmsg = $studentclass->UpdateStudent($studentID, $dataobj->student);
-        $studentclass2 = new Student2_Class($connection);
+        $studentclass2 = new Student_Class($connection);
         $studentmsg2 = $studentclass2->UpdateStudent2($studentID, $dataobj->student2);
         $classdata = new Class_Data($connection);
         $message = $classdata->UpdateData($studentID, $fileID, json_encode($dataobj->studentdata));
@@ -58,7 +56,7 @@ if (!empty($mod) && !empty($studentID) && !empty($fileID))
     $students2 = '';
     $studentclass = new Student_Class($connection);
     $studentmsg = $studentclass->GetStudent($studentID, $students);
-    $studentclass2 = new Student2_Class($connection);
+    $studentclass2 = new Student_Class($connection);
     $studentmsg2 = $studentclass2->GetStudent2($studentID, $students2);
     $classdata = new Class_Data($connection);
     $message = $classdata->GetData($studentID, $fileID, $data);

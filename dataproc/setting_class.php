@@ -55,8 +55,8 @@ class Setting_Class
       $time1 = $sqlarray['time' . $i . '1'];
       $time2 = $sqlarray['time' . $i . '2'];
       if(!empty($time1) && !empty($time2)) {
-        $minutes = (strtotime($time2) - strtotime($time1)) / 60;
-        $context .= 'minutes' . $i . '="' . $minutes . '"' . ',';
+        $lessons = floor((strtotime($time2) - strtotime($time1)) / 60 / 50);//假设40-50分钟一节课，休息10分钟
+        $context .= 'lessons' . $i . '="' . $lessons . '"' . ',';
       }
     }
     if(!empty($context)) {

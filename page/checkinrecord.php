@@ -105,16 +105,16 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
                     <th style="width: 7%;">学籍番号</th>
                     <th style="width: 5%;">氏名</th>
                     <th style="width: 5%;">クラス名</th>
-                    <th style="width: 7%;">時間11</th>
-                    <th style="width: 7%;">時間12</th>
-                    <th style="width: 7%;">時間21</th>
-                    <th style="width: 7%;">時間22</th>
-                    <th style="width: 7%;">時間31</th>
-                    <th style="width: 7%;">時間32</th>
-                    <th style="width: 7%;">時間41</th>
-                    <th style="width: 7%;">時間42</th>
+                    <th style="width: 7%;">日時11</th>
+                    <th style="width: 7%;">日時12</th>
+                    <th style="width: 7%;">日時21</th>
+                    <th style="width: 7%;">日時22</th>
+                    <th style="width: 7%;">日時31</th>
+                    <th style="width: 7%;">日時32</th>
+                    <th style="width: 7%;">日時41</th>
+                    <th style="width: 7%;">日時42</th>
                     <th style="width: 5%;">屬性</th>
-                    <th style="width: 7%;">記錄時間</th>
+                    <th style="width: 7%;">記錄日時</th>
                     <th style="width: 5%;">設備</th>
                     <th style="width: 5%;">生成する</th>
                   </tr>
@@ -130,16 +130,16 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
                     <th>学籍番号</th>
                     <th>氏名</th>
                     <th>クラス名</th>
-                    <th>時間11</th>
-                    <th>時間12</th>
-                    <th>時間21</th>
-                    <th>時間22</th>
-                    <th>時間31</th>
-                    <th>時間32</th>
-                    <th>時間41</th>
-                    <th>時間42</th>
+                    <th>日時11</th>
+                    <th>日時12</th>
+                    <th>日時21</th>
+                    <th>日時22</th>
+                    <th>日時31</th>
+                    <th>日時32</th>
+                    <th>日時41</th>
+                    <th>日時42</th>
                     <th>屬性</th>
-                    <th>記錄時間</th>
+                    <th>記錄日時</th>
                     <th>設備</th>
                     <th>生成する</th>
                   </tr>

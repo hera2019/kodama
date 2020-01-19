@@ -20,6 +20,10 @@ require_once( 'frame.php' );
                 <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>
                 <div class="kodama-menu-info"><h4>Build</h4></div>
               </a></li>
+              <li><a href="../attend/situation_rebuildall.php">
+                <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>
+                <div class="kodama-menu-info"><h4>Rebuild All</h4></div>
+              </a></li>
               <li><a href="javascript:void(0);" onclick="setClassProperty(1);">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">person</i> </div>
                 <div class="kodama-menu-info"><h4>置為:授業</h4></div>
@@ -53,7 +57,7 @@ require_once( 'frame.php' );
                     <th class="col-xs-1">クラス索引</th>
                     <th class="col-xs-2">チェックイン率</th>
                     <th class="col-xs-2">クラス属性</th>
-                    <th class="col-xs-2">記録時間</th>
+                    <th class="col-xs-2">記録日時</th>
                     <th class="col-xs-2">生成する</th>
                   </tr>
                 </thead>
