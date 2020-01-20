@@ -51,6 +51,11 @@ function saveData(id, studentrecord) {
   postSaveData(id, encodeURIComponent(JSON.stringify(data)));
 
   function pushRecord(data, studentrecord, recordindex) {
+    function first(p) { // get first key
+      for(var i in p)
+        return i;
+    }
+    var first_key = first(studentrecord);
     for(var key in studentrecord) {
       if(key.search(/text_/) == 0) { //text
         let keyname = key.substring(5);
@@ -66,6 +71,20 @@ function saveData(id, studentrecord) {
           let el = document.getElementById('select_' + recordindex + '_' + keyname);
           if(el) {
             data[keyname] = el.value;
+            if(data[keyname] == '' && first_key != key) {
+              data[keyname] = '-1';
+            }
+            if(data[keyname] == '-1' && first_key == key) {
+              data[keyname] = '';
+            }
+          }
+        }
+      } else if(key.search(/selecttext_/) == 0) { //select
+        let keyname = key.substring(11);
+        if(keyname) {
+          let el = document.getElementById('selecttext_' + recordindex + '_' + keyname);
+          if(el) {
+            data[keyname] = el.value;
           }
         }
       } else if(key.search(/time_/) == 0) { //time
@@ -74,6 +93,9 @@ function saveData(id, studentrecord) {
           let el = document.getElementById('time_' + recordindex + '_' + keyname);
           if(el) {
             data[keyname] = el.value;
+            if(data[keyname] == '' && first_key != key) {
+              data[keyname] = null;
+            }
           }
         }
       } else if(key.search(/photo_/) == 0) { //photo
@@ -103,6 +125,9 @@ function saveData(id, studentrecord) {
           let el = document.getElementById('checkbox_' + recordindex + '_' + keyname);
           if(el) {
             data[keyname] = el.checked;
+            if(data[keyname] == '' && first_key != key) {
+              data[keyname] = false;
+            }
           }
         }
       }
@@ -118,7 +143,7 @@ function postSaveData(id, postData) {
     url: "../dataproc/studentitemdata_proc.php", // 把数据提交到php
     /* 提交的数据，必须使用key/value的形式，如"key=value"，
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
-    data: "mod=update" + g_records.itemname + "&studentID=" + id + "&data=" + postData,
+    data: "mod=update&item=" + g_records.itemname + "&studentID=" + id + "&data=" + postData,
     success: function (postdata) {
       // 提交成功后的回调，postdata变量是php输出的内容
       if(kodamafunc.isJsonString(postdata)) {
@@ -139,6 +164,9 @@ function postSaveData(id, postData) {
 function postGetData(id, studentrecord, nomsg=false) {  
   for(let i=1; i<=g_records.num; i++) {
     resetRecord(studentrecord, i);
+    if(i != 1) {
+      $("#recordrow" + i).attr('hidden', 'hidden');
+    }
   }
   g_records.num = 1;
   // 提交数据函数  
@@ -149,7 +177,7 @@ function postGetData(id, studentrecord, nomsg=false) {
 
     /* 提交的数据，必须使用key/value的形式，如"key=value"， 
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
-    data: "mod=get" + g_records.itemname + "&studentID=" + id,
+    data: "mod=get&item=" + g_records.itemname + "&studentID=" + id,
     success: function (postdata) {
       // 提交成功后的回调，postdata变量是php输出的内容
       setData(postdata, studentrecord, nomsg); //遍历元素取数据
@@ -207,6 +235,14 @@ function postGetData(id, studentrecord, nomsg=false) {
               el.value = data[keyname];
             }
           }
+        } else if(key.search(/selecttext_/) == 0) { //select
+          let keyname = key.substring(11);
+          if(keyname && data[keyname]) {
+            let el = document.getElementById('selecttext_' + recordindex + '_' + keyname);
+            if(el) {
+              el.value = data[keyname];
+            }
+          }
         } else if(key.search(/time_/) == 0) { //time
           let keyname = key.substring(5);
           if(keyname && data[keyname]) {
@@ -260,7 +296,7 @@ function postGetData(id, studentrecord, nomsg=false) {
         if(keyname) {
           let el = document.getElementById('text_' + recordindex + '_' + keyname);
           if(el) {
-            el.innerHTML = '';
+            el.innerHTML = studentrecord[key];
           }
         }
       } else if(key.search(/select_/) == 0) { //select
@@ -268,7 +304,15 @@ function postGetData(id, studentrecord, nomsg=false) {
         if(keyname) {
           let el = document.getElementById('select_' + recordindex + '_' + keyname);
           if(el) {
-            el.value = '';
+            el.value = studentrecord[key];
+          }
+        }
+      } else if(key.search(/selecttext_/) == 0) { //select
+        let keyname = key.substring(11);
+        if(keyname) {
+          let el = document.getElementById('selecttext_' + recordindex + '_' + keyname);
+          if(el) {
+            el.value = studentrecord[key];
           }
         }
       } else if(key.search(/time_/) == 0) { //time
@@ -276,10 +320,29 @@ function postGetData(id, studentrecord, nomsg=false) {
         if(keyname) {
           let el = document.getElementById('time_' + recordindex + '_' + keyname);
           if(el) {
-            el.value = '';
+            el.value = studentrecord[key];
           } 
         }
       }
     }
   }
+}
+
+Date.prototype.Format = function(formatStr) {
+var str = formatStr;
+var Week = ['日','一','二','三','四','五','六'];
+str=str.replace(/yyyy|YYYY/,this.getFullYear());
+str=str.replace(/yy|YY/,(this.getYear() % 100)>9?(this.getYear() % 100).toString():'0' + (this.getYear() % 100));
+str=str.replace(/MM/,this.getMonth()>=9?(this.getMonth()+1).toString():'0' + (this.getMonth()+1));
+str=str.replace(/M/g,this.getMonth()+1);
+str=str.replace(/w|W/g,Week[this.getDay()]);
+str=str.replace(/dd|DD/,this.getDate()>9?this.getDate().toString():'0' + this.getDate());
+str=str.replace(/d|D/g,this.getDate());
+str=str.replace(/hh|HH/,this.getHours()>9?this.getHours().toString():'0' + this.getHours());
+str=str.replace(/h|H/g,this.getHours());
+str=str.replace(/mm/,this.getMinutes()>9?this.getMinutes().toString():'0' + this.getMinutes());
+str=str.replace(/m/g,this.getMinutes());
+str=str.replace(/ss|SS/,this.getSeconds()>9?this.getSeconds().toString():'0' + this.getSeconds());
+str=str.replace(/s|S/g,this.getSeconds());
+return str;
 }

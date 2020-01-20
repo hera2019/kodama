@@ -83,7 +83,7 @@
                     </div>
                   </td>
                   <td class="kodama-fillcontrol" style="padding: 0px 10px;">                    
-                    <select class="kodama-select kodama-editable-select" name="period" id="select_<?= $i; ?>_period">
+                    <select class="kodama-select kodama-editable-select" name="period" id="selecttext_<?= $i; ?>_period">
                       <option class="kodama-select" value="二年">二年</option>
                       <option class="kodama-select" value="一年">一年</option>
                       <option class="kodama-select" value="6ヶ月">6ヶ月</option>
@@ -133,7 +133,7 @@
 var _studentrecord = {
   'select_feetype': '',
   'time_paymentdate': '',
-  'select_period': '',
+  'selecttext_period': '',
   'text_moneyamount': '',
   'time_expirationdate': '',
   'select_teacherID': '',

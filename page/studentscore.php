@@ -92,7 +92,7 @@ if ( $recordcolumn == NULL ) {
                       echo '</td>';
                     } else {
                       echo '<td class="kodama-fillcontrol" style="padding: 0px 10px;">';
-                        echo '<select class="kodama-select kodama-editable-select" name="score" id="select_' . $i . '_' . $column->COLUMN_NAME . '">';
+                        echo '<select class="kodama-select kodama-editable-select" name="score" id="selecttext_' . $i . '_' . $column->COLUMN_NAME . '">';
                           echo '<option class="kodama-select" value="A+">A+</option>';
                           echo '<option class="kodama-select" value="A">A</option>';
                           echo '<option class="kodama-select" value="A-">A-</option>';
@@ -137,13 +137,13 @@ if ( $recordcolumn == NULL ) {
 //信息ID
 var _studentrecord = {
   'text_examname': '',
-  'select_scoretalk': '',
-  'select_scoreword': '',
-  'select_scoregrammar': '',
-  'select_scoreread': '',
-  'select_scorewrite': '',
-  'select_scorelisten': '',
-  'select_scoresynthesis': '',
+  'selecttext_scoretalk': '',
+  'selecttext_scoreword': '',
+  'selecttext_scoregrammar': '',
+  'selecttext_scoreread': '',
+  'selecttext_scorewrite': '',
+  'selecttext_scorelisten': '',
+  'selecttext_scoresynthesis': '',
   'time_examdate': '',
   'text_ID': '',
 };

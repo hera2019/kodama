@@ -72,12 +72,6 @@
                         <?php endforeach; ?>
                       </select>
                   </td>
-                  <th class="col-xs-2">更新日時</th>
-                  <th class="col-xs-2 kodama-fill" id="text_<?= $i; ?>_recordtime"></td>
-                  <th class="col-xs-2">累計出席率</th>
-                  <th class="col-xs-2 kodama-fill" id="text_<?= $i; ?>_attendance"></td>
-                </tr>
-                <tr>
                   <th class="col-xs-2">実施者</th>
                   <td class="col-xs-2 kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="teacher" id="select_<?= $i; ?>_teacherID">
@@ -87,31 +81,35 @@
                         <?php endforeach; ?>
                       </select>
                   </td>
+                </tr>
+                <tr>
                   <th class="col-xs-2">日時</th>
                   <td class="col-xs-2 kodama-fillcontrol">
-                    <div class="form-group kodama-datepicker" id="time_<?= $i; ?>_0011" data-target-input="nearest">
+                    <div class="form-group kodama-datetimepicker" id="time_<?= $i; ?>_0011" data-target-input="nearest">
                       <input type="text" id="time_<?= $i; ?>_interviewtime" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0011" data-toggle="datetimepicker"/>
                     </div>
                   </td>
+                  <th class="col-xs-2">累計出席率</th>
+                  <th class="col-xs-2" id="text_<?= $i; ?>_attendance"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%</th>
                 </tr>
                 <tr>
                   <th class="col-xs-2">出席状況</th>
-                  <td class="col-xs-2 kodama-fill text-left" colspan="5" id="text_<?= $i; ?>_attendancestatus"></td>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="3" id="text_<?= $i; ?>_attendancestatus"></td>
                 </tr>
                 <tr>
                   <th class="col-xs-2">進路</th>
-                  <td class="col-xs-2 kodama-fill text-left" colspan="5" id="text_<?= $i; ?>_course" style="vertical-align: top; height: 100px;"></td>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="3" id="text_<?= $i; ?>_course" style="vertical-align: top; height: 100px;"></td>
                 </tr>
                 <tr>
                   <th class="col-xs-2">その他</th>
-                  <td class="col-xs-2 kodama-fill text-left" colspan="5" id="text_<?= $i; ?>_other" style="vertical-align: top; height: 100px;"></td>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="3" id="text_<?= $i; ?>_other" style="vertical-align: top; height: 100px;"></td>
                 </tr>
                 <tr>
                   <td class="kodama-fill" id="text_<?= $i; ?>_ID" hidden="hidden"></td>
-                  <th class="col-xs-12" colspan="6"></th>
+                  <th class="col-xs-12 bg-<?= $KODAMA_THEME_COLOR; ?>" colspan="6"></th>
                 </tr>
-                <?php endfor; ?>
               </tbody>
+              <?php endfor; ?>
               <tfoot>
                 <tr>
                 </tr>
@@ -132,12 +130,12 @@
 <script src="../style/js/jquery-editable-select.js"></script>
 <script src="../style/js/kodama-table-student-datasave.js"></script>
 <script type="text/javascript">
-var _studentrecord = {
+var _studentrecord = { // 默认值需要与html中同样，重置时使用
   'text_title': '',
   'select_classID': '',
-  'time_interviewtime': '',
-  'text_attendance': '',
+  'text_attendance': '<?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%',
   'select_teacherID': '',
+  'time_interviewtime': '',
   'text_attendancestatus': '',
   'text_course': '',
   'text_other': '',

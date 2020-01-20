@@ -14,9 +14,9 @@
           <li> <a href="studentattend.php"> <span>出席情報</span> </a> </li>
           <li> <a href="studentfee.php"> <span>入金情報</span> </a> </li>
           <li> <a href="studentinterview.php"> <span>面談履歷</span> </a> </li>
-          <li> <a href="studentworks.php"> <span>作品集</span> </a> </li>
           <li> <a href="studentrewards.php"> <span>賞罰</span> </a> </li>
           <li> <a href="studentadvancement.php"> <span>進學·就職</span> </a> </li>
+          <li> <a href="studentworks.php"> <span>作品集</span> </a> </li>
           <li> <a href="studentdescription.php"> <span>メモ</span> </a> </li>
           <!-- <li> <a href="javascript:void(0);"> <span>アルバイト情報</span> </a> </li> -->
         </ul>
