@@ -8,6 +8,23 @@ require_once( '../include/include_database.php' );
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="../style/css/kodama.css" rel="stylesheet">
+<style>
+  td.details-control {
+      background: url('../style/images/details_open.png') no-repeat center center;
+      cursor: pointer;
+  }
+  tr.shown td.details-control {
+      background: url('../style/images/details_close.png') no-repeat center center;
+  }
+  table.row-expand {
+    background-color: #fffede;
+    border: none;
+    width: 100%;
+  }
+  table.row-expand, table.row-expand tr, table.row-expand tr td {
+    border: none;
+  }
+</style>
 </head>
 
 <section class="content">
@@ -130,11 +147,10 @@ require_once( '../include/include_database.php' );
           </div>
           
           <div style="padding: 0 20px;"><div class="alert-warning col-white" id="message" style="word-wrap: break-word; word-break: break-all;"></div></div>
-          
           <!-- DataTable -->
           <div class="body">
             <div class="table-responsive-lg">
-              <table id="mainTable" class="table table-bordered table-striped table-hover dataTable display">
+              <table id="mainTable" class="table table-bordered table-striped table-hover dataTable display" cellspacing="0">
                 <thead class="col-<?= $KODAMA_THEME_COLOR; ?>">
                   <tr>
                     <th class="col-xs-1 kodama-fillcontrol" style="width: 20px;">
@@ -143,6 +159,7 @@ require_once( '../include/include_database.php' );
                         <label class="custom-control-label" for="checkbox_hc1" id="checkbox_hl1" style="visibility: hidden;"></label>
                       </div>
                     </th>
+                    <td class="details-control details-thead"></td>
                     <th class="col-xs-2">学籍番号</th>
                     <th class="col-xs-2">氏名</th>
                     <th class="col-xs-2">クラス名</th>
@@ -159,6 +176,7 @@ require_once( '../include/include_database.php' );
                         <label class="custom-control-label" for="checkbox_hc2" id="checkbox_hl2" style="visibility: hidden;"></label>
                       </div>
                     </th>
+                    <td class="details-control details-tfoot"></td>
                     <th>学籍番号</th>
                     <th>氏名</th>
                     <th>クラス名</th>

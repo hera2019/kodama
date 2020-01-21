@@ -2,7 +2,6 @@ var _kodama_students = {
   studentID: {},
   currentrecordid: '',
   multiselect: false,
-  currentstudentid: '',
 };
 
 $(document).ready(function () {
@@ -31,9 +30,6 @@ $(document).ready(function () {
   });
   
   let queryParam = " WHERE 1=1";
-  if(_kodama_students.currentstudentid) {
-    queryParam = ' WHERE studentID=' + '"' + _kodama_students.currentstudentid + '"';
-  }
   queryStudent(queryParam);
 });
 
@@ -90,21 +86,27 @@ $(function () {
     showStudent(studentid, check);
   });
 
-  $('.dataTable tbody').on( 'click', 'tr', function () { //此代码之前必须有DataTable初始化代码
-    var check = !$(this).hasClass('selected');
+  $('.dataTable tbody').on( 'click', 'tr td', function () { //此代码之前必须有DataTable初始化代码
+    var tdindex = $(this).index();
+    if(tdindex == 1) {
+      return;
+    }
+    
+    var $row = $(this).parent();
+    var check = !$row.hasClass('selected');
     if(!_kodama_students.multiselect) { //单选
       cancelSelect();
     }
     var studentid = '';
     if ( !check ) {
-      $(this).removeClass('selected');
+      $row.removeClass('selected');
       document.getElementById('checkbox_hc1').checked = false;
       document.getElementById('checkbox_hc2').checked = false;
     }
     else {
-      $(this).addClass('selected');
+      $row.addClass('selected');
     }
-    let els = $(this).find('input[type="checkbox"]');
+    let els = $row.find('input[type="checkbox"]');
     if (els && els.length) { //Checkbox找到  
       els[0].checked = check;
       let id = els[0].id;
@@ -114,6 +116,54 @@ $(function () {
       }
     }
     showStudent(studentid, check);
+  });
+  
+  // Add event listener for opening and closing details
+  $('.dataTable tbody').on('click', 'td.details-control', function() {
+    var table = $('.dataTable').DataTable();    
+    var tr = $(this).closest('tr');
+    var row = table.row( tr );
+
+    if(row.child.isShown()){
+      // This row is already open - close it
+      row.child.hide();
+      tr.removeClass('shown');
+    } else {
+      // Open this row
+      row.child(format(row.data())).show();
+      tr.addClass('shown');
+    }
+  });
+  
+  // Add event listener for opening and closing details
+  $('.dataTable thead, .dataTable tfoot').on('click', 'td.details-control', function() {
+    var table = $('.dataTable').DataTable();
+    //修改顶底图标
+    var tr = $('.details-thead').closest('tr');
+    if(tr.hasClass('shown')) {
+      tr.removeClass('shown');
+    } else {
+      tr.addClass('shown');
+    }
+    tr = $('.details-tfoot').closest('tr');
+    if(tr.hasClass('shown')) {
+      tr.removeClass('shown');
+    } else {
+      tr.addClass('shown');
+    }
+    //修改每行图标
+    table.rows().every(function(){
+      // If row has details collapsed
+      if(!this.child.isShown()){
+        // Open this row
+        this.child(format(this.data())).show();
+        $(this.node()).addClass('shown');
+      } else {
+        // Collapse row details
+        this.child.hide();
+        $(this.node()).removeClass('shown');      
+      }
+    });
   });
 });
 
@@ -170,6 +220,38 @@ function showStudent(studentid, selected) {
   }
 }
 
+function format(data) {
+  // `data` is the original data object for the row
+  return '<table class="row-expand col-blue-grey" cellpadding="11" cellspacing="0">'+
+    '<tbody>'+
+      '<tr>'+
+        '<td class="col-xs-1"></td>'+
+        '<td class="col-xs-2">日時1:</td>'+
+        '<td class="col-xs-4">'+(data.time11==null?"":data.time11)+'</td>'+
+        '<td class="col-xs-5">'+(data.time12==null?"":data.time12)+'</td>'+
+      '</tr>'+
+      '<tr>'+
+        '<td></td>'+
+        '<td>日時2:</td>'+
+        '<td>'+(data.time21==null?"":data.time21)+'</td>'+
+        '<td>'+(data.time22==null?"":data.time22)+'</td>'+
+      '</tr>'+
+      '<tr>'+
+        '<td></td>'+
+        '<td>日時3:</td>'+
+        '<td>'+(data.time31==null?"":data.time31)+'</td>'+
+        '<td>'+(data.time32==null?"":data.time32)+'</td>'+
+      '</tr>'+
+      '<tr>'+
+        '<td></td>'+
+        '<td>日時4:</td>'+
+        '<td>'+(data.time41==null?"":data.time41)+'</td>'+
+        '<td>'+(data.time42==null?"":data.time42)+'</td>'+
+      '</tr>'+
+    '</tbody>'+
+  '</table>';
+}
+
 function queryStudent(queryParam) {
   //清空选中ID数组
   for(let key in _kodama_students.studentID) {
@@ -180,8 +262,8 @@ function queryStudent(queryParam) {
     destroy: true, //销毁之前的DataTable，因为不可重复初始化
     responsive: true,
     select: true,
-    order: [[ 13, 'desc' ]],
-    pageLength: 100,
+    order: [[ 8, 'desc' ]],
+    pageLength: 50,
     "ajax": {
       "type": "POST",
       "url": '../dataproc/checkin_proc.php',
@@ -203,17 +285,17 @@ function queryStudent(queryParam) {
           return str;
         }
       },
+      {
+        'className':      'details-control',
+        'orderable':      false,
+        'data':           null,
+        'defaultContent': ''
+      },
       { "data": "studentnumber" },
       { "data": "name" },
       { "data": "classname" },
       { "data": "time11" },
       { "data": "time12" },
-      { "data": "time21" },
-      { "data": "time22" },
-      { "data": "time31" },
-      { "data": "time32" },
-      { "data": "time41" },
-      { "data": "time42" },
       { "data": "property",
         render: function (data, type, obj, meta) {
           let ret = '<span class="col-black">なし</span>';

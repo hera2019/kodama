@@ -41,11 +41,11 @@ if($mod == 'updatecheckin') { //not addcheckin
 $classtimenum = 1;
 $classtime11 = '08:00:00';
 $classtime12 = '12:00:00';
-$minutes1 = 240;
+$lessons1 = 4;
 $aheadperiod = 60;
 $delayperiod = 60;
-$allowlate = 0;
-$allowearly = 0;
+$allowlate = 5;
+$allowearly = 5;
 $sql = 'SELECT * FROM  classtime';
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -54,16 +54,16 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
   $classtimenum = $recordclasstime->num;
   $classtime11 = $recordclasstime->time11;
   $classtime12 = $recordclasstime->time12;
-  $minutes1 = $recordclasstime->minutes1;
+  $lessons1 = $recordclasstime->lessons1;
   $classtime21 = $recordclasstime->time21;
   $classtime22 = $recordclasstime->time22;
-  $minutes2 = $recordclasstime->minutes2;
+  $lessons2 = $recordclasstime->lessons2;
   $classtime31 = $recordclasstime->time31;
   $classtime32 = $recordclasstime->time32;
-  $minutes3 = $recordclasstime->minutes3;
+  $lessons3 = $recordclasstime->lessons3;
   $classtime41 = $recordclasstime->time41;
   $classtime42 = $recordclasstime->time42;
-  $minutes4 = $recordclasstime->minutes4;
+  $lessons4 = $recordclasstime->lessons4;
   $aheadperiod = $recordclasstime->aheadperiod;
   $delayperiod = $recordclasstime->delayperiod;
   $allowlate = $recordclasstime->allowlate;
@@ -275,12 +275,6 @@ function GetProperty( $time1, $time2 ) {
                 <span class="input-group-addon">Class 4 End: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_042" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time42; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">Record time: </span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_001" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_001" data-toggle="datetimepicker" name="recordtime" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->recordtime; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group-select clearfix">

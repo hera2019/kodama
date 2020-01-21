@@ -115,6 +115,7 @@ class Checkin_Class
       }
     }
     if(!empty($context)) {
+      $context .= 'recordtime="' . date('Y-m-d H:i:s') . '",';
       $context .= 'manualmodified="1"';
       //$context = substr($context, 0, -1); //去掉最后的逗号
     } else {

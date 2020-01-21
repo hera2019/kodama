@@ -192,6 +192,9 @@ function postGetData(id, studentrecord, nomsg=false) {
         let jsondata = JSON.parse(jsonStr.data);
         for(let i=1; i<=g_records.num; i++) {
           setRecord(jsondata['record' + i], studentrecord, i);
+          if(typeof datasaveGetCallback != 'undefined' && datasaveGetCallback instanceof Function) {
+            datasaveGetCallback(jsondata['record' + i], studentrecord, i);
+          }
         }
       }
       if(jsonStr.message && (jsonStr.result != 200 || !nomsg)) { //save后reload，不显示get成功信息

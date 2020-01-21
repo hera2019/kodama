@@ -11,6 +11,23 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="../style/css/kodama.css" rel="stylesheet">
+<style>
+  td.details-control {
+      background: url('../style/images/details_open.png') no-repeat center center;
+      cursor: pointer;
+  }
+  tr.shown td.details-control {
+      background: url('../style/images/details_close.png') no-repeat center center;
+  }
+  table.row-expand {
+    background-color: #fffede;
+    border: none;
+    width: 100%;
+  }
+  table.row-expand, table.row-expand tr, table.row-expand tr td {
+    border: none;
+  }
+</style>
 </head>
 
 <section class="content">
@@ -96,27 +113,22 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
               <table id="mainTable" class="table table-bordered table-striped table-hover dataTable display">
                 <thead class="col-<?= $KODAMA_THEME_COLOR; ?>">
                   <tr>
-                    <th class="kodama-fillcontrol" style="width: 5%;">
+                    <th class="kodama-fillcontrol" style="width: 20px;">
                       <div class="custom-control custom-checkbox text-center" id="checkbox_hc001" style="margin-left: 20px;">
                         <input type="checkbox" id="checkbox_hc1" class="custom-control-input filled-in chk-col-orange"/>
                         <label class="custom-control-label" for="checkbox_hc1" id="checkbox_hl1" style="visibility: hidden;"></label>
                       </div>
                     </th>
-                    <th style="width: 7%;">学籍番号</th>
-                    <th style="width: 5%;">氏名</th>
-                    <th style="width: 5%;">クラス名</th>
-                    <th style="width: 7%;">日時11</th>
-                    <th style="width: 7%;">日時12</th>
-                    <th style="width: 7%;">日時21</th>
-                    <th style="width: 7%;">日時22</th>
-                    <th style="width: 7%;">日時31</th>
-                    <th style="width: 7%;">日時32</th>
-                    <th style="width: 7%;">日時41</th>
-                    <th style="width: 7%;">日時42</th>
-                    <th style="width: 5%;">屬性</th>
-                    <th style="width: 7%;">記錄日時</th>
-                    <th style="width: 5%;">設備</th>
-                    <th style="width: 5%;">生成する</th>
+                    <td class="details-control details-thead"></td>
+                    <th class="col-xs-1">学籍番号</th>
+                    <th class="col-xs-1">氏名</th>
+                    <th class="col-xs-1">クラス名</th>
+                    <th class="col-xs-2">日時11</th>
+                    <th class="col-xs-2">日時12</th>
+                    <th class="col-xs-1">屬性</th>
+                    <th class="col-xs-2">記錄日時</th>
+                    <th class="col-xs-1">設備</th>
+                    <th class="col-xs-1">生成する</th>
                   </tr>
                 </thead>
                 <tfoot class="col-<?= $KODAMA_THEME_COLOR; ?>">
@@ -127,17 +139,12 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
                         <label class="custom-control-label" for="checkbox_hc2" id="checkbox_hl2" style="visibility: hidden;"></label>
                       </div>
                     </th>
+                    <td class="details-control details-tfoot"></td>
                     <th>学籍番号</th>
                     <th>氏名</th>
                     <th>クラス名</th>
                     <th>日時11</th>
                     <th>日時12</th>
-                    <th>日時21</th>
-                    <th>日時22</th>
-                    <th>日時31</th>
-                    <th>日時32</th>
-                    <th>日時41</th>
-                    <th>日時42</th>
                     <th>屬性</th>
                     <th>記錄日時</th>
                     <th>設備</th>
@@ -155,9 +162,4 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
 <!-- Jquery DataTable Plugin Js --> 
 <script src="../style/js/jquery.dataTables.js"></script>
 <script src="../style/js/dataTables.bootstrap.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-  _kodama_students.currentstudentid = <?php echo $studentID; ?>;
-});
-</script>
 <script src="../style/js/kodama-checkinrecord.js"></script>

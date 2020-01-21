@@ -90,7 +90,7 @@ if($mod != 'add') {
               } else {
                 echo 'Add Student Info: <span class="col-rose-red">red</span> icon indicates required.';
               }
-              ?></font></div>            
+              ?></font></div>
             <div  style="padding-left: 2rem;">
               <div id="message" class="alert-warning align-left col-white" style="line-height: 23px; width: 100%;"><?= $message; ?></div>
               <div id="xhr_progressgrd" class="progress" style="width: 0%;">

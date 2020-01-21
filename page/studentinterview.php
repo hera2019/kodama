@@ -19,7 +19,7 @@
         ?>
         <div class="card">
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
-            <h2>入金情報<small></small></h2>
+            <h2>面談履歷<small></small></h2>
             <ul class="header-button">
               <li><a href="javascript:void(0);" onclick="newRecord();">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">create_new_folder</i> </div>
@@ -46,11 +46,6 @@
               <caption><div class="text-left alert-warning align-left col-white" id="message"></div></caption>
               <thead><tr></tr></thead>
               <?php
-              $sql = 'SELECT ID, name FROM class';
-              $statement = $connection->prepare($sql);
-              $statement->execute();
-              $recordclass = $statement->fetchAll( PDO::FETCH_OBJ );
-
               $sql = 'SELECT ID, name FROM teacher ORDER BY ID ASC';
               $statement = $connection->prepare($sql);
               $statement->execute();
@@ -60,18 +55,15 @@
               <tbody id=recordrow<?= $i; ?><?= $i == 1 ? '' : " hidden=\"hidden\""; ?>>
                 <tr>
                   <th class="col-xs-2">タイトル</th>
-                  <td class="col-xs-2 kodama-fill" id="text_<?= $i; ?>_title"></td>
+                  <td class="col-xs-2 kodama-fill text-left" colspan="3" id="text_<?= $i; ?>_title"></td>
                 </tr>
                 <tr>
                   <th class="col-xs-2">クラス</th>
-                  <td class="col-xs-2 kodama-fillcontrol" style="padding: 0px 10px;">
-                      <select class="kodama-select" name="feetype" id="select_<?= $i; ?>_classID">
-                        <option class="kodama-select" value="-1">- - - -</option>
-                        <?php foreach($recordclass as $recordclass1): ?>
-                        <option class="kodama-select" value="<?= $recordclass1->ID; ?>"><?= $recordclass1->name; ?></option>
-                        <?php endforeach; ?>
-                      </select>
-                  </td>
+                  <th class="col-xs-2 text-left" id="text_<?= $i; ?>_class"><?= isset($StudentInfo) ? $StudentInfo->classname : ''; ?></th>
+                  <th class="col-xs-2">累計出席率</th>
+                  <th class="col-xs-2" id="text_<?= $i; ?>_attendance"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%</th>
+                </tr>
+                <tr>
                   <th class="col-xs-2">実施者</th>
                   <td class="col-xs-2 kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="teacher" id="select_<?= $i; ?>_teacherID">
@@ -81,16 +73,12 @@
                         <?php endforeach; ?>
                       </select>
                   </td>
-                </tr>
-                <tr>
                   <th class="col-xs-2">日時</th>
                   <td class="col-xs-2 kodama-fillcontrol">
                     <div class="form-group kodama-datetimepicker" id="time_<?= $i; ?>_0011" data-target-input="nearest">
-                      <input type="text" id="time_<?= $i; ?>_interviewtime" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0011" data-toggle="datetimepicker"/>
+                      <input type="text" id="time_<?= $i; ?>_executiontime" class="form-control datetimepicker-input" data-target="#time_<?= $i; ?>_0011" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <th class="col-xs-2">累計出席率</th>
-                  <th class="col-xs-2" id="text_<?= $i; ?>_attendance"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%</th>
                 </tr>
                 <tr>
                   <th class="col-xs-2">出席状況</th>
@@ -106,7 +94,7 @@
                 </tr>
                 <tr>
                   <td class="kodama-fill" id="text_<?= $i; ?>_ID" hidden="hidden"></td>
-                  <th class="col-xs-12 bg-<?= $KODAMA_THEME_COLOR; ?>" colspan="6"></th>
+                  <th class="col-xs-12" colspan="4" style="height: 10px; background-color: #e9e9e9;"></th>
                 </tr>
               </tbody>
               <?php endfor; ?>
@@ -132,10 +120,10 @@
 <script type="text/javascript">
 var _studentrecord = { // 默认值需要与html中同样，重置时使用
   'text_title': '',
-  'select_classID': '',
+  'text_class': '<?= isset($StudentInfo) ? $StudentInfo->classname : ''; ?>',
   'text_attendance': '<?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%',
   'select_teacherID': '',
-  'time_interviewtime': '',
+  'time_executiontime': '',
   'text_attendancestatus': '',
   'text_course': '',
   'text_other': '',
