@@ -17,7 +17,7 @@
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
             <h2>出席状況<small></small></h2>
             <ul class="header-button">
-              <li><a href="javascript:location.reload();">
+              <li><a href="refreshRecord()">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info">
                   <h4>Reload</h4>
@@ -196,3 +196,8 @@
     </div>      
   </div>
 </section>
+<script type="text/javascript">
+  function refreshRecord() {
+    location.reload();
+  }
+</script>

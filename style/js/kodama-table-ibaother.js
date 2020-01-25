@@ -33,7 +33,7 @@ $(function () {
 });
 
 $(document).ready(function () {
-  refreshData_004();
+  refreshRecord();
 });
 
 function saveData_004() {
@@ -43,7 +43,7 @@ function saveData_004() {
   saveData(id , 4, _student_file4);
 }
 
-function refreshData_004() {
+function refreshRecord() {
   document.getElementById('message').innerHTML = "Loading data...";
 
   var id = document.getElementById('studentid').innerHTML;

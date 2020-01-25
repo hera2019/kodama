@@ -20,7 +20,7 @@
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
             <h2>東京四木教育学院履歴書（追加）<small></small></h2>
             <ul class="header-button">
-              <li><a href="javascript:void(0);" onclick="refreshData_003();">
+              <li><a href="javascript:void(0);" onclick="refreshRecord();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info">
                   <h4>Reload</h4>
@@ -80,7 +80,7 @@
                       <input type="text" id="time_relationshipbirthday4" class="form-control datetimepicker-input" data-target="#time_0011" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation4"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation4"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress4"></td>
                 </tr>
                 <tr>
@@ -91,7 +91,7 @@
                       <input type="text" id="time_relationshipbirthday5" class="form-control datetimepicker-input" data-target="#time_0021" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation5"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation5"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress5"></td>
                 </tr>
                 <tr>
@@ -102,7 +102,7 @@
                       <input type="text" id="time_relationshipbirthday6" class="form-control datetimepicker-input" data-target="#time_0031" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation6"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation6"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress6"></td>
                 </tr>
                 <tr>
@@ -113,7 +113,7 @@
                       <input type="text" id="time_relationshipbirthday7" class="form-control datetimepicker-input" data-target="#time_0041" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation7"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation7"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress7"></td>
                 </tr>
                 <tr>
@@ -124,7 +124,7 @@
                       <input type="text" id="time_relationshipbirthday8" class="form-control datetimepicker-input" data-target="#time_0051" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation8"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation8"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress8"></td>
                 </tr>
                 <tr>
@@ -135,7 +135,7 @@
                       <input type="text" id="time_relationshipbirthday9" class="form-control datetimepicker-input" data-target="#time_0061" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation9"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation9"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress9"></td>
                 </tr>
                 <tr>
@@ -146,7 +146,7 @@
                       <input type="text" id="time_relationshipbirthday10" class="form-control datetimepicker-input" data-target="#time_0071" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation10"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation10"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress10"></td>
                 </tr>
                 <tr>
@@ -157,7 +157,7 @@
                       <input type="text" id="time_relationshipbirthday11" class="form-control datetimepicker-input" data-target="#time_0081" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-2 kodama-fill" colspan="2" id=" text_relationshipoccupation11"></td>
+                  <td class="col-xs-2 kodama-fill" colspan="2" id="text_relationshipoccupation11"></td>
                   <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_relationshipaddress11"></td>
                 </tr>
                 <tr>
@@ -185,7 +185,7 @@
                       <input type="text" id="time_edugraduation6" class="form-control datetimepicker-input" data-target="#time_0101" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-3 kodama-fill text-left" colspan="3" id=" text_eduschoollocation6"></td>
+                  <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_eduschoollocation6"></td>
                   <td class="col-xs-1 kodama-fill" colspan="1" id="text_eduschoolyear6"></td>
                 </tr>
                 <tr>
@@ -200,7 +200,7 @@
                       <input type="text" id="time_edugraduation7" class="form-control datetimepicker-input" data-target="#time_0121" data-toggle="datetimepicker"/>
                     </div>
                   </td>
-                  <td class="col-xs-3 kodama-fill text-left" colspan="3" id=" text_eduschoollocation7"></td>
+                  <td class="col-xs-3 kodama-fill text-left" colspan="3" id="text_eduschoollocation7"></td>
                   <td class="col-xs-1 kodama-fill" colspan="1" id="text_eduschoolyear7"></td>
                 </tr>
                 <tr>
@@ -217,7 +217,7 @@
                 </tr>
                 <tr>
                   <td class="col-xs-3 kodama-fill" colspan="3" id="text_jpschoolname3"></td>
-                  <td class="col-xs-4 kodama-fill text-left" colspan="4" id=" text_jpschoollocation3"></td>
+                  <td class="col-xs-4 kodama-fill text-left" colspan="4" id="text_jpschoollocation3"></td>
                   <td class="col-xs-2 kodama-fillcontrol" colspan="2">
                     <div class="form-group kodama-datepicker" id="time_0131" data-target-input="nearest">
                       <input type="text" id="time_jpadmission3" class="form-control datetimepicker-input" data-target="#time_0131" data-toggle="datetimepicker"/>
@@ -231,7 +231,7 @@
                 </tr>
                 <tr>
                   <td class="col-xs-3 kodama-fill" colspan="3" id="text_jpschoolname4"></td>
-                  <td class="col-xs-4 kodama-fill text-left" colspan="4" id=" text_jpschoollocation4"></td>
+                  <td class="col-xs-4 kodama-fill text-left" colspan="4" id="text_jpschoollocation4"></td>
                   <td class="col-xs-2 kodama-fillcontrol" colspan="2">
                     <div class="form-group kodama-datepicker" id="time_0151" data-target-input="nearest">
                       <input type="text" id="time_jpadmission4" class="form-control datetimepicker-input" data-target="#time_0151" data-toggle="datetimepicker"/>

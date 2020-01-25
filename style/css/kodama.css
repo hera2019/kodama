@@ -5,6 +5,28 @@ tr.selected[class*="odd"]:hover {}
 th:not([class*="text-"])
 */
 
+.sidebar .nav-tabs {
+  font-weight: 600;
+  font-size: 13px;
+  width: 100%;
+  margin-left: 2px; }
+  .sidebar .nav-tabs li {
+    text-align: center; }
+    .sidebar .nav-tabs li > a {
+      margin-right: 0; }
+    .sidebar .nav-tabs li:first-child {
+      width: 50%; }
+    .sidebar .nav-tabs li:last-child {
+      width: 50%; }
+  .sidebar #treeview-selectable ul li {
+    border: none;
+    padding: 5px 5px;
+  }
+    .sidebar #treeview-selectable ul li .badge {
+      color: #fff;
+      background-color: #FF5722;
+    }
+
 /* Password字体 */
 input[type="password"] {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

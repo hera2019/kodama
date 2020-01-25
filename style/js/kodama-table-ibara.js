@@ -113,7 +113,7 @@ $(function () {
 });
 
 $(document).ready(function () {
-  refreshData_003();
+  refreshRecord();
 });
 
 function saveData_003() {
@@ -123,7 +123,7 @@ function saveData_003() {
   saveData(id , 3, _student_file3);
 }
 
-function refreshData_003() {
+function refreshRecord() {
   document.getElementById('message').innerHTML = "Loading data...";
 
   var id = document.getElementById('studentid').innerHTML;

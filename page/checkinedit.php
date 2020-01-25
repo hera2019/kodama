@@ -25,9 +25,8 @@ if($mod == 'updatecheckin') { //not addcheckin
       $message .= "Checkin record not found.";
     }
   }
-} else {  
+} else {
   $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, c.name AS classname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID';
-  $sql .= $Param;
   $statement = $connection->prepare($sql);
   $statement->execute();
   $recordstudent = $statement->fetchAll( PDO::FETCH_OBJ );
@@ -131,8 +130,8 @@ function GetClassIndex( $time, $bstart, &$blate ) {
 }
 
 function GetProperty( $time1, $time2 ) {
-  $date1 = date( 'YYYY-MM-DD', strtotime( $time1 ) );
-  $date2 = date( 'YYYY-MM-DD', strtotime( $time2 ) );
+  $date1 = date( 'Y-m-d', strtotime( $time1 ) );
+  $date2 = date( 'Y-m-d', strtotime( $time2 ) );
   if(strtotime( $date1 ) != strtotime( $date2 )) { //判断是否同一天
     return 0;
   }
@@ -205,7 +204,7 @@ function GetProperty( $time1, $time2 ) {
                   foreach($student_class as $key => $value) {
                     echo '<optgroup label="' . $key . '">';
                     foreach($value as $key2 => $value2) {
-                        echo '<option value="' . $key2 . '">' . $value2 . '</option>';
+                      echo '<option value="' . $key2 . '">' . $value2 . '</option>';
                     }
                     echo '</optgroup>';
                   }

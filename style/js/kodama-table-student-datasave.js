@@ -103,7 +103,7 @@ function saveData(id, studentrecord) {
         if(keyname) {
           let el = document.getElementById('photo_' + recordindex + '_' + keyname);
           if(el) {
-            data[keyname] = el.value;
+            data[keyname] = el.innerHTML;
           }
         }
       } else if(key.search(/radio_/) == 0) { //radio
@@ -273,19 +273,18 @@ function postGetData(id, studentrecord, nomsg=false) {
           let keyname = key.substring(6);
           if(keyname) {
             let eltext = document.getElementById('photo_' + recordindex + '_' + keyname);
-            let elimage = document.getElementById('photoimage');
+            let elimage = document.getElementById('photo_' + recordindex + '_' + 'image');
             if(eltext && elimage) {
               if(data[keyname]) {
                 eltext.value = data[keyname];
+                elimage.removeAttribute("height");
                 elimage.src = kodamafunc.PHOTO_PATH + data[keyname];
               } else {
-                if(data['genderfemale'] == 1) {
-                  elimage.src = kodamafunc.PHOTO_PATH + 'default/female.jpg';
-                } else if(data['genderfemale'] == 0) {
-                  elimage.src = kodamafunc.PHOTO_PATH + 'default/male.jpg';
-                }
+                eltext.value = '';
+                elimage.setAttribute("height", "100%");
+                elimage.src = kodamafunc.PHOTO_PATH + 'default/blank.jpg';
               }
-            }            
+            }
           }
         }
       }
@@ -325,6 +324,22 @@ function postGetData(id, studentrecord, nomsg=false) {
           if(el) {
             el.value = studentrecord[key];
           } 
+        }
+      } else if(key.search(/photo_/) == 0) { //photo
+        let keyname = key.substring(6);
+        if(keyname) {
+          let eltext = document.getElementById('photo_' + recordindex + '_' + keyname);
+          let elimage = document.getElementById('photo_' + recordindex + '_' + 'image');
+          if(eltext && elimage) {
+            if(studentrecord[key]) {
+              eltext.value = studentrecord[key];
+              elimage.src = kodamafunc.PHOTO_PATH + studentrecord[key];
+            } else {
+              eltext.value = '';
+              elimage.setAttribute("height", "100%");
+              elimage.src = kodamafunc.PHOTO_PATH + 'default/blank.jpg';
+            }
+          }
         }
       }
     }

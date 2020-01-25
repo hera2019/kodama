@@ -48,7 +48,7 @@ $(document).ready(function () {
           (item.name == 's.genderfemale' && item.value < 0)) {
           return;
         }
-        queryParam += " AND " + item.name + "='" + item.value + "'";
+        queryParam += " AND " + item.name + " LIKE '%" + item.value + "%'";
       }
     });
 

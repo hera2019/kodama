@@ -59,7 +59,7 @@ $(function () {
 });
 
 $(document).ready(function () {
-  refreshData_002();
+  refreshRecord();
 });
 
 function saveData_002() {
@@ -69,7 +69,7 @@ function saveData_002() {
   saveData(id , 2, _student_file2);
 }
 
-function refreshData_002() {
+function refreshRecord() {
   document.getElementById('message').innerHTML = "Loading data...";
 
   var id = document.getElementById('studentid').innerHTML;

@@ -1,4 +1,5 @@
 <!-- code by zmq -->
+<?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php
 require_once( '../include/include_database.php' );
 require_once( '../include/include_function.php' );
@@ -76,6 +77,11 @@ if($mod != 'add') {
 <section class="content">
   <div class="container-fluid">
     <div class="signup-box">
+      <?php
+      if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
+        require_once( '../frame/studentinfo.php' );
+      }
+      ?>
       <div class="card">
         <div class="body">
           <form id="infoform" method="POST" action="../dataproc/student_proc.php">
@@ -287,32 +293,36 @@ if($mod != 'add') {
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-  var g_classesinfo = {};
-  g_classesinfo = <?php echo $php_classesinfo; ?>;
+  function refreshRecord() {
+    location.reload();
+  }
+  
+  $(document).ready(function() {
+    var g_classesinfo = {};
+    g_classesinfo = <?php echo $php_classesinfo; ?>;
 
-  //班级select 联动 教师select，选中班级，自动选择班主任老师 
-  //js或html调用php变量只能放在php文件里面，js文件不可以
-  $('#classID').change(function(){ //选中班级，自动选择班主任老师
-    //$(this).children('option:selected').val();//可以用
-    //$("#classID option:selected").val();//也可以用
-    let classid = $("#classID").val(); //可以用，这就是selected的值
-    //console.log(classid);
-    
-    let classesinfo = g_classesinfo;
-    //console.log(classesinfo);
-    let teacherid = 0;
-    for(let classinfo of classesinfo) {
-      if(classinfo.ID == classid) {
-        teacherid = classinfo.classteacherID;
-        break;
+    //班级select 联动 教师select，选中班级，自动选择班主任老师 
+    //js或html调用php变量只能放在php文件里面，js文件不可以
+    $('#classID').change(function(){ //选中班级，自动选择班主任老师
+      //$(this).children('option:selected').val();//可以用
+      //$("#classID option:selected").val();//也可以用
+      let classid = $("#classID").val(); //可以用，这就是selected的值
+      //console.log(classid);
+
+      let classesinfo = g_classesinfo;
+      //console.log(classesinfo);
+      let teacherid = 0;
+      for(let classinfo of classesinfo) {
+        if(classinfo.ID == classid) {
+          teacherid = classinfo.classteacherID;
+          break;
+        }
       }
-    }
-    $('#classteacherID').val(teacherid); //设置select的值
-    //$('#classteacherID').selectpicker('val', teacherid); //设置select的值
-    //$('#classteacherID').selectpicker('refresh'); //必须刷新才能看到结果
+      $('#classteacherID').val(teacherid); //设置select的值
+      //$('#classteacherID').selectpicker('val', teacherid); //设置select的值
+      //$('#classteacherID').selectpicker('refresh'); //必须刷新才能看到结果
+    });
   });
-});
 </script>
 <script src="../style/js/kodama-formajaxsubmit.js"></script>
 <script src="../style/js/kodama-photoupload.js"></script>

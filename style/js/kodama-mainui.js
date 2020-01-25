@@ -121,7 +121,7 @@ $.AdminBSB.leftSideBar = {
     setMenuHeight: function (isFirstTime) {
         if (typeof $.fn.slimScroll != 'undefined') {
             var configs = $.AdminBSB.options.leftSideBar;
-            var height = (window.innerHeight - ($('.legal').outerHeight() + $('.navbar').innerHeight()));
+            var height = (window.innerHeight - ($('.legal').outerHeight() + $('.navbar').innerHeight() + $('.sidebar .nav-tabs').outerHeight()));
             var $el = $('.list');
 
             $el.slimscroll({
@@ -468,5 +468,5 @@ $(function () {
     $.AdminBSB.select.activate();
     $.AdminBSB.search.activate();
 
-    setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+    setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);  
 });

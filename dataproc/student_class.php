@@ -19,7 +19,7 @@ class Student_Class
 	{
 		// cleanup
 	}
-  	
+  
 	//添加一条记录
 	public function AddStudent($sqlarray)
 	{
@@ -175,6 +175,61 @@ class Student_Class
         $all[] = $obj_merged;
       }
       $data = json_encode($all);
+		  return $message;
+    }
+    else
+    {
+      //ShowErrorCode($statement);
+      $message = 'Record not found!';
+      return $message;
+    }
+    
+		return $message;
+	}
+  
+	//查询班级学生信息树
+	public function QueryClassStudentTree($Param, &$data)
+	{
+		$message = 'Query record failed!';
+    
+    $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, s.password AS password, s.nickname AS nickname, s.lastname AS lastname, s.firstname AS firstname, s.birthday AS birthday, s.genderfemale AS genderfemale, s.phonenumber AS phonenumber, s.description AS description, c.name AS classname, t.name AS classteachername, i.typename AS statusname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID LEFT JOIN teacher AS t ON s.classteacherID = t.ID LEFT JOIN idconfig AS i ON (type="status" AND s.status = i.typeID)';
+    $sql .= $Param;
+    $statement = $this->connection->prepare($sql);
+    $statement->execute();
+    $recordstudent = $statement->fetchAll( PDO::FETCH_OBJ );
+    if ( $recordstudent != NULL )
+    {
+      $message = '';
+      $studentclassinfo = array();
+      foreach($recordstudent as $record)
+      {
+        //至今日
+        $attend = new Attend();
+        $sql2 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID';
+        $statement = $this->connection->prepare($sql2);
+        $statement->execute([':ID' => $record->ID]);
+        $record2 = $statement->fetch( PDO::FETCH_OBJ );
+        $attend->attendancebeforeday = '';
+        if(!empty($record2->cl)) {
+          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl);
+        }
+        //前月截止
+        $time = time();
+        $thismonth = date( 'Y-m-01', $time );
+        $sql3 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID AND date<:thismonth';
+        $statement = $this->connection->prepare($sql3);
+        $statement->execute([':ID' => $record->ID, ':thismonth' => $thismonth]);
+        $record3 = $statement->fetch( PDO::FETCH_OBJ );
+        $attend->attendancebeforemonth = '';
+        if(!empty($record3->cl)) {
+          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl);
+        }
+
+        $obj_merged = (object) array_merge((array)$record, (array)$attend);
+        
+        $studentclassinfo[] = $obj_merged;
+      }
+      $data = json_encode($studentclassinfo);
 		  return $message;
     }
     else

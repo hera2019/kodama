@@ -20,7 +20,7 @@
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
             <h2>入学前その他の情報<small></small></h2>
             <ul class="header-button">
-              <li><a href="javascript:void(0);" onclick="refreshData_004();">
+              <li><a href="javascript:void(0);" onclick="refreshRecord();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info">
                   <h4>Reload</h4>

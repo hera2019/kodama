@@ -142,8 +142,13 @@ if ( $recordcolumn == NULL ) {
 <!-- Input Mask Plugin Js -->
 <script src="../style/js/jquery.inputmask.bundle.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-  var $maskedInput = $('.kodama-texthorli');
-  $maskedInput.find('.residenceperiod-mask').inputmask('9年mヶ月');
-});
+  function refreshRecord() {
+    location.reload();
+  }
+  
+  $(document).ready(function() {
+    //var $maskedInput = $('.kodama-texthorli');
+    //$maskedInput.find('.residenceperiod-mask').inputmask('9年mヶ月');
+    $('.residenceperiod-mask').inputmask('9年mヶ月');
+  });
 </script>

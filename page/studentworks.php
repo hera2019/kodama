@@ -97,7 +97,7 @@
                       <i class="material-icons">input</i>
                       <span>Image File</span>
                     </button>
-                  <span id="text_<?= $i; ?>_photofile">Upload an image first on top side. Click the button on left, input image file.</span></th>
+                  <span id="photo_<?= $i; ?>_photofile">Upload an image first on top side. Click the button on left, input image file.</span></th>
                 </tr>
                 <tr>
                   <th class="col-xs-2" colspan="3" style="width: 100%;">
@@ -144,7 +144,7 @@
     'select_workstype': '',
     'text_class': '<?= isset($StudentInfo) ? $StudentInfo->classname : ''; ?>',
     'time_executiontime': '',
-    'text_photofile': '',
+    'photo_photofile': '',
     'text_description': '',
     'text_other': '',
     'time_recordtime': '',
@@ -168,12 +168,6 @@
   });
 
   $(function () {
-    for(var i=1; i<=24; i++) {
-      var $photoimage = document.getElementById('photo_' + i + '_image');
-      if($photoimage && $photoimage.src.search(/default\/blank.jpg/) > 0) {
-        //$photoimage.height = '100%';
-      }
-    }
     $(".btn-imagefile").click(function(event) {
       var btnid = this.id;
       if(btnid.search(/btn_/) == 0) {
@@ -183,7 +177,7 @@
         if(photofile == '') {
           return;
         }
-        document.getElementById('text_' + index + '_photofile').innerHTML = photofile;
+        document.getElementById('photo_' + index + '_photofile').innerHTML = photofile;
         document.getElementById('photo_' + index + '_image').removeAttribute("height");
         document.getElementById('photo_' + index + '_image').src = kodamafunc.PHOTO_PATH + photofile;
       }

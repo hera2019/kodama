@@ -95,7 +95,25 @@ if (!empty($mod))
     $data = '';
     $cls = new Student_Class($connection);
     $message = $cls->QueryStudent($Param, $data);
-
+    if($message == '')
+    {
+      $res = json_encode($data, JSON_HEX_QUOT); //引号用\u0022代替
+      $res = str_replace('\u0022', '"', $res); //\u0022用引号代替回来
+      $res = str_replace('\\\\u', '\\u', $res); //去掉多余的\，汉字显示\\u，用参数JSON_UNESCAPED_UNICODE无效
+      $res = str_replace('\\\/', '/', $res); //路径符号：\/替换为/
+      $res = str_replace('\/', '/', $res); //路径符号：\/替换为/
+      $res = substr($res, 1, -1); //去掉前后的引号
+      echo $res;
+      return $res;
+    }
+    $message = '[{"ID":"","studentnumber":"","name":"' . $message . '","classname":""}]';
+  }
+  else if($mod == 'querytree')
+  {
+    $Param = GetParam('param');
+    $data = '';
+    $cls = new Student_Class($connection);
+    $message = $cls->QueryClassStudentTree($Param, $data);
     if($message == '')
     {
       $res = json_encode($data, JSON_HEX_QUOT); //引号用\u0022代替

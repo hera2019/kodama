@@ -31,7 +31,7 @@
     <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
   </ul>
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
+    <div role="tabpanel" class="tab-pane fade in active" id="skins">
       <ul class="kodama-choose-skin">
         <?php foreach($KodamaThemeColors as $key=>$value): ?>
         <li data-theme="<?= $key; ?>" class="<?= $value[1]; ?>">

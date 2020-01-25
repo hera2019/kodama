@@ -1,5 +1,5 @@
-var _kodama_students = {
-  studentID: {},
+var _kodama_records = {
+  recordID: {},
   currentrecordid: '',
   multiselect: false,
 };
@@ -21,7 +21,7 @@ $(document).ready(function () {
         if(item.name == 's.classID' && item.value <= 0) {
           return;
         }
-        queryParam += " AND " + item.name + "='" + item.value + "'";
+        queryParam += " AND " + item.name + " LIKE '%" + item.value + "%'";
       }
     });
 
@@ -35,7 +35,7 @@ $(document).ready(function () {
 
 $(function () {  
   $('#checkbox_multiselect').on("click", function() {
-    _kodama_students.multiselect = this.checked;
+    _kodama_records.multiselect = this.checked;
     document.getElementById('checkbox_hl1').style.visibility = this.checked ? "visible" : "hidden";
     document.getElementById('checkbox_hl2').style.visibility = this.checked ? "visible" : "hidden";
     cancelSelect();
@@ -43,7 +43,7 @@ $(function () {
   });   
 
   $('.dataTable').on("click", "input:checkbox", function() {
-    let studentid = '';
+    let recordid = '';
     var check = this.checked;
     if(this.id == 'checkbox_hc1' || this.id == 'checkbox_hc2') {
       let els = $('.dataTable').find('input[type="checkbox"]');
@@ -68,7 +68,7 @@ $(function () {
       let eltr = this.parentNode.parentNode.parentNode;
       if(eltr) {
         check = !$(eltr).hasClass('selected');
-        if(!_kodama_students.multiselect) { //单选
+        if(!_kodama_records.multiselect) { //单选
           cancelSelect();
         }
         this.checked = check;
@@ -79,11 +79,11 @@ $(function () {
         } else {
           $(eltr).addClass('selected');
         }
-        studentid = this.id.replace(/checkboxi_/, "");
-        selectStudent(studentid, check);
+        recordid = this.id.replace(/checkboxi_/, "");
+        selectStudent(recordid, check);
       }
     }
-    showStudent(studentid, check);
+    showStudent(recordid, check);
   });
 
   $('.dataTable tbody').on( 'click', 'tr td', function () { //此代码之前必须有DataTable初始化代码
@@ -94,10 +94,10 @@ $(function () {
     
     var $row = $(this).parent();
     var check = !$row.hasClass('selected');
-    if(!_kodama_students.multiselect) { //单选
+    if(!_kodama_records.multiselect) { //单选
       cancelSelect();
     }
-    var studentid = '';
+    var recordid = '';
     if ( !check ) {
       $row.removeClass('selected');
       document.getElementById('checkbox_hc1').checked = false;
@@ -111,11 +111,11 @@ $(function () {
       els[0].checked = check;
       let id = els[0].id;
       if(id != 'checkbox_hc1' && id != 'checkbox_hc2') {
-        studentid = id.replace(/checkboxi_/, "");
-        selectStudent(studentid, check);
+        recordid = id.replace(/checkboxi_/, "");
+        selectStudent(recordid, check);
       }
     }
-    showStudent(studentid, check);
+    showStudent(recordid, check);
   });
   
   // Add event listener for opening and closing details
@@ -177,30 +177,30 @@ function cancelSelect() {
       els[i].checked = false;
       let id = els[i].id;
       if(id != 'checkbox_hc1' && id != 'checkbox_hc2') {
-        let studentid = id.replace(/checkboxi_/, "");
-        selectStudent(studentid, false);
+        let recordid = id.replace(/checkboxi_/, "");
+        selectStudent(recordid, false);
       }
     }
   }
 }
 
 function cancelSelectData() {
-  _kodama_students.currentrecordid = '';
+  _kodama_records.currentrecordid = '';
 }
 
-function selectStudent(studentid, selected) {
-  _kodama_students.studentID[studentid] = selected;
+function selectStudent(recordid, selected) {
+  _kodama_records.recordID[recordid] = selected;
 }
 
-function showStudent(studentid, selected) {
+function showStudent(recordid, selected) {
   let table = $('.dataTable').DataTable();
   if(table) {
     let datas = table.rows(['.selected']).data();
     let data = datas[0];
-    let id = _kodama_students.currentrecordid;
+    let id = _kodama_records.currentrecordid;
     if(selected) {
-      if(studentid != '') {
-        id = studentid;
+      if(recordid != '') {
+        id = recordid;
       }
     }
     if(id != '' && datas.length) {
@@ -213,9 +213,9 @@ function showStudent(studentid, selected) {
     }
     if(data) { //把学生信息显示到Student Info
       let info = {};
-      _kodama_students.currentrecordid = data["ID"];
+      _kodama_records.currentrecordid = data["ID"];
     } else {
-      _kodama_students.currentrecordid = '';
+      _kodama_records.currentrecordid = '';
     }
   }
 }
@@ -254,8 +254,8 @@ function format(data) {
 
 function queryStudent(queryParam) {
   //清空选中ID数组
-  for(let key in _kodama_students.studentID) {
-    _kodama_students.studentID[key] = false;
+  for(let key in _kodama_records.recordID) {
+    _kodama_records.recordID[key] = false;
   }
   
   $('.dataTable').DataTable( {
@@ -328,20 +328,20 @@ function addRecord()
 
 function editRecord()
 {
-  if(_kodama_students.currentrecordid)
+  if(_kodama_records.currentrecordid)
   {
-    window.location.href = "checkinedit.php?ID=" + _kodama_students.currentrecordid;
+    window.location.href = "checkinedit.php?ID=" + _kodama_records.currentrecordid;
   }
 }
 
 function deleteRecord()
 {
   //alert( table.rows('.selected').data().length +' row(s) selected' );
-  if(_kodama_students.studentID && !isEmptyID(_kodama_students.studentID))
+  if(_kodama_records.recordID && !isEmptyID(_kodama_records.recordID))
   {
     var text = "You will not be able to recover this record!";
     var btntext = "Yes, delete it!";
-    showConfirmMessage(text, btntext, JSON.stringify(_kodama_students.studentID));
+    showConfirmMessage(text, btntext, JSON.stringify(_kodama_records.recordID));
   }  
 }
 
@@ -387,9 +387,9 @@ function postDeleteRecord(param) {
         let table = $('.dataTable').DataTable();
         if(table) {
           table.rows(['.selected']).remove().draw();
-          _kodama_students.currentrecordid = '';
-          for(let key in _kodama_students.studentID) {
-            _kodama_students.studentID[key] = false;
+          _kodama_records.currentrecordid = '';
+          for(let key in _kodama_records.recordID) {
+            _kodama_records.recordID[key] = false;
           }
         }
       } else {

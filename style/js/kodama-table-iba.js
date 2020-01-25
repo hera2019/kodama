@@ -115,7 +115,7 @@ $(function () {
 });
 
 $(document).ready(function () {
-  refreshData_001();
+  refreshRecord();
 });
 
 function saveData_001() {
@@ -125,7 +125,7 @@ function saveData_001() {
   saveData(id , 1, _student_file1);
 }
 
-function refreshData_001() {
+function refreshRecord() {
   document.getElementById('message').innerHTML = "Loading data...";
 
   var id = document.getElementById('studentid').innerHTML;

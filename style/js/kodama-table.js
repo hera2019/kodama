@@ -131,6 +131,7 @@ function postSaveData(id, fileID, postData) {
 }
 
 function postGetData(id, fileID, _student_file) {
+  resetData(_student_file);
   // 提交数据函数  
   $.ajax({
     // 调用jquery的ajax方法  
@@ -142,12 +143,17 @@ function postGetData(id, fileID, _student_file) {
     data: "mod=get&studentID=" + id + "&fileID=" + fileID,
     success: function (postdata) {
       // 提交成功后的回调，postdata变量是php输出的内容
-      //setData2(postdata); //遍历数据推送到元素
-      setData(postdata); //遍历元素取数据
+      setData(postdata, _student_file); //遍历元素取数据
     }
   });
-
-  function setData(postdata) {
+  
+  function resetData(_student_file) {
+    resetStudent(_student_file.student, 'student');
+    resetStudent(_student_file.student2, 'student2');
+    resetStudentData(_student_file.studentdata);
+  }
+  
+  function setData(postdata, _student_file) {
     //console.log(postdata);
     if(isJsonString(postdata)) {
       var jsonStr = JSON.parse(postdata);
@@ -246,6 +252,8 @@ function postGetData(id, fileID, _student_file) {
                   elimage.src = kodamafunc.PHOTO_PATH + 'default/female.jpg';
                 } else if(student['genderfemale'] == 0) {
                   elimage.src = kodamafunc.PHOTO_PATH + 'default/male.jpg';
+                } else {
+                  elimage.src = kodamafunc.PHOTO_PATH + 'default/empty.jpg';
                 }
               }
             }            
@@ -302,98 +310,116 @@ function postGetData(id, fileID, _student_file) {
           }
         }
       }
-    }   
+    }
   }
   
-  function setData2(postdata) {
-    //console.log(postdata);
-    //document.getElementById('export').innerHTML = postdata;
-
-    var jsonStr = JSON.parse(postdata);
-    //jsonStr = postdata;//eval(postdata);
-    if(jsonStr.message) {
-      document.getElementById('message').innerHTML = jsonStr.message;
-    }
-
-    var student = jsonStr.student;
-    if(student) {
-      document.getElementById('student.name').innerHTML = student.name;
-      document.getElementById('photoimage').src = kodamafunc.PHOTO_PATH + student.photo;
-    }
-
-    if(jsonStr.studentdata) {
-      var studentdata = JSON.parse(jsonStr.studentdata);
-
-      for (var key in studentdata) {
-        var el = document.getElementById(key);
-        if (el) {
-          var value = studentdata[key];
-          if (!setTime2(key, el, value)) {
-            if (!setSelect2(key, el, value)) {
-              if (!setRadio2(key, el, value)) {
-                if (!setCheckbox2(key, el, value)) {
-                  setText2(key, el, value);
+  function resetStudent(filestudent, dbtable) {
+    if(filestudent) {
+      for(var key in filestudent) {
+        if(key.search(/text_/) == 0) { //text
+          let keyname = key.substring(5);
+          if(keyname) {
+            let el = document.getElementById('text_' + dbtable + '.' + keyname);
+            if(el) {
+              el.innerHTML = filestudent[key];
+            }
+          }
+        } else if(key.search(/text2_/) == 0) { //text2
+          let keyname = key.substring(6);
+          let n = keyname.search(/_/);
+          if(n > 0) {
+            let keyname1 = keyname.substring(0, n);
+            let keyname2 = keyname.substring(n + 1);          
+            if(keyname1 || keyname2) {
+              let el = document.getElementById('text2_' + dbtable + '.' + keyname);
+              if(el) {
+                el.innerHTML = (filestudent['text_' + keyname1] ? filestudent['text_' + keyname1] : '') + ' ' + (filestudent['text_' + keyname2] ? filestudent['text_' + keyname2] : '');
+              }
+            }
+          }
+        } else if(key.search(/select_/) == 0) { //select
+          let keyname = key.substring(7);
+          if(keyname) {
+            let el = document.getElementById('select_' + dbtable + '.' + keyname);
+            if(el) {
+              el.value = filestudent[key];
+            }
+          }
+        } else if(key.search(/time_/) == 0) { //time
+          let keyname = key.substring(5);
+          if(keyname) {
+            let el = document.getElementById('time_' + dbtable + '.' + keyname);
+            if(el) {
+              el.value = filestudent[key];
+            }
+          }
+        } else if(key.search(/radio_/) == 0) { //radio
+          let keyname = key.substring(6);
+          if(keyname) {
+            let el = document.getElementById('radio_' + dbtable + '.' + keyname);
+            if(el) {
+              let els = el.getElementsByTagName("input");
+              for (let i = 0; i < els.length; i++) {
+                if (i == filestudent[key]) {
+                  els[i].checked = true; //索引值=0,1,2....
+                } else {
+                  els[i].checked = false; //索引值=0,1,2....
                 }
+              }
+            }
+          }
+        } else if(key.search(/photo_/) == 0) { //photo
+          let keyname = key.substring(6);
+          if(keyname) {
+            let eltext = document.getElementById('photo_' + dbtable + '.' + keyname);
+            let elimage = document.getElementById('photoimage');
+            if(eltext && elimage) {
+              eltext.value = filestudent[key];
+              elimage.src = kodamafunc.PHOTO_PATH + 'default/empty.jpg';
+            }
+          }
+        }
+      }
+    }    
+  }
+  
+  function resetStudentData(filestudentdata) {
+    if(filestudentdata) {
+      for(var key in filestudentdata) {
+        if(key.search(/text_/) == 0) { //text
+          let el = document.getElementById(key);
+          if(el) {
+            el.innerHTML = filestudentdata[key];
+          }
+        } else if(key.search(/select_/) == 0) { //select
+          let el = document.getElementById(key);
+          if(el) {
+            el.value = filestudentdata[key];
+          }
+        } else if(key.search(/time_/) == 0) { //time
+          let el = document.getElementById(key);
+          if(el) {
+            el.value = filestudentdata[key];
+          }
+        } else if(key.search(/checkbox_/) == 0) { //checkbox
+          let el = document.getElementById(key);
+          if(el) {
+            el.checked = filestudentdata[key];
+          }
+        } else if(key.search(/radio_/) == 0) { //radio
+          let el = document.getElementById(key);
+          if(el) {
+            let els = el.getElementsByTagName("input");
+            for (let i = 0; i < els.length; i++) {
+              if (i == filestudentdata[key]) {
+                els[i].checked = true; //索引值=0,1,2....
+              } else {
+                els[i].checked = false; //索引值=0,1,2....
               }
             }
           }
         }
       }
     }
-  }
-  
-  function setTime2(key, el, value) {
-    if (key.indexOf("time") != -1) {
-      var els = el.getElementsByTagName("input");
-      if (els && els[0]) {
-        els[0].value = value;
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function setSelect2(key, el, value) {
-    if (key.indexOf("select") != -1) {
-      var els = el.getElementsByTagName("select");
-      if (els && els[0]) {
-        els[0].value = value;
-        //$('#select_001 select').selectpicker('val', value); //设置select的值
-        //$('#select_001 select').selectpicker('refresh'); //必须刷新才能看到结果
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function setRadio2(key, el, value) {
-    if (key.indexOf("radio") != -1) {
-      var els = el.getElementsByTagName("input");
-      for (var j = 0; j < els.length; j++) {
-        if (j == value) {
-          els[j].checked = true; //索引值=0,1,2....
-        } else {
-          els[j].checked = false; //索引值=0,1,2....
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-  function setCheckbox2(key, el, value) {
-    if (key.indexOf("checkbox") != -1) {
-      var els = el.getElementsByTagName("input");
-      if (els && els[0]) {
-        els[0].checked = value;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  function setText2(key, el, value) {
-    el.innerHTML = value;
-    return true;
   }
 }
