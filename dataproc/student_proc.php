@@ -5,6 +5,7 @@ use NS_Kodama_DB\Student_Class;
 class RtInfo {
   public $result = 201; //result:(200:success, 201...:failed)
   public $message = '';
+  public $data = '';
 }
 
 $message = 'Student info operate failed: param error.';
@@ -66,6 +67,24 @@ if (!empty($mod))
       }
     }
   }
+  else if($mod == 'get')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $data = '';
+      $classdata = new Student_Class($connection);
+      $message = $classdata->GetStudent($ID, $data);
+      if($message == '')
+      {
+        $rtinfo->result = 200;
+        $rtinfo->message = "Get student info successfully!";
+        $rtinfo->data = $data;
+        echo json_encode($rtinfo);
+        return $message;
+      }
+    }
+  }
   else if($mod == 'updatedescription')
   {
     $ID = GetParam('ID');
@@ -86,6 +105,24 @@ if (!empty($mod))
           echo json_encode($rtinfo);
           return $message;
         }
+      }
+    }
+  }
+  else if($mod == 'getdescription')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $data = '';
+      $classdata = new Student_Class($connection);
+      $message = $classdata->GetStudentDescription($ID, $data);
+      if($message == '')
+      {
+        $rtinfo->result = 200;
+        $rtinfo->message = "Get student description successfully!";
+        $rtinfo->data = $data;
+        echo json_encode($rtinfo);
+        return $message;
       }
     }
   }
@@ -191,8 +228,27 @@ if (!empty($mod))
       }
     }
   }
+  else if($mod == 'get2')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $data = '';
+      $classdata = new Student_Class($connection);
+      $message = $classdata->GetStudent2($ID, $data);
+      if($message == '')
+      {
+        $rtinfo->result = 200;
+        $rtinfo->message = "Get student otherinfo successfully!";
+        $rtinfo->data = $data;
+        echo json_encode($rtinfo);
+        return $message;
+      }
+    }
+  }
 }
 
+$rtinfo->message = $message;
 echo json_encode($rtinfo);
 return $message;
 ?>

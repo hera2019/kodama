@@ -114,7 +114,7 @@ if($mod != 'add') {
                         <div class="form-group form-float">
                           <span class="input-group-addon"> <i class="material-icons col-rose-red">person</i> </span>
                           <div class="form-line">
-                            <input value="<?= empty($recordstudent) ? '' : $recordstudent->name; ?>" type="text" class="form-control" name="name" required autofocus>
+                            <input value="<?= empty($recordstudent) ? '' : $recordstudent->name; ?>" type="text" class="form-control" name="name" id="text_name" required autofocus>
                             <label class="form-label">Name</label>
                           </div>
                         </div>
@@ -124,7 +124,7 @@ if($mod != 'add') {
                       <div class='cell'>
                         <div class="form-group">
                           <span class="input-group-addon"> <i class="material-icons col-green">pregnant_woman</i> </span>
-                          <div class="form-line">
+                          <div class="form-line" id="radio_genderfemale>
                             <input name="genderfemale" type="radio" id="radio_001" class="with-gap radio-col-blue" value="0" <?= empty($recordstudent) ? '' : ($recordstudent->genderfemale ? '' : 'checked="checked"'); ?> />
                             <label for="radio_001">男 Male</label>
                             <input name="genderfemale" type="radio" id="radio_002" class="with-gap radio-col-pink" value="1" <?= empty($recordstudent) ? '' : ($recordstudent->genderfemale ? 'checked="checked"' : ''); ?> />
@@ -135,10 +135,10 @@ if($mod != 'add') {
                     </div>
                     <div class='row'>
                       <div class='cell'>
-                        <div class="form-group form-float">
+                        <div class="form-group input-group form-float"><!-- input-group确保时间控件弹出来位置正确，否则会按card高度计算 -->
                           <span class="input-group-addon"> <i class="material-icons col-green">today</i> </span>
                           <div class="form-line form-group kodama-datepicker" id="time_001" data-target-input="nearest" style="margin-bottom: 0;">
-                            <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_001" data-toggle="datetimepicker" name="birthday" style="text-align: left; width: 100%; height: 100%;" value="<?= empty($recordstudent) ? '' : $recordstudent->birthday; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                            <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_001" data-toggle="datetimepicker" name="birthday" id="time_birthday" style="text-align: left; width: 100%;" value="<?= empty($recordstudent) ? '' : $recordstudent->birthday; ?>" /><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                             <label class="form-label">Birthday</label>
                           </div>
                         </div>
@@ -149,7 +149,7 @@ if($mod != 'add') {
                         <div class="form-group form-float" style="word-wrap: break-word; word-break: break-all;">
                           <span class="input-group-addon"> <i class="material-icons col-green">description</i> </span>
                           <div class="form-line">
-                            <textarea cols="12" rows="4" value="" type="text" class="form-control" name="description"><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
+                            <textarea cols="12" rows="4" value="" type="text" class="form-control" name="description" id="text_description"><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
                             <label class="form-label">Description</label>
                           </div>
                         </div>
@@ -160,7 +160,7 @@ if($mod != 'add') {
                     <div align="left">
                       <div class="form-line" id="photo_drag" style="width: 190px;">
                         <form id="formphoto" name="formphoto" enctype="multipart/form-data" method="post" action="../plugin/upload/upload.php" />
-                        <input hidden="true" type="text" name="photo" id="photo" value="<?= !empty($recordstudent) && !empty($recordstudent->photo) ? $photo = $recordstudent->photo : ''; ?>" />
+                        <input hidden="true" type="text" name="photo" id="photo_photo" value="<?= !empty($recordstudent) && !empty($recordstudent->photo) ? $photo = $recordstudent->photo : ''; ?>" />
                         <img class="photoimage" id="photoimage" autocomplete="off" alt="写真" height="190" src="
                          <?php
                          $photo = $PHOTO_PATH . 'default/empty.jpg';
@@ -203,7 +203,7 @@ if($mod != 'add') {
                       }
                     }
                     echo $studentvalue;
-                    ?>" type="text" class="form-control" name="<?= $key; ?>">
+                    ?>" type="text" class="form-control" name="<?= $key; ?>" id="text_<?= $key; ?>">
                   <label class="form-label"><?= $value[0]; ?></label>
                 </div>
               </li>
@@ -212,7 +212,7 @@ if($mod != 'add') {
               <li class="input-group-select clearfix">
                 <span class="input-group-addon"> <i class="material-icons col-green">account_balance</i> </span>
                 <div class="form-line">
-                  <select class="kodama-icon-select" name="nationalityregion">
+                  <select class="kodama-icon-select" name="nationalityregion" id="select_nationalityregion">
                     <option value="-1">-- Please select nationalityregion --</option>
                     <?php
                     $sql = 'SELECT typeID, typename FROM idconfig WHERE type="nationalityregion" ORDER BY typeID ASC';
@@ -228,7 +228,7 @@ if($mod != 'add') {
               <li class="input-group-select clearfix">
                 <span class="input-group-addon"> <i class="material-icons col-green">class</i> </span>
                 <div class="form-line">
-                  <select class="kodama-icon-select" name="classID" id="classID">
+                  <select class="kodama-icon-select" name="classID" id="select_classID">
                     <option value="0">-- Please select class --</option>
                     <?php
                     $sql = 'SELECT ID, name, classteacherID FROM class';
@@ -245,7 +245,7 @@ if($mod != 'add') {
               <li class="input-group-select clearfix">
                 <span class="input-group-addon"> <i class="material-icons col-green">perm_identity</i> </span>
                 <div class="form-line">
-                  <select class="kodama-icon-select" name="classteacherID" id="classteacherID">
+                  <select class="kodama-icon-select" name="classteacherID" id="select_classteacherID">
                     <option value="0">-- Please select teacher --</option>
                     <?php
                     $sql = 'SELECT ID, name FROM teacher';
@@ -261,7 +261,7 @@ if($mod != 'add') {
               <li class="input-group-select clearfix">
                 <span class="input-group-addon"> <i class="material-icons col-green">beenhere</i> </span>
                 <div class="form-line">
-                  <select class="kodama-icon-select" name="status">
+                  <select class="kodama-icon-select" name="status" id="select_status">
                     <option value="-1">-- Please select status --</option>
                     <?php
                     $sql = 'SELECT typeID, typename FROM idconfig WHERE type="status" ORDER BY typeID ASC';
@@ -278,7 +278,7 @@ if($mod != 'add') {
             
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
             <input type="hidden" name="mod" id="mod" value="<?= $mod; ?>" />
-            <input type="hidden" name="ID" id="ID" value="<?= $ID; ?>" />
+            <input type="hidden" name="ID" id="text_ID" value="<?= $ID; ?>" />
           </form>
           <input hidden="true" type="file" size="32" id="photofile" name="photofile" value="" accept="image/*" />
         </div>
@@ -292,21 +292,43 @@ if($mod != 'add') {
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
+<script src="../style/js/kodama-table-student-infoedit.js"></script>
 <script type="text/javascript">
-  function refreshRecord() {
-    location.reload();
-  }
-  
+  var _studentrecord = { // 默认值需要与html中同样，重置时使用
+    'text_name': '',
+    'radio_	genderfemale': '',
+    'time_birthday': '',
+    'text_description': '',
+    'text_lastname': '',
+    'text_firstname': '',
+    'text_lastnamefurigana': '',
+    'text_firstnamefurigana': '',
+    'text_lastnamealphabet': '',
+    'text_firstnamealphabet': '',
+    'text_lastnamemotherland': '',
+    'text_firstnamemotherland': '',
+    'text_studentnumber': '',
+    'text_applicationnumber': '',
+    'text_phonenumber': '',
+    'photo_photo': '',
+    'select_nationalityregion': '',
+    'select_classID': '',
+    'select_classteacherID': '',
+    'select_status': '',
+    'text_ID': '',
+  };
+  g_records.mod = 'get';
+    
   $(document).ready(function() {
     var g_classesinfo = {};
     g_classesinfo = <?php echo $php_classesinfo; ?>;
 
     //班级select 联动 教师select，选中班级，自动选择班主任老师 
     //js或html调用php变量只能放在php文件里面，js文件不可以
-    $('#classID').change(function(){ //选中班级，自动选择班主任老师
+    $('#select_classID').change(function(){ //选中班级，自动选择班主任老师
       //$(this).children('option:selected').val();//可以用
       //$("#classID option:selected").val();//也可以用
-      let classid = $("#classID").val(); //可以用，这就是selected的值
+      let classid = $("#select_classID").val(); //可以用，这就是selected的值
       //console.log(classid);
 
       let classesinfo = g_classesinfo;
@@ -318,7 +340,7 @@ if($mod != 'add') {
           break;
         }
       }
-      $('#classteacherID').val(teacherid); //设置select的值
+      $('#select_classteacherID').val(teacherid); //设置select的值
       //$('#classteacherID').selectpicker('val', teacherid); //设置select的值
       //$('#classteacherID').selectpicker('refresh'); //必须刷新才能看到结果
     });

@@ -56,14 +56,14 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
             <div class="kodama-texthorli">
               <div class="form-group" style="word-wrap: break-word; word-break: break-all;">
                 <div class="form-line">
-                  <textarea cols="12" rows="8" value="" type="text" class="form-control" name="description" placeholder="Description" autofocus><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
+                  <textarea cols="12" rows="8" value="" type="text" class="form-control" name="description" id="text_description" placeholder="Description" autofocus><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
                 </div>
               </div>
             </div>
             
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
             <input type="hidden" name="mod" id="mod" value="updatedescription" />
-            <input type="hidden" name="ID" id="ID" value="<?= $ID; ?>" />
+            <input type="hidden" name="ID" id="text_ID" value="<?= $ID; ?>" />
           </form>
         </div>
       </div>
@@ -79,10 +79,13 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
 <script src="../style/js/kodama-formajaxsubmit.js"></script>
 <!-- Input Mask Plugin Js -->
 <script src="../style/js/jquery.inputmask.bundle.js"></script>
+<script src="../style/js/kodama-table-student-infoedit.js"></script>
 <script type="text/javascript">
-  function refreshRecord() {
-    location.reload();
-  }
+  var _studentrecord = { // 默认值需要与html中同样，重置时使用
+    'text_description': '',
+    'text_ID': '',
+  };
+  g_records.mod = 'getdescription';
   
   $(document).ready(function() {  
     var $maskedInput = $('.kodama-texthorli');

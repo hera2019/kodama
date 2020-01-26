@@ -115,7 +115,7 @@ class Student_Class
 	}
   
 	//获取学生信息
-	public function GetStudent($studentID, &$students)
+	public function GetStudent($studentID, &$data)
 	{
 		if(!empty($studentID))
 		{
@@ -124,7 +124,25 @@ class Student_Class
       $statement->execute( [ ':ID' => $studentID ] );
       $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
       if ( $recordstudent != NULL ) {
-        $students = get_object_vars($recordstudent);
+        $data = get_object_vars($recordstudent);
+        return '';
+      }
+      return 'Student base info not found. ';
+    }
+		return 'Student ID not found. ';
+	}
+  
+	//获取学生备注信息
+	public function GetStudentDescription($studentID, &$data)
+	{
+		if(!empty($studentID))
+		{
+      $sql = 'SELECT ID, description FROM student WHERE ID=:ID';
+      $statement = $this->connection->prepare( $sql );
+      $statement->execute( [ ':ID' => $studentID ] );
+      $recordstudent = $statement->fetch( PDO::FETCH_OBJ );
+      if ( $recordstudent != NULL ) {
+        $data = get_object_vars($recordstudent);
         return '';
       }
       return 'Student base info not found. ';
@@ -379,7 +397,7 @@ class Student_Class
         $students = get_object_vars($recordstudent);
         return '';
       }
-      return 'Student base info not found. ';
+      return 'Student other info not found. ';
     }
 		return 'Student ID not found. ';
 	}

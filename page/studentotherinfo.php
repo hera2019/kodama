@@ -67,8 +67,10 @@ if ( $recordcolumn == NULL ) {
             <div class="kodama-texthorli">
               <!-- 循环自动添加控件 -->
               <?php
+              $php_student_record = [];
               foreach($recordcolumn as $column) {
                 if($column->DATA_TYPE == 'text') {
+                  $php_student_record['text_' . $column->COLUMN_NAME] = '';
                   echo '<li class="input-group">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
                     echo '<div class="form-line">';
@@ -79,17 +81,18 @@ if ( $recordcolumn == NULL ) {
                       }
                       echo $studentvalue;
                     if($column->COLUMN_NAME == 'residenceperiod') {
-                      echo '" type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月">';
+                      echo '" type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" id="text_' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月">';
                     } else {
-                      echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '">';
+                      echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '" id="text_' . $column->COLUMN_NAME . '">';
                     }
                     echo '</div>';
                   echo '</li>';
-                } else if($column->DATA_TYPE == 'date') {
+                } else if($column->DATA_TYPE == 'date') {                  
+                  $php_student_record['time_' . $column->COLUMN_NAME] = '';
                   echo '<li class="input-group">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
                     echo '<div class="form-line form-group kodama-datepicker" id="time_' . $column->ORDINAL_POSITION . '" data-target-input="nearest" style="margin-bottom: 0;">';
-                      echo '<input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_' . $column->ORDINAL_POSITION . '" data-toggle="datetimepicker" name="' . $column->COLUMN_NAME . '" style="text-align: left; width: 100%;" value="';                     
+                      echo '<input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_' . $column->ORDINAL_POSITION . '" data-toggle="datetimepicker" name="' . $column->COLUMN_NAME . '" id="time_' . $column->COLUMN_NAME . '" style="text-align: left; width: 100%;" value="';                     
                       $studentvalue = '';
                       if(!empty($students)) {
                         $studentvalue = $students[$column->COLUMN_NAME];
@@ -102,10 +105,11 @@ if ( $recordcolumn == NULL ) {
                           ($column->COLUMN_NAME == 'curriculum') || 
                           ($column->COLUMN_NAME == 'residence') || 
                           ($column->COLUMN_NAME == 'career')) {
+                  $php_student_record['select_' . $column->COLUMN_NAME] = '';
                   echo '<li class="input-group-select clearfix">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
                     echo '<div class="form-line">';
-                      echo '<select class="kodama-icon-select" name="' . $column->COLUMN_NAME . '">';
+                      echo '<select class="kodama-icon-select" name="' . $column->COLUMN_NAME . '" id="select_' . $column->COLUMN_NAME . '">';
                         echo '<option value="-1">-- Please select --</option>';
                         $sql = 'SELECT typeID, typename FROM idconfig WHERE type="' . $column->COLUMN_NAME . '" ORDER BY typeID ASC';
                         $statement = $connection->prepare($sql);
@@ -120,12 +124,13 @@ if ( $recordcolumn == NULL ) {
                   echo '</li>';
                 }
               }
+              $php_student_record_json = json_encode($php_student_record);
               ?>
             </div>
             
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
             <input type="hidden" name="mod" id="mod" value="update2" />
-            <input type="hidden" name="ID" id="ID" value="<?= $ID; ?>" />
+            <input type="hidden" name="ID" id="text_ID" value="<?= $ID; ?>" />
           </form>
         </div>
       </div>
@@ -141,10 +146,10 @@ if ( $recordcolumn == NULL ) {
 <script src="../style/js/kodama-formajaxsubmit.js"></script>
 <!-- Input Mask Plugin Js -->
 <script src="../style/js/jquery.inputmask.bundle.js"></script>
+<script src="../style/js/kodama-table-student-infoedit.js"></script>
 <script type="text/javascript">
-  function refreshRecord() {
-    location.reload();
-  }
+  var _studentrecord = JSON.parse('<?= $php_student_record_json; ?>');
+  g_records.mod = 'get2';
   
   $(document).ready(function() {
     //var $maskedInput = $('.kodama-texthorli');

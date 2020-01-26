@@ -58,7 +58,7 @@
                   <td class="col-xs-2" colspan="3">
                     <div class="form-line" id="photo_drag" style="width: 100%;">
                       <form id="formphoto" name="formphoto" enctype="multipart/form-data" method="post" action="../plugin/upload/upload.php" />
-                      <input hidden="true" type="text" name="photo" id="photo" value="" />
+                      <input hidden="true" type="text" name="photo" id="photo_photo" value="" />
                       <input hidden="true" type="file" size="32" id="photofile" name="photofile" value="" accept="image/*" />
                       <img class="photoimage" id="photoimage" autocomplete="off" alt="写真" height="" width="100%" src="<?= $PHOTO_PATH . 'default/upload.jpg'; ?>" />
                     </div>
@@ -164,16 +164,13 @@
     }
   }
 
-  $(document).ready(function () {
-  });
-
   $(function () {
     $(".btn-imagefile").click(function(event) {
       var btnid = this.id;
       if(btnid.search(/btn_/) == 0) {
         let n = btnid.search(/_photofile/);
         var index = btnid.substr(4, n - 4);
-        var photofile = document.getElementById('photo').value;
+        var photofile = document.getElementById('photo_photo').value;
         if(photofile == '') {
           return;
         }

@@ -26,7 +26,7 @@ $(function () {
       success: function (data) {
         data = JSON.parse(data);
         if(data.result == 200) {
-          let photoname = document.getElementById('photo'); //可能的ID值1，记录图片文件名
+          let photoname = document.getElementById('photo_photo'); //可能的ID值1，记录图片文件名
           if(photoname) {
             photoname.value = data.filename;
           } else {
