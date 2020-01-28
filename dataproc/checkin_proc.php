@@ -5,6 +5,8 @@ use NS_Kodama_DB\Checkin_Class;
 class RtInfo {
   public $result = 201; //result:(200:success, 201...:failed)
   public $message = '';
+  public $data = '';
+  public $info = '';
 }
 
 $message = 'Checkin info operate failed: param error.';
@@ -62,6 +64,26 @@ if (!empty($mod))
           echo json_encode($rtinfo);
           return $message;
         }
+      }
+    }
+  }
+  else if($mod == 'getattendance')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $data = '';
+      $info = '';
+      $classdata = new Checkin_Class($connection);
+      $message = $classdata->GetAttendance($ID, $data, $info);
+      if($message == '')
+      {
+        $rtinfo->result = 200;
+        $rtinfo->message = "Get student info successfully!";
+        $rtinfo->data = $data;
+        $rtinfo->info = $info;
+        echo json_encode($rtinfo);
+        return $message;
       }
     }
   }
@@ -127,7 +149,7 @@ if (!empty($mod))
     $Param = GetParam('param');
     $data = '';
     $cls = new Checkin_Class($connection);
-    $message = $cls->QueryClasssituation($Param, $data);
+    $message = $cls->QueryClassSituation($Param, $data);
 
     if($message == '')
     {
@@ -171,7 +193,7 @@ if (!empty($mod))
         $checkinIDs .= ')';
         
         $cls = new Checkin_Class($connection);
-        $message = $cls->editClasssituation($checkinIDs, $property);
+        $message = $cls->EditClassSituation($checkinIDs, $property);
 
         if($message == '')
         {

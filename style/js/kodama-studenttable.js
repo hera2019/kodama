@@ -347,7 +347,7 @@ function format(data) {
       '<tr>'+
         '<td></td>'+
         '<td>写真:</td>'+
-        '<td><img class="photo" id="info_photo" alt="写真" height="100" src="'+photo+'" /></td>'+
+        '<td><img class="photo" id="info_photo" alt="写真" height="100px" src="'+photo+'" /></td>'+
       '</tr>'+
     '</tbody>'+
   '</table>';

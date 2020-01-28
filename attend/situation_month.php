@@ -37,14 +37,15 @@ $time = time();
 $currenttime = date( 'Y-m-d H:i:s', $time );
 $sql = 'SELECT *, a.ID AS ID, s.classID AS classID from attendance AS a LEFT JOIN student AS s ON a.studentID=s.ID';
 if($REBUILD_ALL) {
-  $sql2 = 'UPDATE situationmonth SET attendlesson=0';
-  $statement = $connection->prepare( $sql2 );
+  $sqltruncate = 'truncate table situationmonth';
+  echo $sqltruncate . '<br>';
+  $statement = $connection->prepare( $sqltruncate );
   $statement->execute();
 } else {
   $lastID = 0;
   $lasttime = '2019-07-01 00:00:00';
-  $sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
-  $statement = $connection->prepare( $sql );
+  $sql3 = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
+  $statement = $connection->prepare( $sql3 );
   $statement->execute();
   $recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
   if($recordlastrecord) {
@@ -64,6 +65,7 @@ if($REBUILD_ALL) {
 $statement = $connection->prepare( $sql );
 $statement->execute();
 $recordattendance = $statement->fetchAll(PDO::FETCH_OBJ);
+//echo $sql . '<br>';
 foreach($recordattendance as $recordattendance) {
   $studentID = $recordattendance->studentID;
   $property = $recordattendance->property;
@@ -101,7 +103,7 @@ foreach($recordattendance as $recordattendance) {
   if($property == 1 || $property == 6) {
     $attendlesson = $lessons;
   }
-  
+    
   $sql = "SELECT ID, property, attendlesson from situationmonth WHERE studentID=:studentID AND date=:date";
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
@@ -120,7 +122,9 @@ foreach($recordattendance as $recordattendance) {
     $propertyarray[$propertykey] = $property;
     $propertytext = json_encode($propertyarray);
     $sql = 'UPDATE situationmonth SET property=:property, attendlesson=:attendlesson, classlesson=:classlesson, recordtime=:recordtime WHERE ID=:ID';
-    //echo $propertytext . ' ' . $attendlesson . ': month UPDATE<br>';
+    
+    echo 'date studentID attendlesson classlesson property : ' . $date . ' ' . $studentID . ' ' . $attendlesson . ' ' . $monthclasslesson . ' ' . $propertytext . '<br>';
+    
     $statement = $connection->prepare( $sql );
     if ( $statement->execute( [ ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
     } else {
@@ -132,6 +136,9 @@ foreach($recordattendance as $recordattendance) {
     $propertyarray[$propertykey] = $property;
     $propertytext = json_encode($propertyarray);
     $sql = 'INSERT INTO situationmonth(studentID, property, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
+    
+    echo 'date studentID attendlesson classlesson property : ' . $date . ' ' . $studentID . ' ' . $attendlesson . ' ' . $monthclasslesson . ' ' . $propertytext . '<br>';
+    
     $statement = $connection->prepare( $sql );
     if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':date' => $date ] ) ) {      
     } else {
@@ -143,6 +150,7 @@ if($recordattendance) {
   $sql = 'UPDATE lastrecord SET recordID=:recordID, recordtime=:recordtime WHERE tablename="attendance"';
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
+  echo 'The last record time is: ' . $recordattendance->recordtime . '<br>';
 }
 
 //判断当前时间是否上课时间

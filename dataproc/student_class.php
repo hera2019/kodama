@@ -396,6 +396,11 @@ class Student_Class
       if ( $recordstudent != NULL ) {
         $students = get_object_vars($recordstudent);
         return '';
+      } else {
+        $ret = new Attend();
+        $ret->ID = $studentID;
+        $students = get_object_vars($ret);
+        return '';
       }
       return 'Student other info not found. ';
     }

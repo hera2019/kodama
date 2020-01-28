@@ -74,17 +74,17 @@ if ( $recordcolumn == NULL ) {
                   echo '<li class="input-group">';
                     echo '<span class="input-group-addon">' . $column->COLUMN_COMMENT . ': </span>';
                     echo '<div class="form-line">';
-                    echo '<input value="';
+                    if($column->COLUMN_NAME == 'residenceperiod') {
+                      echo '<input type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" id="text_' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月"';
+                    } else {
+                      echo '<input type="text" class="form-control" name="' . $column->COLUMN_NAME . '" id="text_' . $column->COLUMN_NAME . '"';
+                    }
+                    echo ' value="';
                       $studentvalue = '';
                       if(!empty($students)) {
                         $studentvalue = $students[$column->COLUMN_NAME];
                       }
-                      echo $studentvalue;
-                    if($column->COLUMN_NAME == 'residenceperiod') {
-                      echo '" type="text" class="form-control residenceperiod-mask" name="' . $column->COLUMN_NAME . '" id="text_' . $column->COLUMN_NAME . '" placeholder="0年00ヶ月">';
-                    } else {
-                      echo '" type="text" class="form-control" name="' . $column->COLUMN_NAME . '" id="text_' . $column->COLUMN_NAME . '">';
-                    }
+                      echo $studentvalue . '">';
                     echo '</div>';
                   echo '</li>';
                 } else if($column->DATA_TYPE == 'date') {                  
@@ -124,6 +124,7 @@ if ( $recordcolumn == NULL ) {
                   echo '</li>';
                 }
               }
+              $php_student_record['text_ID'] = '';
               $php_student_record_json = json_encode($php_student_record);
               ?>
             </div>
@@ -154,6 +155,6 @@ if ( $recordcolumn == NULL ) {
   $(document).ready(function() {
     //var $maskedInput = $('.kodama-texthorli');
     //$maskedInput.find('.residenceperiod-mask').inputmask('9年mヶ月');
-    $('.residenceperiod-mask').inputmask('9年mヶ月');
+    $('.residenceperiod-mask').inputmask("9年Mヶ月");//'9年{0,1}ヶ月');0|19
   });
 </script>

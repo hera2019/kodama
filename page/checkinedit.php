@@ -352,13 +352,17 @@ $(document).ready(function() {
     afterSelect: function(values) {
       this.qs1.cache();
       this.qs2.cache();
-      _kodama_students.studentID[values] = true;
+      for(var studentid in values) {
+        _kodama_students.studentID[values[studentid]] = true;        
+      }
       $('#ID').val(JSON.stringify(_kodama_students.studentID));
     },
     afterDeselect: function(values) {
       this.qs1.cache();
       this.qs2.cache();
-      _kodama_students.studentID[values] = false;
+      for(var studentid in values) {
+        _kodama_students.studentID[values[studentid]] = false;
+      }
       $('#ID').val(JSON.stringify(_kodama_students.studentID));
     }
   });

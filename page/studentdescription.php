@@ -48,7 +48,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
               } else {
                 echo 'Edit Student Description:';
               }
-              ?></font></div>            
+              ?></font></div>
             <div  style="padding-left: 2rem;">
               <div id="message" class="alert-warning align-left col-white" style="line-height: 23px; width: 100%;"><?= $message; ?></div>
             </div>

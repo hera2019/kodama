@@ -38,11 +38,15 @@ $time = time();
 $lasttime = '2019-07-01 00:00:00';
 
 if($REBUILD_ALL) {
+  $sqltruncate = 'DELETE * FROM situationclass WHERE manualmodified<1';
+  echo $sqltruncate . '<br>';
+  $statement = $connection->prepare( $sqltruncate );
+  $statement->execute();
   $sql = 'SELECT recordtime FROM attendance ORDER BY ID ASC LIMIT 1';
 } else {
   $lastID = 0;
-  $sql = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
-  $statement = $connection->prepare( $sql );
+  $sql2 = 'SELECT recordID, recordtime FROM lastrecord WHERE tablename="attendance"';
+  $statement = $connection->prepare( $sql2 );
   $statement->execute();
   $recordlastrecord = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
   if($recordlastrecord) {
@@ -113,7 +117,7 @@ foreach ( $recordclass as $recordclass ) {
         $endtime = $thatday . ' ' . date( 'H:i:s', strtotime( $classend ) );
 
         //判断当前上课时间classschedule记录是否已生成，已生成则退出
-        $sql = "SELECT * FROM  situationclass WHERE classID=:classID AND (recordtime between :starttime and :endtime)";
+        $sql = "SELECT * FROM situationclass WHERE classID=:classID AND (recordtime between :starttime and :endtime)";
         $statement = $connection->prepare( $sql );
         $statement->execute( [ ':classID' => $classID, ':starttime' => $recordtime, ':endtime' => $endtime ] );
         $recordsituationclass = $statement->fetchAll( PDO::FETCH_OBJ );
@@ -168,7 +172,7 @@ foreach ( $recordclass as $recordclass ) {
 
         }
         //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson2<br>';
-        //echo $studentnum . '  ' . $checkinnum . '  ' . $property . '  ' . $lessons . '  ' . $recordtime . '<br>';
+        echo 'time classID index studentnum checkinnum lessons : ' . $recordtime . ' ' . $classID . ' ' . $classindex . ' ' . $studentnum . ' ' . $checkinnum . ' ' . $lessons . '<br>';
         if ( !$bFind ) { //生成
           //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
           $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, lessons, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :lessons, :recordtime)';

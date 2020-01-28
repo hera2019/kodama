@@ -1544,6 +1544,14 @@
                 cardinality: 1
             } ]
         },
+        M: {
+            validator: "0[0-9]|1[01]",
+            cardinality: 2,
+            prevalidator: [ {
+                validator: "[01]",
+                cardinality: 1
+            } ]
+        },
         y: {
             validator: "(19|20)\\d{2}",
             cardinality: 4,

@@ -202,6 +202,7 @@ function postGetData(id, studentrecord, nomsg=false) {
             if(el) {
               el.value = data[keyname];
               el.innerHTML = data[keyname];
+              el.setAttribute('value', data[keyname]);
             }
           }
         } else if(key.search(/text2_/) == 0) { //text2
@@ -286,6 +287,7 @@ function postGetData(id, studentrecord, nomsg=false) {
         if(el) {
           el.value = studentrecord[key];
           el.innerHTML = studentrecord[key];
+          el.setAttribute('value', studentrecord[key]);
         }
       } else if(key.search(/select_/) == 0) { //select
         let el = document.getElementById(key);
