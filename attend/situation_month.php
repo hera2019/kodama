@@ -43,77 +43,94 @@ $recordattendance = $statement->fetchAll(PDO::FETCH_OBJ);
 //echo $sql . '<br>';
 foreach($recordattendance as $recordattendance) {
   $studentID = $recordattendance->studentID;
-  $property = $recordattendance->property;
-  $timerecord = strtotime($recordattendance->time11);
-  $date = date( 'Y-m-01', $timerecord );
-  $dateNo = date( 'd', $timerecord ) + 0;
   
-  $propertynew = 0;
-  $classindex = $LessonClass->GetClassIndexProperty($recordattendance->time11, $recordattendance->time12, $propertynew);
-  if($classindex == 0) {
-    continue;
-  }
-  if(!$recordattendance->manualmodified) { //没有手动更改过，属性按新计算结果
-    $property = $propertynew;
-  }
+  $classindexnew = [];
+  $classindexnew[1] = $recordattendance->classindex1;
+  $classindexnew[2] = $recordattendance->classindex2;
+  $classindexnew[3] = $recordattendance->classindex3;
+  $classindexnew[4] = $recordattendance->classindex4;
+  $propertynew = [];
+  $propertynew[1] = $recordattendance->property1;
+  $propertynew[2] = $recordattendance->property2;
+  $propertynew[3] = $recordattendance->property3;
+  $propertynew[4] = $recordattendance->property4;
+  $timerecord = [];
+  $timerecord[1] = strtotime($recordattendance->time11);
+  $timerecord[2] = strtotime($recordattendance->time21);
+  $timerecord[3] = strtotime($recordattendance->time31);
+  $timerecord[4] = strtotime($recordattendance->time41);
   
-  $lessons = $LessonClass->GetClassLessons($classindex);
-  $monthclasslesson = 0;
-  $classID = $recordattendance->classID;
-  if(isset($classlesson) && isset($classlesson[$classID]) && isset($classlesson[$classID][$date])) {
-    $monthclasslesson = $classlesson[$classID][$date];
-  } else {
-    continue;
-  }
-  $propertykey = 'd' . $dateNo . 'c' . $classindex;
+  for($i=1; $i<=4; $i++) {
+    $date = date( 'Y-m-01', $timerecord[$i] );
+    $dateNo = date( 'd', $timerecord[$i] ) + 0;
 
-  //统计签到课时数
-  $attendlesson = 0;
-  if($property == 1) {
-    $attendlesson = $lessons;
-  } elseif($property == 6 && $lessons > 0) {
-    $attendlesson = $lessons - 1;
-  }
-  
-  $sql = "SELECT ID, property, attendlesson from situationmonth WHERE studentID=:studentID AND date=:date";
-  $statement = $connection->prepare( $sql );
-  $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
-  $recordsituationmonth = $statement->fetch(PDO::FETCH_OBJ);
-  if($recordsituationmonth) {
-    //$sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.' . $propertykey . '", :property), recordtime=:recordtime WHERE ID=:ID'; //mysql5.7以上版本支持JSON，bluehost服务器mysql目前版本是5.6.41-84.1
-    $propertyarray = array();
-    if(!empty($recordsituationmonth->property)) {
-      $propertyarray = json_decode($recordsituationmonth->property, true);
+    $property = $propertynew[$i];
+    $classindex = $classindexnew[$i];
+    if(empty($classindex) || empty($property)) {
+      continue;
     }
+
+    $monthclasslesson = 0;
+    $lessons = $LessonClass->GetClassLessons($classindex);
+    $classID = $recordattendance->classID;
+    if(isset($classlesson) && isset($classlesson[$date]) && isset($classlesson[$date][$classID])) {
+      $monthclasslesson = $classlesson[$date][$classID];
+    } else {
+      continue;
+    }
+    $propertykey = 'd' . $dateNo . 'c' . $classindex;
+
     //统计签到课时数
-    if(!empty($recordsituationmonth->attendlesson)) {
-      $attendlesson += $recordsituationmonth->attendlesson;
+    $attendlesson = 0;
+    $checkday = date( 'Y-m-d', $timerecord[$i] );
+    if(isset($classproperty) && isset($classproperty[$checkday]) && isset($classproperty[$checkday][$classID]) && isset($classproperty[$checkday][$classID][$classindex]) && $classproperty[$checkday][$classID][$classindex] == 1) {      
+      if($property == 1) {
+        $attendlesson = $lessons;
+      } elseif($property == 6 && $lessons > 0) {
+        $attendlesson = $lessons - 1;
+      }
     }
 
-    $propertyarray[$propertykey] = $property;
-    $propertytext = json_encode($propertyarray);
-    $sql = 'UPDATE situationmonth SET property=:property, attendlesson=:attendlesson, classlesson=:classlesson, recordtime=:recordtime WHERE ID=:ID';
-    
-    echo 'date studentID attendlesson classlesson property : ' . $date . ' ' . $studentID . ' ' . $attendlesson . ' ' . $monthclasslesson . ' ' . $propertytext . '<br>';
-    
+    $sql = "SELECT ID, property, attendlesson from situationmonth WHERE studentID=:studentID AND date=:date";
     $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
+    $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
+    $recordsituationmonth = $statement->fetch(PDO::FETCH_OBJ);
+    if($recordsituationmonth) {
+      //$sql = 'UPDATE situationmonth SET property=JSON_SET(property, "$.' . $propertykey . '", :property), recordtime=:recordtime WHERE ID=:ID'; //mysql5.7以上版本支持JSON，bluehost服务器mysql目前版本是5.6.41-84.1
+      $propertyarray = array();
+      if(!empty($recordsituationmonth->property)) {
+        $propertyarray = json_decode($recordsituationmonth->property, true);
+      }
+      //统计签到课时数
+      if(!empty($recordsituationmonth->attendlesson)) {
+        $attendlesson += $recordsituationmonth->attendlesson;
+      }
+
+      $propertyarray[$propertykey] = $property;
+      $propertytext = json_encode($propertyarray);
+      $sql = 'UPDATE situationmonth SET property=:property, attendlesson=:attendlesson, classlesson=:classlesson, recordtime=:recordtime WHERE ID=:ID';
+
+      echo 'date: ' . $date . ' studentID: ' . $studentID . ' attendlesson: ' . $attendlesson . ' classlesson: ' . $monthclasslesson . ' property: ' . $propertytext . '<br>';
+
+      $statement = $connection->prepare( $sql );
+      if ( $statement->execute( [ ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
+      } else {
+        echo ShowErrorCode( $statement );
+      }
     } else {
-      echo ShowErrorCode( $statement );
-    }
-  } else {
-    //$sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("' . $propertykey . '", :property), :date)'; //mysql5.7以上版本支持JSON，bluehost服务器mysql目前版本是5.6.41-84.1
-    $propertyarray = array();
-    $propertyarray[$propertykey] = $property;
-    $propertytext = json_encode($propertyarray);
-    $sql = 'INSERT INTO situationmonth(studentID, property, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
-    
-    echo 'date studentID attendlesson classlesson property : ' . $date . ' ' . $studentID . ' ' . $attendlesson . ' ' . $monthclasslesson . ' ' . $propertytext . ' : new record<br>';
-    
-    $statement = $connection->prepare( $sql );
-    if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':date' => $date ] ) ) {      
-    } else {
-      echo ShowErrorCode( $statement );
+      //$sql = 'INSERT INTO situationmonth(studentID, property, date) VALUES(:studentID, JSON_OBJECT("' . $propertykey . '", :property), :date)'; //mysql5.7以上版本支持JSON，bluehost服务器mysql目前版本是5.6.41-84.1
+      $propertyarray = array();
+      $propertyarray[$propertykey] = $property;
+      $propertytext = json_encode($propertyarray);
+      $sql = 'INSERT INTO situationmonth(studentID, property, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
+
+      echo 'date: ' . $date . ' studentID: ' . $studentID . ' attendlesson: ' . $attendlesson . ' classlesson: ' . $monthclasslesson . ' property: ' . $propertytext . ' : new record<br>';
+
+      $statement = $connection->prepare( $sql );
+      if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':date' => $date ] ) ) {      
+      } else {
+        echo ShowErrorCode( $statement );
+      }
     }
   }
 }

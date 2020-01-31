@@ -320,6 +320,7 @@ class LessonClass
   }
 
   function GetClassIndexProperty( $time1, $time2, &$property ) {
+    $property = 0;
     if(!empty($time1) && !empty($time2)) {
       $date1 = date( 'Y-m-d', strtotime( $time1 ) );
       $date2 = date( 'Y-m-d', strtotime( $time2 ) );
@@ -327,8 +328,11 @@ class LessonClass
         return 0;
       }
     }
-
-    $property = 0;
+    if(empty($time1) && empty($time2)) {
+      $property = '';
+      return 0;
+    }
+    
     $blate1 = false;
     $blate2 = false;
     $classindex1 = $this->GetClassIndex($time1, true, $blate1);

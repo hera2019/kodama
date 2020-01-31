@@ -43,7 +43,8 @@ if($recordattendance) {
 //echo $lastID . ' ' . $lasttime . ': lastID lasttime<br>';
 
 //查询班级ID、学生人数
-$classlesson = array(); //classID // 日期，年月01日，'Y-m-01'
+$classlesson = array(); // 日期，年月01日，'Y-m-01' classID
+$classproperty = array(); // 日期，年月日，'Y-m-d' classID classindex
 $sql = 'SELECT ID FROM class';
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -78,8 +79,10 @@ foreach ( $recordclass as $recordclass ) {
         $statement->execute( [ ':classID' => $classID, ':starttime' => $recordtime, ':endtime' => $endtime ] );
         $recordsituationclass = $statement->fetchAll( PDO::FETCH_OBJ );
 
-        $starttime = $thatday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $LessonClass->GetClassAheadPeriod() * 60 ); //提前aheadperiod分钟签到
-
+        //$starttime = $thatday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $LessonClass->GetClassAheadPeriod() * 60 ); //提前aheadperiod分钟签到
+        $starttime = $thatday . ' ' . date( 'H:i:s', strtotime( '00:00:00' ) );
+        $endtime = $thatday . ' ' . date( 'H:i:s', strtotime( '23:59:59' ) );
+        
         foreach ( $recordsituationclass as $recordsituationclass ) {
           if ( $classindex == $recordsituationclass->classindex && $classID == $recordsituationclass->classID ) {
             $bFind = TRUE;
@@ -91,23 +94,24 @@ foreach ( $recordclass as $recordclass ) {
         
         if($bFind && $recordsituationclass && $recordsituationclass->manualmodified) {
           if($recordsituationclass->property == 1) {
-            if(isset($classlesson[$classID]) && isset($classlesson[$classID]) && isset($classlesson[$classID][$lessonday])) {
-              $classlesson[$classID][$lessonday] += $lessons;
+            $classproperty[$thatday][$classID][$classindex] = 1;
+            if(isset($classlesson) && isset($classlesson[$lessonday]) && isset($classlesson[$lessonday][$classID])) {
+              $classlesson[$lessonday][$classID] += $lessons;
             }
             else {
-              $classlesson[$classID][$lessonday] = $lessons;
+              $classlesson[$lessonday][$classID] = $lessons;
             }
+            //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ' ' . $classlesson[$lessonday][$classID] . ': lesson1<br>';
           }
-          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ' ' . $classlesson[$classID][$lessonday] . ': lesson1<br>';
           continue;
         }
 
         //查询当课段签到人数，提前60分钟签到（可设定），签到时间段：$classstart-$aheadperiod到$classend之间   
         $sql = "SELECT COUNT(*) from attendance LEFT JOIN student on attendance.studentID=student.ID
                 WHERE time11 between :starttime and :endtime
-                AND student.classID = :classID";
+                AND student.classID = :classID AND instr(concat(',',classindex1,',',classindex2,',',classindex3,',',classindex4,','),concat(',',:classindex,','))>0";
         $statement = $connection->prepare( $sql );
-        $statement->execute( [ ':classID' => $classID, ':starttime' => $starttime, ':endtime' => $endtime ] );
+        $statement->execute( [ ':classID' => $classID, ':starttime' => $starttime, ':endtime' => $endtime, ':classindex' => $classindex ] );
         //$record = $statement->fetch(PDO::FETCH_OBJ);
         $checkinnum = $statement->fetchColumn(); //取得欄位1 的值  (也就是count(*))
         if ( $checkinnum == 0 ) {
@@ -115,13 +119,14 @@ foreach ( $recordclass as $recordclass ) {
           continue;
         } elseif ( $checkinnum / $studentnum > 0.5 ) {//>50%自动判断为有课
           $property = 1; //出
-          if(isset($classlesson[$classID]) && isset($classlesson[$classID]) && isset($classlesson[$classID][$lessonday])) {
-            $classlesson[$classID][$lessonday] += $lessons;
+          $classproperty[$thatday][$classID][$classindex] = 1;
+          if(isset($classlesson) && isset($classlesson[$lessonday]) && isset($classlesson[$lessonday][$classID])) {
+            $classlesson[$lessonday][$classID] += $lessons;
           }
           else {
-            $classlesson[$classID][$lessonday] = $lessons;
+            $classlesson[$lessonday][$classID] = $lessons;
           }
-          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ' ' . $classlesson[$classID][$lessonday] . ': lesson2<br>';
+          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ' ' . $classlesson[$lessonday][$classID] . ': lesson2<br>';
         }
         else { //<50%提醒负责人确认
           $property = 0;
@@ -129,7 +134,7 @@ foreach ( $recordclass as $recordclass ) {
 
         }
         //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson2<br>';
-        echo 'time classID index studentnum checkinnum lessons : ' . $recordtime . ' ' . $classID . ' ' . $classindex . ' ' . $studentnum . ' ' . $checkinnum . ' ' . $lessons . ' : new record<br>';
+        echo 'time: ' . $recordtime . ' classID: ' . $classID . ' index: ' . $classindex . ' studentnum: ' . $studentnum . ' checkinnum: ' . $checkinnum . ' lessons: ' . $lessons . ' : ' . ($bFind ? '' : 'new record') . '<br>';
         if ( !$bFind ) { //生成
           //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
           $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, lessons, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :lessons, :recordtime)';

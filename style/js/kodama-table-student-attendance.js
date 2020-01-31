@@ -69,25 +69,29 @@ function postGetData(id, nomsg=false) {
             if(monthinfo.days[d]) {
               propertyname = monthinfo.days[d];
             }
-            tbContent += '<td ';
-            if(propertyname == '出') { //1
-              tbContent += 'class="col-green"';
-            } else if(propertyname == '欠') { //2
-              tbContent += 'class="col-deep-orange"';
-            } else if(propertyname == '不') { //0
-              tbContent += 'class="col-pink"';
-            } else if(propertyname == '公') { //3
-              tbContent += 'class="col-brown"';
-            } else if(propertyname == '休') { //4
-              tbContent += 'class="col-blue-grey"';
-            } else if(propertyname == '帰') { //5
-              tbContent += 'class="col-grey"';
-            } else if(propertyname == '遅') { //6
-              tbContent += 'class="col-orange"';
-            } else if(propertyname == '-') { //7
-              tbContent += 'class="col-black"';
+            tbContent += '<td>';
+            while(propertyname) {              
+              let word1 = propertyname.substr(0, 1);
+              propertyname = propertyname.replace(word1, '');
+              if(word1 == '出') { //1
+                tbContent += '<span class="col-green">出</span>';
+              } else if(word1 == '欠') { //2
+                tbContent += '<span class="col-deep-orange">欠</span>';
+              } else if(word1 == '不') { //0
+                tbContent += '<span class="col-pink">不</span>';
+              } else if(word1 == '公') { //3
+                tbContent += '<span class="col-brown">公</span>';
+              } else if(word1 == '休') { //4
+                tbContent += '<span class="col-blue-grey">休</span>';
+              } else if(word1 == '帰') { //5
+                tbContent += '<span class="col-grey">帰</span>';
+              } else if(word1 == '遅') { //6
+                tbContent += '<span class="col-orange">遅</span>';
+              } else if(word1 == '-') { //7
+                tbContent += '<span class="col-black">-</span>';
+              }
             }
-            tbContent += '>' + propertyname + '</td>';
+            tbContent += '</td>';
           }
 
           tbContent += '<td>' + monthinfo.lessonall + '</td>';

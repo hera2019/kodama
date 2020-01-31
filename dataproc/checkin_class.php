@@ -126,13 +126,13 @@ class Checkin_Class
     
     $sql = 'INSERT INTO attendance('. $title1 . ') VALUES('. $context1 . ')';
     //console_log($sql);
-    $message .= $sql;
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute()) {
       $message = '';
     }
     else {
       $message = 'Add record failed!';
+      $message .= $sql;
       $message .= ShowErrorCode($statement);
     }
     
@@ -373,9 +373,17 @@ class Checkin_Class
         $dayrec = date("d", $timerec) + 0;   // 日
         $propertykey = 'd' . $dayrec . 'c' . $recordsituationclass->classindex;
         $classrec[$yearrec][$monthrec][$propertykey] = new ClassLesson($recordsituationclass->property, $recordsituationclass->lessons);
-        //$echo .= $yearrec . ' ' . $monthrec . ' ' . $propertykey . ' ' . $recordsituationclass->property . " class <br>";
       }
-      //$info .= json_encode($classrec) . '<br><br>';
+      foreach($classrec as $info_y => $info_month_s) {
+        foreach($info_month_s as $info_m => $info_propertykey_s) {
+          $info .= $info_y . '-' . $info_m . '={';
+          foreach($info_propertykey_s as $info_propertykey => $info_property) {
+            $info .= '"' . $info_propertykey . '":"' . $info_property->property . '",';
+          }
+          $info .= '}<br>';
+        }
+      }
+      $info .= '<br>';
       
       $sql = 'SELECT property, date FROM situationmonth WHERE studentID=:studentID';
       $statement = $this->connection->prepare($sql);
@@ -383,10 +391,12 @@ class Checkin_Class
       $recordsituationmonth = $statement->fetchAll(PDO::FETCH_OBJ);
       $attendrec = array();
       foreach($recordsituationmonth as $recordsituationmonth) {
-        $info .= $recordsituationmonth->date . $recordsituationmonth->property . "<br>";
         $timerec = strtotime($recordsituationmonth->date);
         $yearrec  = date("Y", $timerec) + 0;   // 时间1的年份
         $monthrec = date("m", $timerec) + 0;   // 时间1的月份
+        
+        $info .= $yearrec . '-' . $monthrec . '=' . $recordsituationmonth->property . "<br>";
+        
         $propertyobj = json_decode($recordsituationmonth->property);
         foreach($propertyobj as $key => $value) {
           $attendrec[$yearrec][$monthrec][$key] = $value;
@@ -431,10 +441,7 @@ class Checkin_Class
           }
           for($d=$d1; $d<=$d2; $d++) {
             $property = -1;
-            $lessons = array();
-            $lessons[0] = 4;
-            $selectedindex = 0;
-            for($k=0; $k<=4; $k++) {
+            for($k=1; $k<=4; $k++) {
               $propertykey = 'd' . $d . 'c' . $k;
 
               //每日上课课时
@@ -442,7 +449,8 @@ class Checkin_Class
                 //$info .= $year . ' ' . $m . ' ' . $propertykey . ' ' . $classrec[$year][$m][$propertykey]->property . " property 2 <br>";
                 $classlesson = $classrec[$year][$m][$propertykey];
                 if($classlesson->property == 1) {
-                  $monthattend->days[$d] = $arrayproperty[2]; //欠
+                  $property1 = 2; //欠
+                  $monthattend->lessonall += $classlesson->lessons;
                   if(!isset($attendrec[$year]) || !isset($attendrec[$year][$m]) || !isset($attendrec[$year][$m][$propertykey])) {
                     $attendrec[$year][$m][$propertykey] = 2;
                   }
@@ -450,40 +458,48 @@ class Checkin_Class
                   //每日出勤情况
                   if(isset($attendrec[$year]) && isset($attendrec[$year][$m]) && isset($attendrec[$year][$m][$propertykey])) {
                     $property1 = $attendrec[$year][$m][$propertykey];
-                    $arraypriority = array(-1, 0, 2, 5, 4, 3, 7, 6, 1);
-                    $priority = array_search($property, $arraypriority);
-                    $priority1 = array_search($property1, $arraypriority);
-                    if($priority < $priority1) {
-                      $selectedindex = $k; // selected index
-                      $property = $property1;
-                      $lessons[$k] = $classlesson->lessons;
-                    }
+                    if($property1 == 1) { //'出'
+                      $monthattend->lessonattend += $classlesson->lessons;
+                    } else if($property1 == 2) { //'欠'
+                      $monthattend->lessonabsent += $classlesson->lessons;
+                    } else if($property1 == 6) { //'遅'
+                      $monthattend->lessonlate += 1;
+                      $monthattend->lessonattend += $classlesson->lessons - 1;
+                    }                    
                   }
-                  $lessons[$k] = $classlesson->lessons;
-                  $monthattend->dayall += 1;
-                  $monthattend->lessonall += $lessons[$k];
+                  
+                  //属性优先级比较
+                  $arraypriority = array(-1, 0, 2, 5, 4, 3, 7, 6, 1);
+                  $priority = array_search($property, $arraypriority);
+                  $priority1 = array_search($property1, $arraypriority);
+                  if($priority < $priority1) {
+                    $property = $property1;
+                  }
+                  if(isset($monthattend->days[$d])) {
+                    $monthattend->days[$d] .= $arrayproperty[$property1];
+                  } else {
+                    $monthattend->days[$d] = $arrayproperty[$property1];
+                  }
                 }
               }
             }
             if($property == 1) { //'出'
+              $monthattend->dayall += 1;
               $monthattend->dayattend += 1;
-              $monthattend->lessonattend += $lessons[$selectedindex];
             } else if($property == 2) { //'欠'
+              $monthattend->dayall += 1;
               $monthattend->dayabsent += 1;
-              $monthattend->lessonabsent += $lessons[$selectedindex];
             } else if($property == 0) { //'不'
             } else if($property == 3) { //'公'
             } else if($property == 4) { //'休'
             } else if($property == 5) { //'帰'
             } else if($property == 6) { //'遅'
-              $monthattend->lessonlate += 1;
+              $monthattend->dayall += 1;
               $monthattend->dayattend += 1;
-              $monthattend->lessonattend += $lessons[$selectedindex] - 1;
             } else if($property == 7) { //'-'-:休校日
             } else if($property == -1) { //'-'-:休校日
               $property = 7;
             }
-            $monthattend->days[$d] = $arrayproperty[$property];
           }
 
           if($monthattend->dayall > 0) {
@@ -496,6 +512,7 @@ class Checkin_Class
           $StudentAttendance[$year][$m] = clone $monthattend;
         }
       }
+      //$info = ''; //不显示调试信息
       $data = json_encode($StudentAttendance);
     } else {
 		  $message = 'Student ID not found. ';

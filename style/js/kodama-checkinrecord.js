@@ -220,7 +220,7 @@ function showStudent(recordid, selected) {
   }
 }
 function getPropertyName(property) {  
-  let ret = '<span class="col-black">なし</span>';
+  let ret = '';//'<span class="col-black">なし</span>';
   if(property == 0) {
     ret = '<span class="col-pink">不明</span>';
   } else if(property == 1) {

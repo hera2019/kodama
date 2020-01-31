@@ -343,7 +343,7 @@ $(document).ready(function() {
 
   //timechange
   $('#time_011,#time_012,#time_021,#time_022,#time_031,#time_032,#time_041,#time_042').change(function() {
-    var idstring = $(this).id;
+    var idstring = this.id;
     if(idstring.search(/time_0/) == 0) {
       let id = string.substr(6, 1);
       if (parseInt(id).toString() != 'NaN') {
