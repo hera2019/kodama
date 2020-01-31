@@ -1,43 +1,18 @@
 <?php
 require_once '../include/include_database.php';
-//查询每日上课时间
-$classtimenum = 1;
-$classtime11 = '08:00:00';
-$classtime12 = '12:00:00';
-$lessons1 = 4;
-$aheadperiod = 60;
-$delayperiod = 60;
-$allowlate = 0;
-$allowearly = 0;
-$sql = 'SELECT * FROM  classtime';
-$statement = $connection->prepare( $sql );
-$statement->execute();
-$recordclasstime = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
-if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
-  $classtimenum = $recordclasstime->num;
-  $classtime11 = $recordclasstime->time11;
-  $classtime12 = $recordclasstime->time12;
-  $lessons1 = $recordclasstime->lessons1;
-  $classtime21 = $recordclasstime->time21;
-  $classtime22 = $recordclasstime->time22;
-  $lessons2 = $recordclasstime->lessons2;
-  $classtime31 = $recordclasstime->time31;
-  $classtime32 = $recordclasstime->time32;
-  $lessons3 = $recordclasstime->lessons3;
-  $classtime41 = $recordclasstime->time41;
-  $classtime42 = $recordclasstime->time42;
-  $lessons4 = $recordclasstime->lessons4;
-  $aheadperiod = $recordclasstime->aheadperiod;
-  $delayperiod = $recordclasstime->delayperiod;
-  $allowlate = $recordclasstime->allowlate;
-  $allowearly = $recordclasstime->allowearly;
-}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//situation_class.php中已定义
+//require_once 'attend_class.php';
+//use Attend\LessonClass;
+//$LessonClass = new LessonClass($connection);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $time = time();
 $currenttime = date( 'Y-m-d H:i:s', $time );
 $sql = 'SELECT *, a.ID AS ID, s.classID AS classID from attendance AS a LEFT JOIN student AS s ON a.studentID=s.ID';
-if($REBUILD_ALL) {
-  $sqltruncate = 'truncate table situationmonth';
+if($REBUILD_ALL) { //重新生成
+  $sqltruncate = 'truncate table situationmonth'; //清空表
   echo $sqltruncate . '<br>';
   $statement = $connection->prepare( $sqltruncate );
   $statement->execute();
@@ -72,26 +47,20 @@ foreach($recordattendance as $recordattendance) {
   $timerecord = strtotime($recordattendance->time11);
   $date = date( 'Y-m-01', $timerecord );
   $dateNo = date( 'd', $timerecord ) + 0;
-  $classindex = GetClassIndex($recordattendance->time11, $classtimenum, $aheadperiod,
-                              $classtime11, $classtime12,
-                              $classtime21, $classtime22,
-                              $classtime31, $classtime32,
-                              $classtime41, $classtime42);
+  
+  $propertynew = 0;
+  $classindex = $LessonClass->GetClassIndexProperty($recordattendance->time11, $recordattendance->time12, $propertynew);
   if($classindex == 0) {
     continue;
   }
-  if($classindex == 1) {
-    $lessons = $lessons1;
-  } else if($classindex == 2) {
-    $lessons = $lessons2;
-  } else if($classindex == 3) {
-    $lessons = $lessons3;
-  } else if($classindex == 4) {
-    $lessons = $lessons4;
+  if(!$recordattendance->manualmodified) { //没有手动更改过，属性按新计算结果
+    $property = $propertynew;
   }
+  
+  $lessons = $LessonClass->GetClassLessons($classindex);
   $monthclasslesson = 0;
   $classID = $recordattendance->classID;
-  if(isset($classlesson) && isset($classlesson[$classID]) && isset($classlesson[$classID]) && isset($classlesson[$classID][$date])) {
+  if(isset($classlesson) && isset($classlesson[$classID]) && isset($classlesson[$classID][$date])) {
     $monthclasslesson = $classlesson[$classID][$date];
   } else {
     continue;
@@ -100,10 +69,12 @@ foreach($recordattendance as $recordattendance) {
 
   //统计签到课时数
   $attendlesson = 0;
-  if($property == 1 || $property == 6) {
+  if($property == 1) {
     $attendlesson = $lessons;
+  } elseif($property == 6 && $lessons > 0) {
+    $attendlesson = $lessons - 1;
   }
-    
+  
   $sql = "SELECT ID, property, attendlesson from situationmonth WHERE studentID=:studentID AND date=:date";
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':studentID' => $studentID, ':date' => $date ] );
@@ -116,7 +87,7 @@ foreach($recordattendance as $recordattendance) {
     }
     //统计签到课时数
     if(!empty($recordsituationmonth->attendlesson)) {
-      $attendlesson = $attendlesson + $recordsituationmonth->attendlesson;
+      $attendlesson += $recordsituationmonth->attendlesson;
     }
 
     $propertyarray[$propertykey] = $property;
@@ -137,7 +108,7 @@ foreach($recordattendance as $recordattendance) {
     $propertytext = json_encode($propertyarray);
     $sql = 'INSERT INTO situationmonth(studentID, property, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
     
-    echo 'date studentID attendlesson classlesson property : ' . $date . ' ' . $studentID . ' ' . $attendlesson . ' ' . $monthclasslesson . ' ' . $propertytext . '<br>';
+    echo 'date studentID attendlesson classlesson property : ' . $date . ' ' . $studentID . ' ' . $attendlesson . ' ' . $monthclasslesson . ' ' . $propertytext . ' : new record<br>';
     
     $statement = $connection->prepare( $sql );
     if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => $attendlesson, ':classlesson' => $monthclasslesson, ':date' => $date ] ) ) {      
@@ -151,70 +122,5 @@ if($recordattendance) {
   $statement = $connection->prepare( $sql );
   $statement->execute( [ ':recordID' => $recordattendance->ID, ':recordtime' => $recordattendance->recordtime ] );
   echo 'The last record time is: ' . $recordattendance->recordtime . '<br>';
-}
-
-//判断当前时间是否上课时间
-/**
- * 判断当前的时分是否在指定的时间段内
- * @param $start 开始时分  eg:10:30:00
- * @param $end  结束时分   eg:15:30:00
- * @author:zmq
- * @date:2019/8/12 14:34
- * @return: bool  1：在范围内，0:没在范围内
- */
-function IsBetweenTime( $start, $end, $time, $aheadperiod ) {
-  $date = date( 'H:i:s', strtotime( $time ) );
-  $curTime = strtotime( $date ); //当前时分秒
-  $assignTime1 = strtotime( $start ) - $aheadperiod * 60; //获得指定秒钟时间戳，00:00:00
-  $assignTime2 = strtotime( $end ); //获得指定秒钟时间戳，01:00:00
-  $result = false;
-  if ( $curTime > $assignTime1 && $curTime < $assignTime2 ) {
-    $result = true;
-  }
-  return $result;
-}
-
-function GetClassIndex( $time, $classtimenum, $aheadperiod,
-                        $classtime11, $classtime12,
-                        $classtime21, $classtime22,
-                        $classtime31, $classtime32,
-                        $classtime41, $classtime42 ) {
-  $classindex = 0;
-  $classstart = $classtime11;
-  $classend = $classtime12;
-  //判断第几课时段
-  if ( $classtimenum >= 4 ) {
-    $isBetweenTime = IsBetweenTime( $classtime41, $classtime42, $time, $aheadperiod );
-    if ( $isBetweenTime ) {
-      $classindex = 4;
-      $classstart = $classtime41;
-      $classend = $classtime42;
-    }
-  }
-  if ( $classtimenum >= 3 ) {
-    $isBetweenTime = IsBetweenTime( $classtime31, $classtime32, $time, $aheadperiod );
-    if ( $isBetweenTime ) {
-      $classindex = 3;
-      $classstart = $classtime31;
-      $classend = $classtime32;
-    }
-  }
-  if ( $classtimenum >= 2 ) {
-    $isBetweenTime = IsBetweenTime( $classtime21, $classtime22, $time, $aheadperiod );
-    if ( $isBetweenTime ) {
-      $classindex = 2;
-      $classstart = $classtime21;
-      $classend = $classtime22;
-    }
-  }
-  if ( $classtimenum >= 1 ) {
-    $isBetweenTime = IsBetweenTime( $classtime11, $classtime12, $time, $aheadperiod );
-    if ( $isBetweenTime ) {
-      $classindex = 1;
-      $classstart = $classtime11;
-      $classend = $classtime12;
-    }
-  }
-  return $classindex;
 }
 ?>

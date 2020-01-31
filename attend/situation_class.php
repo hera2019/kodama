@@ -1,43 +1,17 @@
 <?php
 require_once '../include/include_database.php';
 //查询每日上课时间
-$classtimenum = 1;
-$classtime11 = '08:00:00';
-$classtime12 = '12:00:00';
-$lessons1 = 4;
-$aheadperiod = 60;
-$delayperiod = 60;
-$allowlate = 0;
-$allowearly = 0;
-$sql = 'SELECT * FROM  classtime';
-$statement = $connection->prepare( $sql );
-$statement->execute();
-$recordclasstime = $statement->fetch( PDO::FETCH_OBJ ); //只有一条记录不用fetchAll
-if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
-  $classtimenum = $recordclasstime->num;
-  $classtime11 = $recordclasstime->time11;
-  $classtime12 = $recordclasstime->time12;
-  $lessons1 = $recordclasstime->lessons1;
-  $classtime21 = $recordclasstime->time21;
-  $classtime22 = $recordclasstime->time22;
-  $lessons2 = $recordclasstime->lessons2;
-  $classtime31 = $recordclasstime->time31;
-  $classtime32 = $recordclasstime->time32;
-  $lessons3 = $recordclasstime->lessons3;
-  $classtime41 = $recordclasstime->time41;
-  $classtime42 = $recordclasstime->time42;
-  $lessons4 = $recordclasstime->lessons4;
-  $aheadperiod = $recordclasstime->aheadperiod;
-  $delayperiod = $recordclasstime->delayperiod;
-  $allowlate = $recordclasstime->allowlate;
-  $allowearly = $recordclasstime->allowearly;
-}
+
+require_once 'attend_class.php';
+
+use Attend\LessonClass;
+$LessonClass = new LessonClass($connection);
 
 $time = time();
 //签到时间段：$classstart-$aheadperiod到$classend之间
 $lasttime = '2019-07-01 00:00:00';
 
-if($REBUILD_ALL) {
+if($REBUILD_ALL) { //重新生成
   $sqltruncate = 'DELETE * FROM situationclass WHERE manualmodified<1';
   echo $sqltruncate . '<br>';
   $statement = $connection->prepare( $sqltruncate );
@@ -69,10 +43,7 @@ if($recordattendance) {
 //echo $lastID . ' ' . $lasttime . ': lastID lasttime<br>';
 
 //查询班级ID、学生人数
-$classlesson = array
-( //classID
-  array(), // 日期，年月01日，'Y-m-01'
-);
+$classlesson = array(); //classID // 日期，年月01日，'Y-m-01'
 $sql = 'SELECT ID FROM class';
 $statement = $connection->prepare( $sql );
 $statement->execute();
@@ -92,27 +63,12 @@ foreach ( $recordclass as $recordclass ) {
       $thatday = date( 'Y-m-d', $nexttime );
       //echo $thatday . ' : thatday<br>';
       
-      for($j=0; $j<$classtimenum; $j++) {
+      for($classindex=1; $classindex<=$LessonClass->GetClassTimeNum(); $classindex++) {
         $bFind = FALSE;
-        $classindex = $j + 1;
-        if($j == 0) {
-          $classstart = $classtime11;
-          $classend = $classtime12;
-          $lessons = $lessons1;
-        } else if($j == 1) {
-          $classstart = $classtime21;
-          $classend = $classtime22;
-          $lessons = $lessons2;
-        } else if($j == 2) {
-          $classstart = $classtime31;
-          $classend = $classtime32;
-          $lessons = $lessons3;
-        } else if($j == 3) {
-          $classstart = $classtime41;
-          $classend = $classtime42;
-          $lessons = $lessons4;
-        }
-
+        $classstart = $LessonClass->GetClassTime1($classindex);
+        $classend = $LessonClass->GetClassTime2($classindex);
+        $lessons = $LessonClass->GetClassLessons($classindex);
+        
         $recordtime = $thatday . ' ' . date( 'H:i:s', strtotime( $classstart ) );
         $endtime = $thatday . ' ' . date( 'H:i:s', strtotime( $classend ) );
 
@@ -122,7 +78,7 @@ foreach ( $recordclass as $recordclass ) {
         $statement->execute( [ ':classID' => $classID, ':starttime' => $recordtime, ':endtime' => $endtime ] );
         $recordsituationclass = $statement->fetchAll( PDO::FETCH_OBJ );
 
-        $starttime = $thatday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $aheadperiod * 60 ); //提前aheadperiod分钟签到
+        $starttime = $thatday . ' ' . date( 'H:i:s', strtotime( $classstart ) - $LessonClass->GetClassAheadPeriod() * 60 ); //提前aheadperiod分钟签到
 
         foreach ( $recordsituationclass as $recordsituationclass ) {
           if ( $classindex == $recordsituationclass->classindex && $classID == $recordsituationclass->classID ) {
@@ -142,7 +98,7 @@ foreach ( $recordclass as $recordclass ) {
               $classlesson[$classID][$lessonday] = $lessons;
             }
           }
-          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson1<br>';
+          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ' ' . $classlesson[$classID][$lessonday] . ': lesson1<br>';
           continue;
         }
 
@@ -165,6 +121,7 @@ foreach ( $recordclass as $recordclass ) {
           else {
             $classlesson[$classID][$lessonday] = $lessons;
           }
+          //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ' ' . $classlesson[$classID][$lessonday] . ': lesson2<br>';
         }
         else { //<50%提醒负责人确认
           $property = 0;
@@ -172,7 +129,7 @@ foreach ( $recordclass as $recordclass ) {
 
         }
         //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson2<br>';
-        echo 'time classID index studentnum checkinnum lessons : ' . $recordtime . ' ' . $classID . ' ' . $classindex . ' ' . $studentnum . ' ' . $checkinnum . ' ' . $lessons . '<br>';
+        echo 'time classID index studentnum checkinnum lessons : ' . $recordtime . ' ' . $classID . ' ' . $classindex . ' ' . $studentnum . ' ' . $checkinnum . ' ' . $lessons . ' : new record<br>';
         if ( !$bFind ) { //生成
           //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
           $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, lessons, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :lessons, :recordtime)';

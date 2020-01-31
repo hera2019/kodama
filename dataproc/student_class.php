@@ -174,7 +174,7 @@ class Student_Class
         $record2 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforeday = '';
         if(!empty($record2->cl)) {
-          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl);
+          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl) . '%';
         }
         //前月截止
         $time = time();
@@ -185,7 +185,7 @@ class Student_Class
         $record3 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforemonth = '';
         if(!empty($record3->cl)) {
-          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl);
+          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl) . '%';
         }
         
         $obj_merged = (object) array_merge((array)$record, (array)$attend);
@@ -229,7 +229,7 @@ class Student_Class
         $record2 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforeday = '';
         if(!empty($record2->cl)) {
-          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl);
+          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl) . '%';
         }
         //前月截止
         $time = time();
@@ -240,7 +240,7 @@ class Student_Class
         $record3 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforemonth = '';
         if(!empty($record3->cl)) {
-          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl);
+          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl) . '%';
         }
 
         $obj_merged = (object) array_merge((array)$record, (array)$attend);

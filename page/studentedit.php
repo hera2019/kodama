@@ -71,6 +71,9 @@ if($mod != 'add') {
 .kodama-divtable .merged{
   padding: 0;
 }
+.kodama-divtable .form-group {
+  width: 90%;
+}
 </style>
 </head>
 
@@ -124,7 +127,7 @@ if($mod != 'add') {
                       <div class='cell'>
                         <div class="form-group">
                           <span class="input-group-addon"> <i class="material-icons col-green">pregnant_woman</i> </span>
-                          <div class="form-line" id="radio_genderfemale>
+                          <div class="form-line" id="radio_genderfemale">
                             <input name="genderfemale" type="radio" id="radio_001" class="with-gap radio-col-blue" value="0" <?= empty($recordstudent) ? '' : ($recordstudent->genderfemale ? '' : 'checked="checked"'); ?> />
                             <label for="radio_001">男 Male</label>
                             <input name="genderfemale" type="radio" id="radio_002" class="with-gap radio-col-pink" value="1" <?= empty($recordstudent) ? '' : ($recordstudent->genderfemale ? 'checked="checked"' : ''); ?> />
@@ -296,7 +299,7 @@ if($mod != 'add') {
 <script type="text/javascript">
   var _studentrecord = { // 默认值需要与html中同样，重置时使用
     'text_name': '',
-    'radio_	genderfemale': '',
+    'radio_genderfemale': '',
     'time_birthday': '',
     'text_description': '',
     'text_lastname': '',

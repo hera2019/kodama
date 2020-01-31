@@ -219,6 +219,27 @@ function showStudent(recordid, selected) {
     }
   }
 }
+function getPropertyName(property) {  
+  let ret = '<span class="col-black">なし</span>';
+  if(property == 0) {
+    ret = '<span class="col-pink">不明</span>';
+  } else if(property == 1) {
+    ret = '<span class="col-green">出席</span>';
+  } else if(property == 6) {
+    ret = '<span class="col-orange">遅刻早退</span>';
+  } else if(property == 2) {
+    ret = '<span class="col-deep-orange">欠席</span>';
+  } else if(property == 3) { //3
+    ret = '<span class="col-brown">公欠</span>';
+  } else if(property == 4) { //4
+    ret = '<span class="col-blue-grey">休学</span>';
+  } else if(property == 5) { //5
+    ret = '<span class="col-grey">一時帰国</span>';
+  } else if(property == 7) { //7
+    ret = '<span class="col-black">休校日</span>';
+  }
+  return ret;
+}
 
 function format(data) {
   // `data` is the original data object for the row
@@ -226,27 +247,43 @@ function format(data) {
     '<tbody>'+
       '<tr>'+
         '<td class="col-xs-1"></td>'+
-        '<td class="col-xs-2">日時1:</td>'+
-        '<td class="col-xs-4">'+(data.time11==null?"":data.time11)+'</td>'+
-        '<td class="col-xs-5">'+(data.time12==null?"":data.time12)+'</td>'+
+        '<td class="col-xs-1">日時1:</td>'+
+        '<td class="col-xs-3">'+(data.time11==null?"":data.time11)+'</td>'+
+        '<td class="col-xs-3">'+(data.time12==null?"":data.time12)+'</td>'+
+        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td class="col-xs-1">'+(data.classindex1==null?"":data.classindex1)+'</td>'+
+        '<td class="col-xs-1">属性:</td>'+
+        '<td class="col-xs-1">'+getPropertyName(data.property1)+'</td>'+
       '</tr>'+
       '<tr>'+
         '<td></td>'+
         '<td>日時2:</td>'+
         '<td>'+(data.time21==null?"":data.time21)+'</td>'+
         '<td>'+(data.time22==null?"":data.time22)+'</td>'+
+        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td>'+(data.classindex2==null?"":data.classindex2)+'</td>'+
+        '<td class="col-xs-1">属性:</td>'+
+        '<td>'+getPropertyName(data.property2)+'</td>'+
       '</tr>'+
       '<tr>'+
         '<td></td>'+
         '<td>日時3:</td>'+
         '<td>'+(data.time31==null?"":data.time31)+'</td>'+
         '<td>'+(data.time32==null?"":data.time32)+'</td>'+
+        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td>'+(data.classindex3==null?"":data.classindex3)+'</td>'+
+        '<td class="col-xs-1">属性:</td>'+
+        '<td>'+getPropertyName(data.property3)+'</td>'+
       '</tr>'+
       '<tr>'+
         '<td></td>'+
         '<td>日時4:</td>'+
         '<td>'+(data.time41==null?"":data.time41)+'</td>'+
         '<td>'+(data.time42==null?"":data.time42)+'</td>'+
+        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td>'+(data.classindex4==null?"":data.classindex4)+'</td>'+
+        '<td class="col-xs-1">属性:</td>'+
+        '<td>'+getPropertyName(data.property4)+'</td>'+
       '</tr>'+
     '</tbody>'+
   '</table>';
@@ -296,17 +333,9 @@ function queryStudent(queryParam) {
       { "data": "classname" },
       { "data": "time11" },
       { "data": "time12" },
-      { "data": "property",
+      { "data": "property1",
         render: function (data, type, obj, meta) {
-          let ret = '<span class="col-black">なし</span>';
-          if(data == 0) {
-            ret = '<span class="col-red">不明</span>';
-          } else if(data == 1) {
-            ret = '<span class="col-green">授業</span>';
-          } else if(data == 6) {
-            ret = '<span class="col-orange">遅早</span>';
-          }
-          return ret;
+          return getPropertyName(data);
         }
       },
       { "data": "recordtime" },

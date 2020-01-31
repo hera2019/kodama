@@ -69,21 +69,23 @@ function postGetData(id, nomsg=false) {
             if(monthinfo.days[d]) {
               propertyname = monthinfo.days[d];
             }
-            tbContent += '<td';
+            tbContent += '<td ';
             if(propertyname == '出') { //1
-              tbContent += ' class="col-green"';
+              tbContent += 'class="col-green"';
             } else if(propertyname == '欠') { //2
-              tbContent += ' class="col-red"';
+              tbContent += 'class="col-deep-orange"';
+            } else if(propertyname == '不') { //0
+              tbContent += 'class="col-pink"';
             } else if(propertyname == '公') { //3
-              tbContent += ' class="col-brown"';
+              tbContent += 'class="col-brown"';
             } else if(propertyname == '休') { //4
-              tbContent += ' class="col-blue-grey"';
+              tbContent += 'class="col-blue-grey"';
             } else if(propertyname == '帰') { //5
-              tbContent += ' class="col-grey"';
+              tbContent += 'class="col-grey"';
             } else if(propertyname == '遅') { //6
-              tbContent += ' class="col-orange"';
+              tbContent += 'class="col-orange"';
             } else if(propertyname == '-') { //7
-              tbContent += ' class="col-black"';
+              tbContent += 'class="col-black"';
             }
             tbContent += '>' + propertyname + '</td>';
           }

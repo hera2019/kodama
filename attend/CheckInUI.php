@@ -1,8 +1,5 @@
 <?php
 require_once '../include/include_database.php';
-require_once 'AttendClass.php';
-
-use Attend\AttendClass;
 
 //define ('ATTEND_ADD_ATTEND_RECORD_PARENT_URL', 'queryrecord.php');
 
@@ -152,7 +149,7 @@ $('input:radio').on('click', function(e)
 				//$("input[name='studentname']").remove();
 				document.getElementById('studentarea').innerHTML = strHtml;
 				$("input[name='studentname']").labelauty();
-			   document.getElementById('message').innerHTML = "please check in...";
+			   document.getElementById('message').innerHTML = "Please check in...";
 				break;
 		   }
 		}
@@ -174,7 +171,7 @@ $(document).ready(function()
 	$("#submit").click(function ()
 	{
 		//$("#message").text("checking in...");
-		document.getElementById('message').innerHTML = "checking in...";
+		document.getElementById('message').innerHTML = "Checking in...";
 		postsubmitdata();
 	});
 });

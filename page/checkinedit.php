@@ -36,6 +36,12 @@ if($mod == 'updatecheckin') { //not addcheckin
   }
 }
 
+//签到属性
+$sql = 'SELECT ID, description FROM attendproperty ORDER BY ID ASC';
+$statement = $connection->prepare($sql);
+$statement->execute();
+$recordattendproperty = $statement->fetchAll(PDO::FETCH_OBJ);
+
 //查询每日上课时间
 $classtimenum = 1;
 $classtime11 = '08:00:00';
@@ -67,88 +73,6 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
   $delayperiod = $recordclasstime->delayperiod;
   $allowlate = $recordclasstime->allowlate;
   $allowearly = $recordclasstime->allowearly;
-}
-
-function IsBetweenTime( $start, $end, $time, $bstart, &$blate ) { //$bstart上课开始时间，还是下课时间
-  global $aheadperiod, $delayperiod, $allowlate, $allowearly;
-  $date = date( 'H:i:s', strtotime( $time ) );
-  $curTime = strtotime( $date ); //当前时分秒
-  $assignstart = strtotime( $start ); //获得指定秒钟时间戳，00:00:00
-  $assignend = strtotime( $end ); //获得指定秒钟时间戳，01:00:00
-  $result = false;
-  $blate = false;
-  if ( $curTime > $assignstart - $aheadperiod * 60 
-      && $curTime < $assignend + $delayperiod * 60 ) {
-    $result = true;
-    if($bstart) {
-      if ( $curTime - $assignstart > $allowlate * 60 ) {
-        $blate = true;
-      }
-    } else {
-      if ( $assignend - $curTime > $allowearly * 60 ) {
-        $blate = true;
-      }
-    }
-  }
-  return $result;
-}
-
-function GetClassIndex( $time, $bstart, &$blate ) {
-  global $classtimenum, $aheadperiod, $delayperiod, $allowlate, $allowearly,
-          $classtime11, $classtime12,
-          $classtime21, $classtime22,
-          $classtime31, $classtime32,
-          $classtime41, $classtime42;
-  $classindex = 0;
-  $blate = false;
-  //判断第几课时段
-  if ( $classtimenum >= 4 ) {
-    $isBetweenTime = IsBetweenTime( $classtime41, $classtime42, $time, $bstart, $blate );
-    if ( $isBetweenTime ) {
-      $classindex = 4;
-    }
-  }
-  if ( $classtimenum >= 3 ) {
-    $isBetweenTime = IsBetweenTime( $classtime31, $classtime32, $time, $bstart, $blate );
-    if ( $isBetweenTime ) {
-      $classindex = 3;
-    }
-  }
-  if ( $classtimenum >= 2 ) {
-    $isBetweenTime = IsBetweenTime( $classtime21, $classtime22, $time, $bstart, $blate );
-    if ( $isBetweenTime ) {
-      $classindex = 2;
-    }
-  }
-  if ( $classtimenum >= 1 ) {
-    $isBetweenTime = IsBetweenTime( $classtime11, $classtime12, $time, $bstart, $blate );
-    if ( $isBetweenTime ) {
-      $classindex = 1;
-    }
-  }
-  return $classindex;
-}
-
-function GetProperty( $time1, $time2 ) {
-  $date1 = date( 'Y-m-d', strtotime( $time1 ) );
-  $date2 = date( 'Y-m-d', strtotime( $time2 ) );
-  if(strtotime( $date1 ) != strtotime( $date2 )) { //判断是否同一天
-    return 0;
-  }
-  
-  $property = 0;
-  $blate1 = false;
-  $blate2 = false;
-  $classindex1 = GetClassIndex($time1, true, $blate1);
-  $classindex2 = GetClassIndex($time2, false, $blate2);
-  if($classindex1 != 0 && $classindex2 != 0 && $classindex1 == $classindex2) { //判断是否同一堂课
-    $property = 1; //出席
-    if($blate1 || $blate2) {
-      $property = 6; //迟到早退
-    }
-  }
-  
-  return $property;
 }
 ?>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
@@ -185,10 +109,10 @@ function GetProperty( $time1, $time2 ) {
                 if(empty($ID)) {
                   echo 'Please choose a record first. <span class=\'bg-white\'><a href = "../page/checkinrecord.php">Click here choose a record.</a></span>';
                 } else {
-                  echo 'Edit Checkin Record:';
+                  echo 'Edit Checkin Record: <span class=\'bg-white\'><a href = "../page/checkinrecord.php">Click here choose another record.</a></span>';
                 }
               } else {
-                echo 'Add Checkin Record:';
+                echo 'Add Checkin Record: <span class=\'bg-white\'><a href = "../page/checkinrecord.php">Click here choose another record.</a></span>';
               }
               ?></font></div>            
             <div  style="padding-left: 2rem; padding-right: 2rem;">
@@ -228,6 +152,7 @@ function GetProperty( $time1, $time2 ) {
                 </div>
               </li>
               <?php endif; ?>
+              <hr>
               <li class="input-group">
                 <span class="input-group-addon">Class 1 Start: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_011" data-target-input="nearest" style="margin-bottom: 0;">
@@ -241,53 +166,102 @@ function GetProperty( $time1, $time2 ) {
                 </div>
               </li>
               <li class="input-group">
+                <span class="input-group-addon">Class Index 1: </span>
+                <div class="form-line">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex1; ?>" type="text" class="form-control" name="classindex1" id="classindex1">
+                </div>
+              </li>
+              <li class="input-group-select clearfix">
+                <span class="input-group-addon">Property 1: </span>
+                <div class="form-line">
+                  <select class="kodama-icon-select" name="property1" id="property1">
+                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
+                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property1 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
+                  <?php endforeach; ?>
+                  </select>
+                </div>
+              </li>
+              <li class="input-group">
                 <span class="input-group-addon">Class 2 Start: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_021" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_021" data-toggle="datetimepicker" name="time21" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time21; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_021" data-toggle="datetimepicker" name="time21" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time21; ?>" id="time21"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 2 End: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_022" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_022" data-toggle="datetimepicker" name="time22" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time22; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_022" data-toggle="datetimepicker" name="time22" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time22; ?>" id="time22"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                </div>
+              </li>
+              <li class="input-group">
+                <span class="input-group-addon">Class Index 2: </span>
+                <div class="form-line">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex2; ?>" type="text" class="form-control" name="classindex2" id="classindex2">
+                </div>
+              </li>
+              <li class="input-group-select clearfix">
+                <span class="input-group-addon">Property 2: </span>
+                <div class="form-line">
+                  <select class="kodama-icon-select" name="property2" id="property2">
+                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
+                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property2 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
+                  <?php endforeach; ?>
+                  </select>
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 3 Start: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_031" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_031" data-toggle="datetimepicker" name="time31" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time31; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_031" data-toggle="datetimepicker" name="time31" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time31; ?>" id="time31"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 3 End: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_032" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_032" data-toggle="datetimepicker" name="time32" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time32; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_032" data-toggle="datetimepicker" name="time32" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time32; ?>" id="time32"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                </div>
+              </li>
+              <li class="input-group">
+                <span class="input-group-addon">Class Index 3: </span>
+                <div class="form-line">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex3; ?>" type="text" class="form-control" name="classindex3" id="classindex3">
+                </div>
+              </li>
+              <li class="input-group-select clearfix">
+                <span class="input-group-addon">Property 3: </span>
+                <div class="form-line">
+                  <select class="kodama-icon-select" name="property3" id="property3">
+                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
+                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property3 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
+                  <?php endforeach; ?>
+                  </select>
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 4 Start: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_041" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_041" data-toggle="datetimepicker" name="time41" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time41; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_041" data-toggle="datetimepicker" name="time41" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time41; ?>" id="time41"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 4 End: </span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_042" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time42; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time42; ?>" id="time42"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                </div>
+              </li>
+              <li class="input-group">
+                <span class="input-group-addon">Class Index 4: </span>
+                <div class="form-line">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex4; ?>" type="text" class="form-control" name="classindex4" id="classindex4">
                 </div>
               </li>
               <li class="input-group-select clearfix">
-                <span class="input-group-addon">Property: </span>
+                <span class="input-group-addon">Property 4: </span>
                 <div class="form-line">
-                  <select class="kodama-icon-select" name="property" id="property">
-                    <option value="0" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "0" ? ' selected="selected"' : ''); ?>>不明</option>
-                    <option value="1" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "1" ? ' selected="selected"' : ''); ?>>出席</option>
-                    <option value="2" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "2" ? ' selected="selected"' : ''); ?>>欠席</option>
-                    <option value="3" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "3" ? ' selected="selected"' : ''); ?>>公欠</option>
-                    <option value="4" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "4" ? ' selected="selected"' : ''); ?>>休学</option>
-                    <option value="5" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "5" ? ' selected="selected"' : ''); ?>>一時帰国</option>
-                    <option value="6" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "6" ? ' selected="selected"' : ''); ?>>遅刻早退</option>
-                    <option value="7" <?= empty($recordcheckin) ? '' : ($recordcheckin->property == "7" ? ' selected="selected"' : ''); ?>>休校日</option>
+                  <select class="kodama-icon-select" name="property4" id="property4">
+                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
+                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property4 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
+                  <?php endforeach; ?>
                   </select>
                 </div>
               </li>
@@ -368,48 +342,62 @@ $(document).ready(function() {
   });
 
   //timechange
-  $('#time_011').change(function() {
-    timechanged();
+  $('#time_011,#time_012,#time_021,#time_022,#time_031,#time_032,#time_041,#time_042').change(function() {
+    var idstring = $(this).id;
+    if(idstring.search(/time_0/) == 0) {
+      let id = string.substr(6, 1);
+      if (parseInt(id).toString() != 'NaN') {
+        timechanged($("#time" + id + '1'), $("#time" + id + '2'), $('#classindex' + id), $('#property' + id));
+      }
+    }
   });
-  $('#time_011').on('change.datetimepicker', function(e) {
-    timechanged();
-  });
-  $('#time_012').change(function() {
-    timechanged();
-  });
-  $('#time_012').on('change.datetimepicker', function(e) {
-    timechanged();
+  $('#time_011,#time_012,#time_021,#time_022,#time_031,#time_032,#time_041,#time_042').on('change.datetimepicker', function(e) {
+    var idstring = this.id;
+    if(idstring.search(/time_0/) == 0) {
+      let id = idstring.substr(6, 1);
+      if (parseInt(id).toString() != 'NaN') {
+        timechanged($("#time" + id + '1'), $("#time" + id + '2'), $('#classindex' + id), $('#property' + id));
+      }
+    }
   });
   
-  function timechanged() {
-    let strtime11 = $("#time11").val();
-    let strtime12 = $("#time12").val();
-    let property = getProperty(strtime11, strtime12);
-    $('#property').val(property);
+  function timechanged($time1, $time2, $classindex, $property) {
+    let strtime11 = $time1.val();
+    let strtime12 = $time2.val();
+    let property = [ 0 ];
+    let classindex = getClassIndexProperty(strtime11, strtime12, property);
+    $classindex.val(classindex);
+    $property.val(property[0]);
     
-    function getProperty(strtime1, strtime2) {    
-      let time11 = new Date(strtime1); //毫秒级 / 1000
-      let time12 = new Date(strtime2);
-      let strdate1 = time11.toDateString();
-      let strdate2 = time12.toDateString();
-      if(strdate1 != strdate2 ) { //判断是否同一天
-        return 0;
+    function getClassIndexProperty(strtime1, strtime2, property) {
+      if(strtime1 && strtime1) {
+        let time11 = new Date(strtime1); //毫秒级 / 1000
+        let time12 = new Date(strtime2);
+        let strdate1 = time11.toDateString();
+        let strdate2 = time12.toDateString();
+        if(strdate1 != strdate2 ) { //判断是否同一天
+          return 0;
+        }
       }
 
-      let property = 0;
+      property[0] = 0;
       let blate1 = [ false ];
       let blate2 = [ false ];
       let classindex1 = getClassIndex(strtime1, true, blate1);
       let classindex2 = getClassIndex(strtime2, false, blate2);
       if(classindex1 != 0 && classindex2 != 0 && classindex1 == classindex2) { //判断是否同一堂课
-        property = 1; //出席
+        property[0] = 1; //出席
         if(blate1[0] || blate2[0]) {
-          property = 6; //迟到早退
+          property[0] = 6; //迟到早退
         }
       }
-      return property;
+      return classindex1;
 
       function getClassIndex( time, bstart, blate ) {
+        if(!time) {
+          return 0;
+        }
+        
         let classtimenum = <?= $classtimenum; ?>;
         let aheadperiod = <?= $aheadperiod; ?>;
         let delayperiod = <?= $delayperiod; ?>;
@@ -425,29 +413,34 @@ $(document).ready(function() {
         let classtime42 = "<?= $classtime42; ?>";
         let classindex = 0;
         blate[0] = false;
+        let blate1 = [ false ];
         //判断第几课时段
         if ( classtimenum >= 4 ) {
-          var betweenTime = isBetweenTime( classtime41, classtime42, time, bstart, blate );
+          var betweenTime = isBetweenTime( classtime41, classtime42, time, bstart, blate1 );
           if ( betweenTime ) {
             classindex = 4;
+            blate[0] = blate1[0];
           }
         }
         if ( classtimenum >= 3 ) {
-          betweenTime = isBetweenTime( classtime31, classtime32, time, bstart, blate );
+          betweenTime = isBetweenTime( classtime31, classtime32, time, bstart, blate1 );
           if ( betweenTime ) {
             classindex = 3;
+            blate[0] = blate1[0];
           }
         }
         if ( classtimenum >= 2 ) {
-          betweenTime = isBetweenTime( classtime21, classtime22, time, bstart, blate );
+          betweenTime = isBetweenTime( classtime21, classtime22, time, bstart, blate1 );
           if ( betweenTime ) {
             classindex = 2;
+            blate[0] = blate1[0];
           }
         }
         if ( classtimenum >= 1 ) {
-          betweenTime = isBetweenTime( classtime11, classtime12, time, bstart, blate );
+          betweenTime = isBetweenTime( classtime11, classtime12, time, bstart, blate1 );
           if ( betweenTime ) {
             classindex = 1;
+            blate[0] = blate1[0];
           }
         }
         return classindex;

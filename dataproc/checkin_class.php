@@ -179,6 +179,7 @@ class Checkin_Class
     }
     
     $sql = 'UPDATE attendance SET ' . $context .' WHERE ID=:ID';
+    //echo $sql;
     $statement =  $this->connection->prepare($sql);
     if ($statement->execute([':ID' => $ID])) {
       $message = '';
@@ -397,7 +398,6 @@ class Checkin_Class
       $statement->execute();
       $recordattendproperty = $statement->fetchAll(PDO::FETCH_OBJ);
       $arrayproperty = array();
-      $arrayproperty[0] = '';
       foreach($recordattendproperty as $recordattendproperty) {
         $arrayproperty[$recordattendproperty->ID] = $recordattendproperty->property;
       }
@@ -430,7 +430,7 @@ class Checkin_Class
             $d2 = $day2;
           }
           for($d=$d1; $d<=$d2; $d++) {
-            $property = 0;
+            $property = -1;
             $lessons = array();
             $lessons[0] = 4;
             $selectedindex = 0;
@@ -450,7 +450,7 @@ class Checkin_Class
                   //每日出勤情况
                   if(isset($attendrec[$year]) && isset($attendrec[$year][$m]) && isset($attendrec[$year][$m][$propertykey])) {
                     $property1 = $attendrec[$year][$m][$propertykey];
-                    $arraypriority = array(0, 2, 5, 4, 3, 7, 6, 1);
+                    $arraypriority = array(-1, 0, 2, 5, 4, 3, 7, 6, 1);
                     $priority = array_search($property, $arraypriority);
                     $priority1 = array_search($property1, $arraypriority);
                     if($priority < $priority1) {
@@ -471,6 +471,7 @@ class Checkin_Class
             } else if($property == 2) { //'欠'
               $monthattend->dayabsent += 1;
               $monthattend->lessonabsent += $lessons[$selectedindex];
+            } else if($property == 0) { //'不'
             } else if($property == 3) { //'公'
             } else if($property == 4) { //'休'
             } else if($property == 5) { //'帰'
@@ -479,7 +480,7 @@ class Checkin_Class
               $monthattend->dayattend += 1;
               $monthattend->lessonattend += $lessons[$selectedindex] - 1;
             } else if($property == 7) { //'-'-:休校日
-            } else if($property == 0) { //'-'-:休校日
+            } else if($property == -1) { //'-'-:休校日
               $property = 7;
             }
             $monthattend->days[$d] = $arrayproperty[$property];

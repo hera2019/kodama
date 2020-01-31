@@ -61,7 +61,7 @@
                   <th class="col-xs-2">クラス</th>
                   <th class="col-xs-2 text-left" id="text_<?= $i; ?>_class"><?= isset($StudentInfo) ? $StudentInfo->classname : ''; ?></th>
                   <th class="col-xs-2">累計出席率</th>
-                  <th class="col-xs-2" id="text_<?= $i; ?>_attendance"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%</th>
+                  <th class="col-xs-2" id="text_<?= $i; ?>_attendance"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?></th>
                 </tr>
                 <tr>
                   <th class="col-xs-2">実施者</th>
@@ -106,7 +106,7 @@
           </div>
         </div>
       </div>
-    </div>      
+    </div>
   </div>
 </section>
 
@@ -121,7 +121,7 @@
 var _studentrecord = { // 默认值需要与html中同样，重置时使用
   'text_title': '',
   'text_class': '<?= isset($StudentInfo) ? $StudentInfo->classname : ''; ?>',
-  'text_attendance': '<?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>%',
+  'text_attendance': '<?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ""; ?>',
   'select_teacherID': '',
   'time_executiontime': '',
   'text_attendancestatus': '',

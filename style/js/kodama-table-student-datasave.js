@@ -18,6 +18,7 @@ $(document).ready(function () {
 
 function newRecord() {
   g_records.num += 1;
+  resetRecord(_studentrecord, g_records.num);
   $("#recordrow" + g_records.num).removeAttr('hidden');
 }
 
@@ -295,78 +296,72 @@ function postGetData(id, studentrecord, nomsg=false) {
         }
       }
     }    
-  }
-  
-  function resetRecord(studentrecord, recordindex) {
-    for(var key in studentrecord) {
-      if(key.search(/text_/) == 0) { //text
-        let keyname = key.substring(5);
-        if(keyname) {
-          let el = document.getElementById('text_' + recordindex + '_' + keyname);
-          if(el) {
-            el.innerHTML = studentrecord[key];
+  }  
+}
+
+function resetRecord(studentrecord, recordindex) {
+  for(var key in studentrecord) {
+    if(key == 'text_attendance') { //面谈记录需要得到当前出席率
+      let keyname = key.substring(5);
+      if(keyname) {
+        let el = document.getElementById('text_' + recordindex + '_' + keyname);
+        if(el) {
+          let eltext = studentrecord[key];
+          let el1 = document.getElementById('attendancebeforeday');
+          if(el1) {
+            eltext = el1.innerHTML;
           }
+          el.innerHTML = eltext;
         }
-      } else if(key.search(/select_/) == 0) { //select
-        let keyname = key.substring(7);
-        if(keyname) {
-          let el = document.getElementById('select_' + recordindex + '_' + keyname);
-          if(el) {
-            el.value = studentrecord[key];
-          }
+      }
+    } else if(key.search(/text_/) == 0) { //text
+      let keyname = key.substring(5);
+      if(keyname) {
+        let el = document.getElementById('text_' + recordindex + '_' + keyname);
+        if(el) {
+          el.innerHTML = studentrecord[key];
         }
-      } else if(key.search(/selecttext_/) == 0) { //select
-        let keyname = key.substring(11);
-        if(keyname) {
-          let el = document.getElementById('selecttext_' + recordindex + '_' + keyname);
-          if(el) {
-            el.value = studentrecord[key];
-          }
+      }
+    } else if(key.search(/select_/) == 0) { //select
+      let keyname = key.substring(7);
+      if(keyname) {
+        let el = document.getElementById('select_' + recordindex + '_' + keyname);
+        if(el) {
+          el.value = studentrecord[key];
         }
-      } else if(key.search(/time_/) == 0) { //time
-        let keyname = key.substring(5);
-        if(keyname) {
-          let el = document.getElementById('time_' + recordindex + '_' + keyname);
-          if(el) {
-            el.value = studentrecord[key];
-          } 
+      }
+    } else if(key.search(/selecttext_/) == 0) { //select
+      let keyname = key.substring(11);
+      if(keyname) {
+        let el = document.getElementById('selecttext_' + recordindex + '_' + keyname);
+        if(el) {
+          el.value = studentrecord[key];
         }
-      } else if(key.search(/photo_/) == 0) { //photo
-        let keyname = key.substring(6);
-        if(keyname) {
-          let eltext = document.getElementById('photo_' + recordindex + '_' + keyname);
-          let elimage = document.getElementById('photo_' + recordindex + '_' + 'image');
-          if(eltext && elimage) {
-            if(studentrecord[key]) {
-              eltext.innerHTML = studentrecord[key];
-              elimage.src = kodamafunc.PHOTO_PATH + studentrecord[key];
-            } else {
-              eltext.innerHTML = '';
-              elimage.setAttribute("height", "100%");
-              elimage.src = kodamafunc.PHOTO_PATH + 'default/blank.jpg';
-            }
+      }
+    } else if(key.search(/time_/) == 0) { //time
+      let keyname = key.substring(5);
+      if(keyname) {
+        let el = document.getElementById('time_' + recordindex + '_' + keyname);
+        if(el) {
+          el.value = studentrecord[key];
+        } 
+      }
+    } else if(key.search(/photo_/) == 0) { //photo
+      let keyname = key.substring(6);
+      if(keyname) {
+        let eltext = document.getElementById('photo_' + recordindex + '_' + keyname);
+        let elimage = document.getElementById('photo_' + recordindex + '_' + 'image');
+        if(eltext && elimage) {
+          if(studentrecord[key]) {
+            eltext.innerHTML = studentrecord[key];
+            elimage.src = kodamafunc.PHOTO_PATH + studentrecord[key];
+          } else {
+            eltext.innerHTML = '';
+            elimage.setAttribute("height", "100%");
+            elimage.src = kodamafunc.PHOTO_PATH + 'default/blank.jpg';
           }
         }
       }
     }
   }
-}
-
-Date.prototype.Format = function(formatStr) {
-var str = formatStr;
-var Week = ['日','一','二','三','四','五','六'];
-str=str.replace(/yyyy|YYYY/,this.getFullYear());
-str=str.replace(/yy|YY/,(this.getYear() % 100)>9?(this.getYear() % 100).toString():'0' + (this.getYear() % 100));
-str=str.replace(/MM/,this.getMonth()>=9?(this.getMonth()+1).toString():'0' + (this.getMonth()+1));
-str=str.replace(/M/g,this.getMonth()+1);
-str=str.replace(/w|W/g,Week[this.getDay()]);
-str=str.replace(/dd|DD/,this.getDate()>9?this.getDate().toString():'0' + this.getDate());
-str=str.replace(/d|D/g,this.getDate());
-str=str.replace(/hh|HH/,this.getHours()>9?this.getHours().toString():'0' + this.getHours());
-str=str.replace(/h|H/g,this.getHours());
-str=str.replace(/mm/,this.getMinutes()>9?this.getMinutes().toString():'0' + this.getMinutes());
-str=str.replace(/m/g,this.getMinutes());
-str=str.replace(/ss|SS/,this.getSeconds()>9?this.getSeconds().toString():'0' + this.getSeconds());
-str=str.replace(/s|S/g,this.getSeconds());
-return str;
 }

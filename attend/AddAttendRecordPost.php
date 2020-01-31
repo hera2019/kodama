@@ -1,10 +1,10 @@
 <?php
 require_once '../include/include_database.php';
-require_once 'AttendClass.php';
+require_once 'attend_class.php';
 
 use Attend\AttendClass;
 
-$message = 'check in failed: not got student id';
+$message = 'Check in failed: not got student id';
 if (isset ($_POST['studentID']))
 {
 	$studentID = $_POST['studentID'];
@@ -13,7 +13,7 @@ if (isset ($_POST['studentID']))
 	
 	if($message == '')
 	{
-		$message = "check in successfully!";
+		$message = "Check in successfully!";
 	}
 }
 echo $message;

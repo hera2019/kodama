@@ -48,7 +48,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
               <thead class="bg-<?= $KODAMA_THEME_COLOR; ?>">
                 <tr>
                   <th colspan="2">对象</th>
-                  <th colspan="31">日（ <span class="bg-green">出:出席</span> <span class="bg-red">欠:欠席</span> <span class="bg-orange">遅:遅刻，早退</span> <span class="bg-brown">公:公欠</span> <span class="bg-blue-grey">休:休学</span> <span class="bg-grey">帰:一時帰国</span> <span class="bg-black">-:休校日</span> ）</th>
+                  <th colspan="31">日（ <span class="bg-green">出:出席</span> <span class="bg-deep-orange">欠:欠席</span> <span class="bg-orange">遅:遅刻，早退</span> <span class="bg-brown">公:公欠</span> <span class="bg-blue-grey">休:休学</span> <span class="bg-grey">帰:一時帰国</span> <span class="bg-black">-:休校日</span> <span class="bg-pink">不:不明</span> ）</th>
                   <th colspan="5">コマ数</th>
                   <th colspan="4">日数</th>
                 </tr>

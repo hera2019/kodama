@@ -1,7 +1,6 @@
 //bootstrap-treeview 可参考 http://www.jq22.com/jquery-info10461
 $(function () {
-  
-    var _kodama_students2 = {
+  var _kodama_students2 = {
     studentID: {},
     studentkey: [
       'studentid',
