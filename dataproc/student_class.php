@@ -166,28 +166,68 @@ class Student_Class
       $all = array();
       foreach($record as $record)
       {
+        $ID = $record->ID;
+        $classID = $record->classID;
+        
+        //查询准确开课时间
+        $maxclasslessons = 0;
+        $time = time();
+        $classstartdate = NULL;
+        $sqlclassstartdate = 'SELECT classstartdate FROM student2 WHERE ID=:ID';
+        $statement = $this->connection->prepare($sqlclassstartdate);
+        $statement->execute( [ ':ID' => $ID ] );
+        $recordclassstartdate = $statement->fetch( PDO::FETCH_OBJ );
+        if(!empty($recordclassstartdate)) {
+          $classstartdate = $recordclassstartdate->classstartdate;
+          //if($time < strtotime($classstartdate)) {
+          //  $time = strtotime($classstartdate) + (2*365-30)*24*3600;
+          //}
+        }
+        if(empty($classstartdate)) {
+          $classstartdate = date('Y-m-d', $time - (2*365-30)*24*3600);
+        }        
+        $sqlsituationclass = 'SELECT sum(lessons) AS cl FROM situationclass WHERE classID=:classID AND property=1 AND recordtime>:classstartdate';
+        $statement = $this->connection->prepare($sqlsituationclass);
+        $statement->execute( [ ':classID' => $classID, ':classstartdate' => $classstartdate ] );
+        $recordsituationclass = $statement->fetch( PDO::FETCH_OBJ );
+        if(!empty($recordsituationclass)) {
+          $maxclasslessons = $recordsituationclass->cl;
+        }
+        //if($ID == 71) echo ': ' . $ID . ' ' . $classID . ' ' . $classstartdate . ' ' . $maxclasslessons . '<br>';
+        //结束查询准确开课时间
+
         //至今日
         $attend = new Attend();
         $sql2 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID';
         $statement = $this->connection->prepare($sql2);
-        $statement->execute([':ID' => $record->ID]);
+        $statement->execute([':ID' => $ID]);
         $record2 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforeday = '';
-        if(!empty($record2->cl)) {
-          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl) . '%';
+        if(!empty($record2) && !empty($record2->cl)) {
+          $maxclasslessons = $maxclasslessons > $record2->cl ? $maxclasslessons : $record2->cl;
+          if($maxclasslessons == 0) {
+            $attend->attendancebeforeday = '';
+          } else {
+            $attend->attendancebeforeday = round($record2->al * 100 / $maxclasslessons) . '%';
+          }
         }
         //前月截止
         $time = time();
         $thismonth = date( 'Y-m-01', $time );
         $sql3 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID AND date<:thismonth';
         $statement = $this->connection->prepare($sql3);
-        $statement->execute([':ID' => $record->ID, ':thismonth' => $thismonth]);
+        $statement->execute([':ID' => $ID, ':thismonth' => $thismonth]);
         $record3 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforemonth = '';
-        if(!empty($record3->cl)) {
-          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl) . '%';
+        if(!empty($record3) && !empty($record3->cl)) {
+          $maxclasslessons = $maxclasslessons > $record3->cl ? $maxclasslessons : $record3->cl;
+          if($maxclasslessons == 0) {
+            $attend->attendancebeforemonth = '';
+          } else {
+            $attend->attendancebeforemonth = round($record3->al * 100 / $maxclasslessons) . '%';
+          }
         }
-        
+
         $obj_merged = (object) array_merge((array)$record, (array)$attend);
         
         $all[] = $obj_merged;
@@ -221,26 +261,66 @@ class Student_Class
       $studentclassinfo = array();
       foreach($recordstudent as $record)
       {
+        $ID = $record->ID;
+        $classID = $record->classID;
+        
+        //查询准确开课时间
+        $maxclasslessons = 0;
+        $time = time();
+        $classstartdate = NULL;
+        $sqlclassstartdate = 'SELECT classstartdate FROM student2 WHERE ID=:ID';
+        $statement = $this->connection->prepare($sqlclassstartdate);
+        $statement->execute( [ ':ID' => $ID ] );
+        $recordclassstartdate = $statement->fetch( PDO::FETCH_OBJ );
+        if(!empty($recordclassstartdate)) {
+          $classstartdate = $recordclassstartdate->classstartdate;
+          //if($time < strtotime($classstartdate)) {
+          //  $time = strtotime($classstartdate) + (2*365-30)*24*3600;
+          //}
+        }
+        if(empty($classstartdate)) {
+          $classstartdate = date('Y-m-d', $time - (2*365-30)*24*3600);
+        }        
+        $sqlsituationclass = 'SELECT sum(lessons) AS cl FROM situationclass WHERE classID=:classID AND property=1 AND recordtime>:classstartdate';
+        $statement = $this->connection->prepare($sqlsituationclass);
+        $statement->execute( [ ':classID' => $classID, ':classstartdate' => $classstartdate ] );
+        $recordsituationclass = $statement->fetch( PDO::FETCH_OBJ );
+        if(!empty($recordsituationclass)) {
+          $maxclasslessons = $recordsituationclass->cl;
+        }
+        //if($ID == 71) echo ': ' . $ID . ' ' . $classID . ' ' . $classstartdate . ' ' . $maxclasslessons . '<br>';
+        //结束查询准确开课时间
+
         //至今日
         $attend = new Attend();
         $sql2 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID';
         $statement = $this->connection->prepare($sql2);
-        $statement->execute([':ID' => $record->ID]);
+        $statement->execute([':ID' => $ID]);
         $record2 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforeday = '';
-        if(!empty($record2->cl)) {
-          $attend->attendancebeforeday = round($record2->al * 100 / $record2->cl) . '%';
+        if(!empty($record2) && !empty($record2->cl)) {
+          $maxclasslessons = $maxclasslessons > $record2->cl ? $maxclasslessons : $record2->cl;
+          if($maxclasslessons == 0) {
+            $attend->attendancebeforeday = '';
+          } else {
+            $attend->attendancebeforeday = round($record2->al * 100 / $maxclasslessons) . '%';
+          }
         }
         //前月截止
         $time = time();
         $thismonth = date( 'Y-m-01', $time );
         $sql3 = 'SELECT sum(attendlesson) AS al, sum(classlesson) AS cl FROM situationmonth WHERE studentID=:ID AND date<:thismonth';
         $statement = $this->connection->prepare($sql3);
-        $statement->execute([':ID' => $record->ID, ':thismonth' => $thismonth]);
+        $statement->execute([':ID' => $ID, ':thismonth' => $thismonth]);
         $record3 = $statement->fetch( PDO::FETCH_OBJ );
         $attend->attendancebeforemonth = '';
-        if(!empty($record3->cl)) {
-          $attend->attendancebeforemonth = round($record3->al * 100 / $record3->cl) . '%';
+        if(!empty($record3) && !empty($record3->cl)) {
+          $maxclasslessons = $maxclasslessons > $record3->cl ? $maxclasslessons : $record3->cl;
+          if($maxclasslessons == 0) {
+            $attend->attendancebeforemonth = '';
+          } else {
+            $attend->attendancebeforemonth = round($record3->al * 100 / $maxclasslessons) . '%';
+          }
         }
 
         $obj_merged = (object) array_merge((array)$record, (array)$attend);

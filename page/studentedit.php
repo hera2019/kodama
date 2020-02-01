@@ -81,8 +81,10 @@ if($mod != 'add') {
   <div class="container-fluid">
     <div class="signup-box">
       <?php
-      if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
-        require_once( '../frame/studentinfo.php' );
+      if($mod != 'add') {
+        if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
+          require_once( '../frame/studentinfo.php' );
+        }
       }
       ?>
       <div class="card">

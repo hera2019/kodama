@@ -34,6 +34,7 @@ if($REBUILD_ALL) { //重新生成
     $sql = 'SELECT recordtime FROM attendance WHERE ID > ' . $lastID . ' ORDER BY ID ASC LIMIT 1';
   }
 }
+echo $sql . '<br>';
 $statement = $connection->prepare( $sql );
 $statement->execute();
 $recordattendance = $statement->fetch(PDO::FETCH_OBJ);
@@ -109,11 +110,12 @@ foreach ( $recordclass as $recordclass ) {
         //查询当课段签到人数，提前60分钟签到（可设定），签到时间段：$classstart-$aheadperiod到$classend之间   
         $sql = "SELECT COUNT(*) from attendance LEFT JOIN student on attendance.studentID=student.ID
                 WHERE time11 between :starttime and :endtime
-                AND student.classID = :classID AND instr(concat(',',classindex1,',',classindex2,',',classindex3,',',classindex4,','),concat(',',:classindex,','))>0";
+                AND student.classID = :classID AND (classindex1=:classindex OR classindex2=:classindex OR classindex3=:classindex OR classindex4=:classindex)";
         $statement = $connection->prepare( $sql );
         $statement->execute( [ ':classID' => $classID, ':starttime' => $starttime, ':endtime' => $endtime, ':classindex' => $classindex ] );
         //$record = $statement->fetch(PDO::FETCH_OBJ);
         $checkinnum = $statement->fetchColumn(); //取得欄位1 的值  (也就是count(*))
+        //echo $classID . ' ' . $starttime . ' ' . $endtime . ' ' . $classindex . ' ' . $checkinnum . '<br>';
         if ( $checkinnum == 0 ) {
           $property = 7; //休
           continue;

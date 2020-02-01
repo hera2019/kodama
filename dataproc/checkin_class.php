@@ -331,6 +331,7 @@ class Checkin_Class
 		{
       $message = '';
       $time = time();
+      $classstartdate = NULL;
       $sql = 'SELECT classstartdate FROM student2 WHERE ID=:ID';
       $statement = $this->connection->prepare($sql);
       $statement->execute( [ ':ID' => $ID ] );
@@ -338,12 +339,11 @@ class Checkin_Class
       if(!empty($recordclassstartdate)) {
         $classstartdate = $recordclassstartdate->classstartdate;
         if($time < strtotime($classstartdate)) {
-          //$message = "入学時間未到";
-          //return;
+          $time = strtotime($classstartdate) + (2*365-30)*24*3600;
         }
       }
-      if(!isset($classstartdate) || empty($classstartdate)) {
-        $classstartdate = date('Y-m-d', $time - 2*365*24*3600);
+      if(empty($classstartdate)) {
+        $classstartdate = date('Y-m-d', $time - (2*365-30)*24*3600);
       }
 
       $time1 = strtotime($classstartdate);//开始时间 时间戳
@@ -397,9 +397,11 @@ class Checkin_Class
         
         $info .= $yearrec . '-' . $monthrec . '=' . $recordsituationmonth->property . "<br>";
         
-        $propertyobj = json_decode($recordsituationmonth->property);
-        foreach($propertyobj as $key => $value) {
-          $attendrec[$yearrec][$monthrec][$key] = $value;
+        if(!empty($recordsituationmonth->property)) {
+          $propertyobj = json_decode($recordsituationmonth->property);
+          foreach($propertyobj as $key => $value) {
+            $attendrec[$yearrec][$monthrec][$key] = $value;
+          }
         }
       }
 

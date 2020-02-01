@@ -8,10 +8,12 @@ $(document).ready(function () {
 });
 
 function refreshRecord() {
-  document.getElementById('message').innerHTML = "Loading data...";
-
-  var id = document.getElementById('studentid').innerHTML;
-  postGetData(id, _studentrecord);
+  var el = document.getElementById('studentid');
+  if(el) {
+    document.getElementById('message').innerHTML = "Loading data...";
+    var id = document.getElementById('studentid').innerHTML;
+    postGetData(id, _studentrecord);
+  }
 }
 
 function postGetData(id, studentrecord, nomsg=false) {

@@ -37,10 +37,12 @@ if($REBUILD_ALL) { //重新生成
     $sql .= ' WHERE a.recordtime > "' . $lasttime . '"';
   }
 }
+$sql .= ' ORDER BY time11 ASC';
 $statement = $connection->prepare( $sql );
 $statement->execute();
 $recordattendance = $statement->fetchAll(PDO::FETCH_OBJ);
 //echo $sql . '<br>';
+$studentmonthcheck = array();
 foreach($recordattendance as $recordattendance) {
   $studentID = $recordattendance->studentID;
   
@@ -90,6 +92,57 @@ foreach($recordattendance as $recordattendance) {
         $attendlesson = $lessons - 1;
       }
     }
+    
+    //检查每个学生，是不是每个月都有记录，否则此月填充0，但是当月上课时间必要记录，统计出席率相关。必须！！！
+    if(isset($studentmonthcheck) && isset($studentmonthcheck[$studentID])) {
+      if($studentmonthcheck[$studentID] != $date) {
+        $timelast = strtotime($studentmonthcheck[$studentID]);
+        $timecur = strtotime($date);
+        $yearchecklast = date( 'Y', $timelast );     
+        $yearcheckcur = date( 'Y', $timecur );
+        if($yearchecklast <= $yearcheckcur) {
+          $monthnum = ($yearcheckcur - $yearchecklast) * 12;
+          $monthchecklast = date( 'm', $timelast );
+          $monthcheckcur = date( 'm', $timecur );
+          if($monthnum >= 12) {
+            $monthnum += $monthcheckcur - $monthchecklast;
+          } elseif($monthchecklast + 1 < $monthcheckcur) {
+            $monthnum += $monthcheckcur - $monthchecklast;
+          }
+          if($monthnum > 1) {
+            for($month_i=0; $month_i<$monthnum - 1; $month_i++) {
+              $monthchecklast += 1;
+              if($monthchecklast > 12) {
+                $yearchecklast += 1;
+                $monthchecklast = 1;
+              }
+              $newlastdate = date( 'Y-m-01', strtotime($yearchecklast . '-' . $monthchecklast . '-01') );
+              
+              $newlastmonthclasslesson = 0;
+              if(isset($classlesson) && isset($classlesson[$newlastdate]) && isset($classlesson[$newlastdate][$classID])) {
+                $newlastmonthclasslesson = $classlesson[$newlastdate][$classID];
+              }
+              if(!empty($newlastmonthclasslesson))
+              {
+                //$propertyarray = array();
+                $propertytext = '';//json_encode($propertyarray);
+                $sql = 'INSERT INTO situationmonth(studentID, property, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
+
+                echo 'date: ' . $newlastdate . ' studentID: ' . $studentID . ' attendlesson: ' . 0 . ' classlesson: ' . $newlastmonthclasslesson . ' property: ' . $propertytext . ' : new empty record<br>';
+
+                $statement = $connection->prepare( $sql );
+                if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => 0, ':classlesson' => $newlastmonthclasslesson, ':date' => $newlastdate ] ) ) {      
+                } else {
+                  echo ShowErrorCode( $statement );
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    $studentmonthcheck[$studentID] = $date;
+    //检查是否漏过一个月结束
 
     $sql = "SELECT ID, property, attendlesson from situationmonth WHERE studentID=:studentID AND date=:date";
     $statement = $connection->prepare( $sql );

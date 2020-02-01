@@ -226,7 +226,7 @@ foreach($textarea as $key => $textobj) {
     $textobj->text = $student2->residencename;
   } elseif($key == 'residenceperiod' && !empty($student2)) {
     $str = $student2->residenceperiod;
-    $str1 = explode('年', $str, 2);
+    /*$str1 = explode('年', $str, 2);
     $stryear = $str1[0];
     $str2 = $str1[1];
     $str3 = explode('ヶ月', $str2, -1);
@@ -240,8 +240,8 @@ foreach($textarea as $key => $textobj) {
       $strmonth = $strmonth . 'ヶ月';
     } else {
       $strmonth = '';
-    }
-    $textobj->text = $stryear . $strmonth;
+    }*/
+    $textobj->text = $str;
   } elseif($key == 'residencedate' && !empty($student2)) {
     $textobj->Date($student2->residencedate);
   } elseif($key == 'course' && !empty($student2)) {
@@ -302,7 +302,7 @@ foreach($textarea as $key => $textobj) {
 }
 
 //write attend info
-require_once( '../attend/getstudentmonthattand.php' );
+//require_once( '../attend/getstudentmonthattand.php' );
 $attendarea = array(
   'year1' => new TextArea(14.5, 117.7, 40.6, 125.7),
   'year2' => new TextArea(14.5, 143.3, 40.6, 151.3),
@@ -319,12 +319,54 @@ $attendarea = array(
   'percent' => new TextArea(168, 170.8, 178, 174.6),
 );
 
-//计算全部课时
-$alldaywhole = 0;
-//计算每日签到
-$attenddaywhole = 0;
-$absentdaywhole = 0;
-$latedaywhole = 0;
+require_once '../dataproc/checkin_class.php';
+use NS_Kodama_DB\Checkin_Class;
+
+$data = '';
+$info = '';
+$classdata = new Checkin_Class($connection);
+$message = $classdata->GetAttendance($studentID, $data, $info);
+if($message == '') {
+  if(!empty($data)) {
+    $StudentAttendance = json_decode($data, true);
+    //print_r($StudentAttendance);
+  }
+}
+
+$time = time();
+$classstartdate = NULL;
+$sql = 'SELECT classstartdate FROM student2 WHERE ID=:ID';
+$statement = $connection->prepare($sql);
+$statement->execute( [ ':ID' => $studentID ] );
+$recordclassstartdate = $statement->fetch( PDO::FETCH_OBJ );
+if(!empty($recordclassstartdate)) {
+  $classstartdate = $recordclassstartdate->classstartdate;
+  if($time < strtotime($classstartdate)) {
+    $time = strtotime($classstartdate) + (2*365-30)*24*3600;
+  }
+}
+if(empty($classstartdate) || $time < strtotime($classstartdate)) {
+  $classstartdate = date('Y-m-d', $time - (2*365-30)*24*3600);
+}
+
+$time1 = strtotime($classstartdate);//开始时间 时间戳
+$year1  = date("Y", $time1) + 0;   // 时间1的年份
+$month1 = date("m", $time1) + 0;   // 时间1的月份
+$day1 = date("d", $time1) + 0;   // 时间1的月份
+
+$year2  = date("Y", $time) + 0;   // 时间2的年份
+$month2 = date("m", $time) + 0;   // 时间2的月份
+$day2 = date("d", $time) + 0;   // 时间2的月份
+$echo = "";
+//$echo .= $month2 . " ";
+//$echo .= $month1 . " ";
+if($year2 - $year1 > 2) {
+  $year1 = $year2 - 2;
+}
+
+//课时
+$totallessonall = 0;
+$totallessonattend = 0;
 for($i=0; $i<2; $i++) {
   $year = $year1 + $i;
   $textobj = $attendarea['year' . ($i+1)];
@@ -332,12 +374,9 @@ for($i=0; $i<2; $i++) {
   $pdf->SetXY($textobj->left, $textobj->top);
   $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
 
-  //计算全部课时
-  $alldayoneyear = 0;
-  //计算每日签到
-  $attenddayoneyear = 0;
-  $absentdayoneyear = 0;
-  $latedayoneyear = 0;
+  //课时
+  $oneylessonall = 0;
+  $oneylessonattend = 0;
   for($j=0; $j<12; $j++) {
     $textobj = $attendarea['month' . ($i+1)];
     $month = $month1 + $j;
@@ -349,88 +388,52 @@ for($i=0; $i<2; $i++) {
     $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
     $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
 
-    //计算全部课时
-    $allday = 0;
-    //计算每日签到
-    $attendday = 0;
-    $absentday = 0;
-    $lateday = 0;
-    for($k=1; $k<=31; $k++) {
-      $property = 0;
-      $propertyname = "";
-      for($l=1; $l<=4; $l++) {
-        $propertykey = 'd' . $k . 'c' . $l;
-
-        //每日上课课时
-        if(isset($classrec[$year]) && isset($classrec[$year][$month]) && isset($classrec[$year][$month][$propertykey])) {
-          //$echo .= $year . ' ' . $month . ' ' . $propertykey . ' ' . $classrec[$year][$month][$propertykey] . " property 2 <br>";
-          if($classrec[$year][$month][$propertykey] == 1) {
-            $allday = $allday + 1;
-            if(!isset($attendrec[$year]) || !isset($attendrec[$year][$month]) || !isset($attendrec[$year][$month][$propertykey])) {
-              $attendrec[$year][$month][$propertykey] = 2;
-            }
-
-            //每日出勤情况
-            if(isset($attendrec[$year]) && isset($attendrec[$year][$month]) && isset($attendrec[$year][$month][$propertykey])) {
-              $property1 = $attendrec[$year][$month][$propertykey];
-              $arraypriority = array(1=>2, 5, 4, 3, 7, 6, 1);
-              $priority = array_search($property, $arraypriority);
-              $priority1 = array_search($property1, $arraypriority);
-              if($priority < $priority1) {
-                $property = $property1;
-              }
-            }
-          }
-        }
-      }
-      $propertyname = $arrayproperty[$property];
-      if($property == 1) { //'出'
-        $attendday = $attendday + 1;
-      } else if($property == 2) { //'欠'
-        $absentday = $absentday + 1;
-      } else if($property == 6) { //'遅'
-        $lateday = $lateday + 1;
-      }
+    if(isset($StudentAttendance) && isset($StudentAttendance[$year]) && isset($StudentAttendance[$year][$month])) {
+      $monthinfo = $StudentAttendance[$year][$month];
+    } else {
+      continue;
     }
+    //print_r($monthinfo);
+    //课时
+    $lessonall = empty($monthinfo['lessonall']) ? 0 : $monthinfo['lessonall'];
+    $lessonattend = empty($monthinfo['lessonattend']) ? 0 : $monthinfo['lessonattend'];
 
-    $attendpercent = "";
-    if($allday > 0) {
-      $attendpercent = round(($attendday + $lateday) / $allday * 100) . "%";
+    if(!empty($lessonall) || !empty($lessonattend)) {
+      $textobj = $attendarea['class' . ($i+1)];
+      $textobj->text = $lessonall;
+      $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
+      $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+
+      $textobj = $attendarea['attend' . ($i+1)];
+      $textobj->text = $lessonattend;
+      $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
+      $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
     }
-    
-    $textobj = $attendarea['class' . ($i+1)];
-    $textobj->text = $allday * 4;
-    $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
-    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
-    
-    $textobj = $attendarea['attend' . ($i+1)];
-    $textobj->text = ($attendday + $lateday) * 4;
-    $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
-    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
-    
-    $alldayoneyear = $alldayoneyear + $allday;
-    $attenddayoneyear = $attenddayoneyear + $attendday;
-    $absentdayoneyear = $absentdayoneyear + $absentday;
-    $latedayoneyear = $latedayoneyear + $lateday;
+    $oneylessonall += $lessonall;
+    $oneylessonattend += $lessonattend;
   }
-  $textobj = $attendarea['classall' . ($i+1)];
-  $textobj->text = $alldayoneyear * 4;
-  $pdf->SetXY($textobj->left, $textobj->top);
-  $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+  
+  if(!empty($oneylessonall) || !empty($oneylessonattend)) {
+    $textobj = $attendarea['classall' . ($i+1)];
+    $textobj->text = $oneylessonall;
+    $pdf->SetXY($textobj->left, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
 
-  $textobj = $attendarea['attendall' . ($i+1)];
-  $textobj->text = ($attenddayoneyear + $latedayoneyear) * 4;
-  $pdf->SetXY($textobj->left, $textobj->top);
-  $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
-
-  $alldaywhole = $alldaywhole + $alldayoneyear;
-  $attenddaywhole = $attenddaywhole + $attenddayoneyear;
-  $absentdaywhole = $absentdaywhole + $absentdayoneyear;
-  $latedaywhole = $latedaywhole + $latedayoneyear;
+    $textobj = $attendarea['attendall' . ($i+1)];
+    $textobj->text = $oneylessonattend;
+    $pdf->SetXY($textobj->left, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+  }  
+  $totallessonall += $oneylessonall;
+  $totallessonattend += $oneylessonattend;
 }
 
 $textobj = $attendarea['percent'];
-$textobj->text = round(($attenddaywhole + $latedaywhole) / $alldaywhole * 100) . "%";
+if(empty($totallessonall)) {
+  $textobj->text = '  %';
+} else {
+  $textobj->text = round($totallessonattend / $totallessonall * 100) . "%";
+}
 $pdf->SetXY($textobj->left, $textobj->top);
 $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
 
