@@ -15,6 +15,11 @@ class ClassLesson{
     $this->lessons = $lessons;
   }
 }
+class StudentAttendance {
+  public $firsttime = NULL;
+  public $lasttime = NULL;
+  public $months = array();
+}
 class AttendMonth {
   public $lessonall = 0;
   public $lessonattend = 0;
@@ -40,7 +45,7 @@ class AttendMonth {
     $this->days = array();
   }
   public function CheckValue() {
-    if($this->dayall == 0) {
+    if($this->dayall == 0 && $this->lessonall == 0) {
       $this->lessonall = $this->lessonall > 0 ? $this->lessonall : '';
       $this->lessonattend = $this->lessonattend > 0 ? $this->lessonattend : '';
       $this->lessonabsent = $this->lessonabsent > 0 ? $this->lessonabsent : '';
@@ -54,10 +59,11 @@ class AttendMonth {
   }
 }
 
+//$studentattendance = new StudentAttendance();
 //$month1 = new AttendMonth();
 //$month1->days['dayname'] = 'dayproperty';
-//$StudentAttendance['yearname']['monthname'] = $month1;
-//$StudentAttendance['yearname']['monthname']->days[dayname]
+//$studentattendance->months['yearname']['monthname'] = $month1;
+//$studentattendance->months['yearname']['monthname']->days[dayname]
 /////////////////////////////////////////////////////////////////////////////////////////
 
 class Checkin_Class
@@ -89,6 +95,9 @@ class Checkin_Class
     $studentIDs = [];
     foreach($sqlarray as $key => $value) {
       if(strstr($key, 'time') && empty($value)) {
+        $title .= $key . ',';
+        $context .= 'null,';
+      } elseif((strstr($key, 'classindex') && empty($value)) || (strstr($key, 'property') && empty($value))) {
         $title .= $key . ',';
         $context .= 'null,';
       } elseif($key == 'ID') { //studentID
@@ -164,6 +173,8 @@ class Checkin_Class
     $context = '';
     foreach($sqlarray as $key => $value) {
       if(strstr($key, 'time') && empty($value)) {
+        $context .= $key . '=null,';
+      } elseif((strstr($key, 'classindex') && empty($value)) || (strstr($key, 'property') && empty($value))) {
         $context .= $key . '=null,';
       } else {
         $context .= $key . '="' . $value . '"' . ',';
@@ -329,82 +340,31 @@ class Checkin_Class
 	{
 		if(!empty($ID))
 		{
-      $message = '';
-      $time = time();
-      $classstartdate = NULL;
-      $sql = 'SELECT classstartdate FROM student2 WHERE ID=:ID';
-      $statement = $this->connection->prepare($sql);
-      $statement->execute( [ ':ID' => $ID ] );
-      $recordclassstartdate = $statement->fetch( PDO::FETCH_OBJ );
-      if(!empty($recordclassstartdate)) {
-        $classstartdate = $recordclassstartdate->classstartdate;
-        if($time < strtotime($classstartdate)) {
-          $time = strtotime($classstartdate) + (2*365-30)*24*3600;
-        }
-      }
-      if(empty($classstartdate)) {
-        $classstartdate = date('Y-m-d', $time - (2*365-30)*24*3600);
-      }
-
-      $time1 = strtotime($classstartdate);//开始时间 时间戳
-      $year1  = date("Y", $time1) + 0;   // 时间1的年份
-      $month1 = date("m", $time1) + 0;   // 时间1的月份
-      $day1 = date("d", $time1) + 0;   // 时间1的月份
-
-      $year2  = date("Y", $time) + 0;   // 时间2的年份
-      $month2 = date("m", $time) + 0;   // 时间2的月份
-      $day2 = date("d", $time) + 0;   // 时间2的月份
-      $echo = "";
-      //$echo .= $month2 . " ";
-      //$echo .= $month1 . " ";
-      if($year2 - $year1 > 2) {
-        $year1 = $year2 - 2;
-      }
-
-      $sql = 'SELECT situationclass.classID AS classID, situationclass.classindex AS classindex, situationclass.property AS property, situationclass.lessons AS lessons, situationclass.recordtime AS recordtime FROM situationclass LEFT JOIN student ON student.classID=situationclass.classID WHERE student.ID=:studentID';
+      $message = '';/*
+      $sql = 'SELECT situationclass.classID AS classID, situationclass.classindex AS classindex, situationclass.property AS property, situationclass.lessons AS lessons, situationclass.recordtime AS recordtime FROM situationclass LEFT JOIN student ON student.classID=situationclass.classID WHERE student.ID=:studentID ORDER BY recordtime ASC';
       $statement = $this->connection->prepare($sql);
       $statement->execute( [ ':studentID' => $ID ] );
       $recordsituationclass = $statement->fetchAll(PDO::FETCH_OBJ);
       $classrec = array();
       foreach($recordsituationclass as $recordsituationclass) {
-        $timerec = strtotime($recordsituationclass->recordtime);
-        $yearrec  = date("Y", $timerec) + 0;   // 年
-        $monthrec = date("m", $timerec) + 0;   // 月
-        $dayrec = date("d", $timerec) + 0;   // 日
-        $propertykey = 'd' . $dayrec . 'c' . $recordsituationclass->classindex;
-        $classrec[$yearrec][$monthrec][$propertykey] = new ClassLesson($recordsituationclass->property, $recordsituationclass->lessons);
+        if($recordsituationclass->property > 0) {
+          $timerec = strtotime($recordsituationclass->recordtime);
+          $yearrec  = date("Y", $timerec) + 0;   // 年
+          $monthrec = date("m", $timerec) + 0;   // 月
+          $dayrec = date("d", $timerec) + 0;   // 日
+          $classrec[$yearrec][$monthrec][$dayrec][$recordsituationclass->classindex] = new ClassLesson($recordsituationclass->property, $recordsituationclass->lessons);
+        }
       }
+      ksort($classrec);
       foreach($classrec as $info_y => $info_month_s) {
-        foreach($info_month_s as $info_m => $info_propertykey_s) {
-          $info .= $info_y . '-' . $info_m . '={';
-          foreach($info_propertykey_s as $info_propertykey => $info_property) {
-            $info .= '"' . $info_propertykey . '":"' . $info_property->property . '",';
-          }
-          $info .= '}<br>';
+        foreach($info_month_s as $info_m => $info_day_s) {
+          $info .= $info_y . '-' . $info_m . '=' . json_encode($info_day_s) . '<br>';
         }
       }
+      $info = str_replace('{"property":', '', $info); //去掉键值字符
+      $info = str_replace(',"lessons":"4"}', '', $info); //无用信息
       $info .= '<br>';
-      
-      $sql = 'SELECT property, date FROM situationmonth WHERE studentID=:studentID';
-      $statement = $this->connection->prepare($sql);
-      $statement->execute( [ ':studentID' => $ID ] );
-      $recordsituationmonth = $statement->fetchAll(PDO::FETCH_OBJ);
-      $attendrec = array();
-      foreach($recordsituationmonth as $recordsituationmonth) {
-        $timerec = strtotime($recordsituationmonth->date);
-        $yearrec  = date("Y", $timerec) + 0;   // 时间1的年份
-        $monthrec = date("m", $timerec) + 0;   // 时间1的月份
-        
-        $info .= $yearrec . '-' . $monthrec . '=' . $recordsituationmonth->property . "<br>";
-        
-        if(!empty($recordsituationmonth->property)) {
-          $propertyobj = json_decode($recordsituationmonth->property);
-          foreach($propertyobj as $key => $value) {
-            $attendrec[$yearrec][$monthrec][$key] = $value;
-          }
-        }
-      }
-
+      */
       $sql = 'SELECT ID, property FROM attendproperty';
       $statement = $this->connection->prepare($sql);
       $statement->execute();
@@ -414,77 +374,55 @@ class Checkin_Class
         $arrayproperty[$recordattendproperty->ID] = $recordattendproperty->property;
       }
 
-      $StudentAttendance = array();
+      $studentattendance = new StudentAttendance();
       $monthattend = new AttendMonth();
-      for($year=$year1; $year<=$year2; $year++) {                  
-        $m1 = 1;
-        $m2 = 12;
-        if($year == $year1) {
-          $m1 = $month1;
-        } else if($year == $year2) {
-          $m2 = $month2;
+      
+      $sql = 'SELECT properties, date, classlesson, attendlesson FROM situationmonth WHERE studentID=:studentID ORDER BY date ASC';
+      $statement = $this->connection->prepare($sql);
+      $statement->execute( [ ':studentID' => $ID ] );
+      $recordsituationmonth = $statement->fetchAll(PDO::FETCH_OBJ);
+      $attendrec = array();
+      $arraypriority = array(-1, 0, 2, 5, 4, 3, 7, 6, 1);//属性优先级比较用
+      foreach($recordsituationmonth as $recordsituationmonth) { //每月
+        if(empty($studentattendance->firsttime)) {
+          $studentattendance->firsttime = $recordsituationmonth->date;
         }
-        for($m=$m1; $m<=$m2; $m++) {
-          $monthattend->ResetValue();
+        $studentattendance->lasttime = $recordsituationmonth->date;
+        $timerec = strtotime($recordsituationmonth->date);
+        $year = date("Y", $timerec) + 0;
+        $month = date("m", $timerec) + 0;
+        $monthrec = date("Y-m", $timerec);
+        $info .= $monthrec . '=' . $recordsituationmonth->properties . "<br>";  
+        $monthattend->ResetValue();
 
-          //计算全部课时
-          $allday = 0;
-          //计算每日签到
-          $attendday = 0;
-          $absentday = 0;
-          $lateday = 0;
+        //计算全部课时
+        $allday = 0;
+        //计算每日签到
+        $attendday = 0;
+        $absentday = 0;
+        $lateday = 0;
 
-          $d1 = 1;
-          $d2 = $this->DaysInMonth($year, $m);
-          if($year == $year1 && $m == $m1) {
-            $d1 = $day1;
-          } else if($year == $year2 && $m == $m2) {
-            $d2 = $day2;
-          }
-          for($d=$d1; $d<=$d2; $d++) {
+        if(!empty($recordsituationmonth->properties)) {
+          $propertyobj = json_decode($recordsituationmonth->properties);
+          foreach($propertyobj as $day => $valueday) { //每天
             $property = -1;
-            for($k=1; $k<=4; $k++) {
-              $propertykey = 'd' . $d . 'c' . $k;
-
-              //每日上课课时
-              if(isset($classrec[$year]) && isset($classrec[$year][$m]) && isset($classrec[$year][$m][$propertykey])) {
-                //$info .= $year . ' ' . $m . ' ' . $propertykey . ' ' . $classrec[$year][$m][$propertykey]->property . " property 2 <br>";
-                $classlesson = $classrec[$year][$m][$propertykey];
-                if($classlesson->property == 1) {
-                  $property1 = 2; //欠
-                  $monthattend->lessonall += $classlesson->lessons;
-                  if(!isset($attendrec[$year]) || !isset($attendrec[$year][$m]) || !isset($attendrec[$year][$m][$propertykey])) {
-                    $attendrec[$year][$m][$propertykey] = 2;
-                  }
-
-                  //每日出勤情况
-                  if(isset($attendrec[$year]) && isset($attendrec[$year][$m]) && isset($attendrec[$year][$m][$propertykey])) {
-                    $property1 = $attendrec[$year][$m][$propertykey];
-                    if($property1 == 1) { //'出'
-                      $monthattend->lessonattend += $classlesson->lessons;
-                    } else if($property1 == 2) { //'欠'
-                      $monthattend->lessonabsent += $classlesson->lessons;
-                    } else if($property1 == 6) { //'遅'
-                      $monthattend->lessonlate += 1;
-                      $monthattend->lessonattend += $classlesson->lessons - 1;
-                    }                    
-                  }
-                  
-                  //属性优先级比较
-                  $arraypriority = array(-1, 0, 2, 5, 4, 3, 7, 6, 1);
-                  $priority = array_search($property, $arraypriority);
-                  $priority1 = array_search($property1, $arraypriority);
-                  if($priority < $priority1) {
-                    $property = $property1;
-                  }
-                  if(isset($monthattend->days[$d])) {
-                    $monthattend->days[$d] .= $arrayproperty[$property1];
-                  } else {
-                    $monthattend->days[$d] = $arrayproperty[$property1];
-                  }
-                }
+            foreach($valueday as $classindex => $property1) {
+              if($property1 == 6) { //'遅'
+                $monthattend->lessonlate += 1;
               }
-            }
+
+              //属性优先级比较
+              $priority = array_search($property, $arraypriority);
+              $priority1 = array_search($property1, $arraypriority);
+              if($priority < $priority1) {
+                $property = $property1;
+              }
+              if(isset($monthattend->days[$day])) {
+                $monthattend->days[$day] .= $arrayproperty[$property1];
+              } else {
+                $monthattend->days[$day] = $arrayproperty[$property1];
+              }
+            } //每次课
             if($property == 1) { //'出'
               $monthattend->dayall += 1;
               $monthattend->dayattend += 1;
@@ -502,39 +440,27 @@ class Checkin_Class
             } else if($property == -1) { //'-'-:休校日
               $property = 7;
             }
-          }
-
-          if($monthattend->dayall > 0) {
-            $monthattend->dayattendpercent = round($monthattend->dayattend / $monthattend->dayall * 100) . "%";
-          }
-          if($monthattend->lessonall > 0) {
-            $monthattend->lessonattendpercent = round($monthattend->lessonattend / $monthattend->lessonall * 100) . "%";
-          }
-          $monthattend->CheckValue();
-          $StudentAttendance[$year][$m] = clone $monthattend;
+          } //每日
         }
-      }
+        $monthattend->lessonall = $recordsituationmonth->classlesson;
+        $monthattend->lessonattend = $recordsituationmonth->attendlesson;
+        $monthattend->lessonabsent = $monthattend->lessonall - $monthattend->lessonattend - $monthattend->lessonlate;
+        if($monthattend->dayall > 0) {
+          $monthattend->dayattendpercent = round($monthattend->dayattend / $monthattend->dayall * 100) . "%";
+        }
+        if($monthattend->lessonall > 0) {
+          $monthattend->lessonattendpercent = round($monthattend->lessonattend / $monthattend->lessonall * 100) . "%";
+        }
+        $monthattend->CheckValue();
+        $studentattendance->months[$year][$month] = clone $monthattend;
+      } //每月       
+      $info = str_replace('"', '', $info); //无用信息
       //$info = ''; //不显示调试信息
-      $data = json_encode($StudentAttendance);
+      $data = json_encode($studentattendance);
     } else {
 		  $message = 'Student ID not found. ';
-    }
+    } //每年
     return $message;
-	}
-  
-  private function DaysInMonth($year='', $month='') {
-    if(empty($year)) $year = date('Y');  
-      if(empty($month)) $month = date('m');
-    $day = '01';
-
-    //检测日期是否合法
-    if(!checkdate($month, $day, $year))
-      return '输入的时间有误';
-
-    //获取当年当月第一天的时间戳(时,分,秒,月,日,年)
-    $timestamp = mktime(0, 0, 0, $month, $day, $year);
-    $result = date('t', $timestamp);
-    return $result;
-  }
+	}  
 // end of class  
 }

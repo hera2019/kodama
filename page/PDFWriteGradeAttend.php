@@ -328,41 +328,40 @@ $classdata = new Checkin_Class($connection);
 $message = $classdata->GetAttendance($studentID, $data, $info);
 if($message == '') {
   if(!empty($data)) {
-    $StudentAttendance = json_decode($data, true);
-    //print_r($StudentAttendance);
+    $studentattendance = json_decode($data, true);
+    //print_r($studentattendance);
   }
 }
 
 $time = time();
 $classstartdate = NULL;
-$sql = 'SELECT classstartdate FROM student2 WHERE ID=:ID';
-$statement = $connection->prepare($sql);
-$statement->execute( [ ':ID' => $studentID ] );
-$recordclassstartdate = $statement->fetch( PDO::FETCH_OBJ );
-if(!empty($recordclassstartdate)) {
-  $classstartdate = $recordclassstartdate->classstartdate;
-  if($time < strtotime($classstartdate)) {
-    $time = strtotime($classstartdate) + (2*365-30)*24*3600;
+$classenddate = NULL;
+if(isset($studentattendance)) {
+  if(!empty($studentattendance['firsttime'])) {
+    $classstartdate = $studentattendance['firsttime'];
+  }
+  if(!empty($studentattendance['lasttime'])) {
+    $classenddate = $studentattendance['lasttime'];
   }
 }
-if(empty($classstartdate) || $time < strtotime($classstartdate)) {
-  $classstartdate = date('Y-m-d', $time - (2*365-30)*24*3600);
+if(empty($classstartdate)) {
+  $classstartdate = date('Y-m-d', $time);
 }
-
-$time1 = strtotime($classstartdate);//开始时间 时间戳
-$year1  = date("Y", $time1) + 0;   // 时间1的年份
-$month1 = date("m", $time1) + 0;   // 时间1的月份
-$day1 = date("d", $time1) + 0;   // 时间1的月份
-
-$year2  = date("Y", $time) + 0;   // 时间2的年份
-$month2 = date("m", $time) + 0;   // 时间2的月份
-$day2 = date("d", $time) + 0;   // 时间2的月份
+if(empty($classenddate)) {
+  $classenddate = date('Y-m-d', $time);
+}
+$firsttime = strtotime($classstartdate);
+$lasttime = strtotime($classenddate);
+$curtime = strtotime(date('Y-m-d', $time));
+if($lasttime - $firsttime > 731*24*3600) { //2年
+  $firsttime = strtotime(date('Y-m-d', $lasttime) . ' -2year+1month');
+} elseif($firsttime >= $curtime) {
+  $firsttime = strtotime(date('Y-m-d', $lasttime) . ' -2year+1month');
+}
+//strtotime(date('Y-m-d', $time) . ' -2year+1month'); //2020-02-01=>2018-03-01
+$year1  = date("Y", $firsttime) + 0;   // 时间1的年份
+$month1 = date("m", $firsttime) + 0;   // 时间1的月份
 $echo = "";
-//$echo .= $month2 . " ";
-//$echo .= $month1 . " ";
-if($year2 - $year1 > 2) {
-  $year1 = $year2 - 2;
-}
 
 //课时
 $totallessonall = 0;
@@ -388,8 +387,8 @@ for($i=0; $i<2; $i++) {
     $pdf->SetXY($textobj->left + 11.5 * $j, $textobj->top);
     $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
 
-    if(isset($StudentAttendance) && isset($StudentAttendance[$year]) && isset($StudentAttendance[$year][$month])) {
-      $monthinfo = $StudentAttendance[$year][$month];
+    if(isset($studentattendance) && isset($studentattendance['months']) && isset($studentattendance['months'][$year]) && isset($studentattendance['months'][$year][$month])) {
+      $monthinfo = $studentattendance['months'][$year][$month];
     } else {
       continue;
     }

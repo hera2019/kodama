@@ -168,7 +168,7 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
               <li class="input-group">
                 <span class="input-group-addon">Class Index 1: </span>
                 <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex1; ?>" type="text" class="form-control" name="classindex1" id="classindex1">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex1; ?>" type="text" class="form-control" name="classindex1" id="classindex1" readonly="readonly">
                 </div>
               </li>
               <li class="input-group-select clearfix">
@@ -196,7 +196,7 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
               <li class="input-group">
                 <span class="input-group-addon">Class Index 2: </span>
                 <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex2; ?>" type="text" class="form-control" name="classindex2" id="classindex2">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex2; ?>" type="text" class="form-control" name="classindex2" id="classindex2" readonly="readonly">
                 </div>
               </li>
               <li class="input-group-select clearfix">
@@ -224,7 +224,7 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
               <li class="input-group">
                 <span class="input-group-addon">Class Index 3: </span>
                 <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex3; ?>" type="text" class="form-control" name="classindex3" id="classindex3">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex3; ?>" type="text" class="form-control" name="classindex3" id="classindex3" readonly="readonly">
                 </div>
               </li>
               <li class="input-group-select clearfix">
@@ -252,7 +252,7 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
               <li class="input-group">
                 <span class="input-group-addon">Class Index 4: </span>
                 <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex4; ?>" type="text" class="form-control" name="classindex4" id="classindex4">
+                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex4; ?>" type="text" class="form-control" name="classindex4" id="classindex4" readonly="readonly">
                 </div>
               </li>
               <li class="input-group-select clearfix">

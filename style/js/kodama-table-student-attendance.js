@@ -51,8 +51,8 @@ function postGetData(id, nomsg=false) {
   function setRecord(data) {
     if(data) {
       var tbContent = '';
-      for(let year in data) {
-        let months = data[year];
+      for(let year in data.months) {
+        let months = data.months[year];
         let monthsarray = Object.entries(months);
         let firstmonth = true;
         for(let m in months) {
