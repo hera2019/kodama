@@ -58,9 +58,9 @@ foreach ( $recordclass as $recordclass ) {
   if ( $studentnum > 0 && $classID > 0 ) {    
     $lasttime = date( 'Y-m-d', strtotime($lasttime) );
     $nexttime = strtotime($lasttime);
-    $daynum = ($time - $nexttime) / 3600 / 24;
+    $daynum = ($time - $nexttime) / 3600 / 24; //$daynum是浮点数
     for($i=0; $i<$daynum; $i++) {
-      $thatday = date( 'Y-m-d', $nexttime );
+      $thatday = date( 'Y-m-d', strtotime($lasttime . '+' . $i . 'day') ); //第 $i 天
       //echo $thatday . ' : thatday<br>';      
       for($classindex=1; $classindex<=$LessonClass->GetClassTimeNum(); $classindex++) {
         $bFind = FALSE;
@@ -119,7 +119,7 @@ foreach ( $recordclass as $recordclass ) {
 
         }
         //echo $classID.' '.$classindex.' '.$lessonday.' '.$lessons . ': lesson2<br>';
-        echo 'time: ' . $recordtime . ' classID: ' . $classID . ' index: ' . $classindex . ' studentnum: ' . $studentnum . ' checkinnum: ' . $checkinnum . ' lessons: ' . $lessons . ' : ' . ($bFind ? '' : 'new record') . '<br>';
+        echo 'time: ' . $recordtime . ' classID: ' . $classID . ' index: ' . $classindex . ' studentnum: ' . $studentnum . ' checkinnum: ' . $checkinnum . ' property: ' . $property . ' lessons: ' . $lessons . ' : ' . ($bFind ? '' : 'new record') . '<br>';
         if ( !$bFind ) { //生成
           //echo $classID . '  ' . $studentnum . '  ' . $checkinnum . ': INSERT<br>';
           $sql = 'INSERT INTO situationclass(classID, classindex, studentnum, checkinnum, property, lessons, recordtime) VALUES(:classID, :classindex, :studentnum, :checkinnum, :property, :lessons, :recordtime)';
@@ -132,12 +132,11 @@ foreach ( $recordclass as $recordclass ) {
           $sql = 'UPDATE situationclass SET studentnum=:studentnum, checkinnum=:checkinnum, property=:property, lessons=:lessons, recordtime=:recordtime WHERE ID=:ID';
           $statement = $connection->prepare( $sql );
           if ( $statement->execute( [ ':studentnum' => $studentnum, ':checkinnum' => $checkinnum, ':property' => $property, ':lessons' => $lessons, ':recordtime' => $recordtime, ':ID' => $recordsituationclass->ID ] ) ) {} else {
-            ShowErrorCode( $statement );
+            echo ShowErrorCode( $statement );
           }
         }
-      }
-      $nexttime = $nexttime + 3600 * 24;
-    }
+      } //classindex
+    } //day
   }
 }
 ?>

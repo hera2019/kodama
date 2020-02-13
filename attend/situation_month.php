@@ -37,7 +37,8 @@ if($REBUILD_ALL) { //重新生成
     $sql .= 'AND a.time11 > "' . $lasttime . '"';
   }
 }
-$sql .= 'ORDER BY time11 ASC'; // AND studentID=87 
+$sql .= ' ORDER BY time11 ASC'; // AND studentID=87 
+//echo $sql . '<br>';
 $statement = $connection->prepare( $sql );
 $statement->execute();
 $recordattendance = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -47,6 +48,7 @@ $studentfirsttime_s = array();
 $lastattendancerecorID = 0;
 $lastattendancerecortime = NULL;
 foreach($recordattendance as $recordattendance) {
+  //echo json_encode($recordattendance) . '<br>';
   $studentID = $recordattendance->studentID;
   $classID = $recordattendance->classID;
   $classindexs_4 = [];
@@ -127,7 +129,7 @@ foreach($studentpropertie_s as $classID => $studentID_s) {
     }
     if(empty($timeend)) {
       $timeend = date('Y-m-d', $time);
-    }    
+    }
     //echo 'classID: '.$classID . ' studentID: ' . $studentID . ' timestart: ' . $timestart . ' timeend: ' . $timeend . '<br>';
     
     //从开始时间到结束时间
@@ -204,7 +206,7 @@ foreach($studentpropertie_s as $classID => $studentID_s) {
             $propertyarray = json_decode($propertytext, true);
           }
           if(!empty($monthproperty_s)) {
-            $propertytext = json_encode(array_merge($propertyarray, $monthproperty_s));
+            $propertytext = json_encode($propertyarray + $monthproperty_s);
           }
           //统计签到课时数
           if(!empty($recordsituationmonth->classlesson)) {
@@ -213,12 +215,12 @@ foreach($studentpropertie_s as $classID => $studentID_s) {
           if(!empty($recordsituationmonth->attendlesson)) {
             $monthattendlesson += $recordsituationmonth->attendlesson;
           }
-          $sql = 'UPDATE situationmonth SET properties=:property, attendlesson=:attendlesson, classlesson=:classlesson, recordtime=:recordtime WHERE ID=:ID';
+          $sql = 'UPDATE situationmonth SET properties=:properties, attendlesson=:attendlesson, classlesson=:classlesson, recordtime=:recordtime WHERE ID=:ID';
 
-          echo 'date: ' . $month_01 . ' studentID: ' . $studentID . ' attendlesson: ' . $monthattendlesson . ' classlesson: ' . $monthclasslesson . ' property: ' . $propertytext . '<br>';
+          echo 'date: ' . $month_01 . ' studentID: ' . $studentID . ' attendlesson: ' . $monthattendlesson . ' classlesson: ' . $monthclasslesson . ' properties: ' . $propertytext . '<br>';
 
           $statement = $connection->prepare( $sql );
-          if ( $statement->execute( [ ':property' => $propertytext, ':attendlesson' => $monthattendlesson, ':classlesson' => $monthclasslesson, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
+          if ( $statement->execute( [ ':properties' => $propertytext, ':attendlesson' => $monthattendlesson, ':classlesson' => $monthclasslesson, ':recordtime' => $currenttime, ':ID' => $recordsituationmonth->ID ] ) ) {
           } else {
             echo ShowErrorCode( $statement );
           }
@@ -228,12 +230,12 @@ foreach($studentpropertie_s as $classID => $studentID_s) {
           if(!empty($monthproperty_s)) {
             $propertytext = json_encode($monthproperty_s);
           }
-          $sql = 'INSERT INTO situationmonth(studentID, properties, attendlesson, classlesson, date) VALUES(:studentID, :property, :attendlesson, :classlesson, :date)';
+          $sql = 'INSERT INTO situationmonth(studentID, properties, attendlesson, classlesson, date) VALUES(:studentID, :properties, :attendlesson, :classlesson, :date)';
 
-          echo 'date: ' . $month_01 . ' studentID: ' . $studentID . ' attendlesson: ' . $monthattendlesson . ' classlesson: ' . $monthclasslesson . ' property: ' . $propertytext . ' : new record<br>';
+          echo 'date: ' . $month_01 . ' studentID: ' . $studentID . ' attendlesson: ' . $monthattendlesson . ' classlesson: ' . $monthclasslesson . ' properties: ' . $propertytext . ' : new record<br>';
 
           $statement = $connection->prepare( $sql );
-          if ( $statement->execute( [ ':studentID' => $studentID, ':property' => $propertytext, ':attendlesson' => $monthattendlesson, ':classlesson' => $monthclasslesson, ':date' => $month_01 ] ) ) {      
+          if ( $statement->execute( [ ':studentID' => $studentID, ':properties' => $propertytext, ':attendlesson' => $monthattendlesson, ':classlesson' => $monthclasslesson, ':date' => $month_01 ] ) ) {      
           } else {
             echo ShowErrorCode( $statement );
           }
