@@ -79,7 +79,7 @@ class Checkin_Class
 	{
 		// cleanup
 	}
-  	
+  
 	//添加一条记录
 	public function AddCheckin($sqlarray)
 	{
@@ -332,6 +332,155 @@ class Checkin_Class
       ShowErrorCode($statement);
     }
 		
+		return $message;
+	}
+  
+	//添加一条班级记录
+	public function AddClassManage($sqlarray)
+	{
+		$message = 'Add record failed!';
+		if(empty($sqlarray))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    $title = '';
+    $context = '';
+    foreach($sqlarray as $key => $value) {
+      if($key == 'ID') {
+        continue;
+      }
+      $title .= $key . ',';
+      $context .= '"' . $value . '"' . ',';
+    }
+    if(!empty($title) && !empty($context)) {
+      $title = substr($title, 0, -1); //去掉最后的逗号
+      $context = substr($context, 0, -1); //去掉最后的逗号
+    } else {
+      $message = '';//'Param error 2!';
+      return $message;
+    }
+    
+    $sql = 'INSERT INTO class('. $title . ') VALUES('. $context . ')';
+    //console_log($sql);
+    $statement =  $this->connection->prepare($sql);
+    if ($statement->execute()) {
+      $message = '';
+    }
+    else {
+      $message = 'Add record failed!';
+      ShowErrorCode($statement);
+    }
+    
+		return $message;
+	}
+
+	//查询班级信息
+	public function QueryClassManage($Param, &$data)
+	{
+		$message = 'Query record failed!';
+    
+    $sql = 'SELECT c.ID AS ID, c.name AS name, c.description AS description, t.name AS classteachername FROM class AS c LEFT JOIN teacher AS t ON c.classteacherID=t.ID'; //CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, 
+    $sql .= $Param;
+    $statement = $this->connection->prepare($sql);
+    $statement->execute();
+    $record = $statement->fetchAll( PDO::FETCH_OBJ );
+    if ( $record != NULL )
+    {
+      $message = '';
+      $all = array();
+      foreach($record as $record)
+      {
+        $all[] = $record;
+      }
+      $data = json_encode($all);
+		  return $message;
+    }
+    else
+    {
+      //ShowErrorCode($statement);
+      $message = 'Record not found!';
+      return $message;
+    }
+    
+		return $message;
+	}
+  
+	//修改班级信息
+	public function UpdateClassManage($ID, $sqlarray)
+	{
+		$message = 'Update record failed!';
+		if(empty($ID) || empty($sqlarray))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    //数据表 Checkin
+    //查询ID是否存在，不存在则返回错误
+    $sql = "SELECT ID from class WHERE ID = :ID";
+    $statement = $this->connection->prepare($sql);
+    $statement->execute([':ID' => $ID]);
+    $record = $statement->fetch( PDO::FETCH_OBJ );
+    if ( $record == NULL )
+    {
+      $message = 'This record is not exist!';
+      return $message;
+    }
+    
+    $context = '';
+    foreach($sqlarray as $key => $value) {
+      if($key == 'ID') {
+        continue;
+      }
+      $context .= $key . '="' . $value . '"' . ',';
+    }
+    if(!empty($context)) {      
+      $context = substr($context, 0, -1); //去掉最后的逗号
+    } else {
+      $message = '';
+      return $message;
+    }
+    
+    $sql = 'UPDATE class SET ' . $context .' WHERE ID=:ID';
+    //echo $sql;
+    $statement =  $this->connection->prepare($sql);
+    if ($statement->execute([':ID' => $ID])) {
+      $message = '';
+    }
+    else {
+      $message = 'Update record failed!';
+      $message .= ShowErrorCode($statement);
+    }
+		
+		return $message;
+	}
+  
+	//删除记录
+	public function DeleteClassManage($ID)
+	{
+		$message = 'Delete record failed!';
+		if(empty($ID))
+		{
+      $message = 'Param error!';
+      return $message;
+    }
+    
+    //批量删除DELETE FROM student WHERE ID IN (640,634,633)；
+    $sql = 'DELETE FROM class WHERE ID=:ID';
+    //console_log($sql);
+    $statement = $this->connection->prepare($sql);
+    $statement->execute([':ID' => $ID]);
+    $count = $statement->rowCount();
+    if($count > 0) {
+      $message = '';
+    }
+    else {
+      $message = 'No record has been deleted!';
+      ShowErrorCode($statement);
+    }
+    
 		return $message;
 	}
   

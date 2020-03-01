@@ -59,6 +59,8 @@
             </li>
             <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">account_box</i> <span>マスタ管理</span> </a>
               <ul class="ml-menu">
+                <li> <a href="teachermanage.php"> <span>教師検索</span> </a> </li>
+                <li> <a href="classmanage.php"> <span>クラス検索</span> </a> </li>
                 <li> <a href="usermanage.php"> <span>マスタ検索</span> </a> </li>
               </ul>
             </li>

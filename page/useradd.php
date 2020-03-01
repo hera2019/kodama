@@ -16,19 +16,9 @@ $message = '';
                 <input value="" type="text" class="form-control" name="namesurname" placeholder="Name Surname" required autofocus>
               </div>
             </div>
-            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">face</i> </span>
-              <div class="form-line">
-                <input value="" type="text" class="form-control" name="nickname" placeholder="Nickname">
-              </div>
-            </div>
-            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons col-rose-red">email</i> </span>
-              <div class="form-line">
-                <input value="" type="email" class="form-control" name="email" placeholder="Email Address" required>
-              </div>
-            </div>
             <div class="input-group"> <span class="input-group-addon"> <i class="material-icons col-rose-red">lock</i> </span>
               <div class="form-line">
-                <input value="" type="password" class="form-control" name="password" minlength="6" placeholder="Password: empty means no modified" required>
+                <input value="" type="password" autocomplete="new-password" class="form-control" name="password" minlength="6" placeholder="Password: empty means no modified" required>
               </div>
             </div>
             <div class="input-group"> <span class="input-group-addon"> <i class="material-icons col-rose-red">lock</i> </span>
@@ -36,7 +26,17 @@ $message = '';
                 <input value="" type="password" class="form-control" name="confirm" minlength="6" placeholder="Confirm Password: empty means no modified" required>
               </div>
             </div>
-            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">book</i> </span>
+            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons col-rose-red">email</i> </span>
+              <div class="form-line">
+                <input value="" type="email" class="form-control" name="email" placeholder="Email Address" required>
+              </div>
+            </div>
+            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">face</i> </span>
+              <div class="form-line">
+                <input value="" type="text" class="form-control" name="nickname" placeholder="Nickname">
+              </div>
+            </div>
+            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">description</i> </span>
               <div class="form-line">
                 <input value="" type="text" class="form-control" name="description" id="description" placeholder="Description">
               </div>
