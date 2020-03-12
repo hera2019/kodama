@@ -15,7 +15,7 @@
               <ul class="ml-menu">
                 <li> <a href="studenttable.php"> <span>学生情報検索</span> </a> </li>
                 <li> <a href="studentedit.php"> <span>学生基本情報</span> </a> </li>
-                <li> <a href="studentotherinfo.php"> <span>その他の学生情報</span> </a> </li>
+                <li> <a href="studentotherinfo.php"> <span>学籍情報</span> </a> </li>
                 <li> <a href="studentscore.php"> <span>成績情報</span> </a> </li>
                 <li> <a href="studentattend.php"> <span>出席情報</span> </a> </li>
                 <li> <a href="studentfee.php"> <span>入金情報</span> </a> </li>

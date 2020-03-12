@@ -52,7 +52,7 @@ if ( $recordclasstime == NULL ) {
               <li class="input-group-select clearfix">
                 <span class="input-group-addon">Class Num: </span>
                 <div class="form-line">
-                  <select class="kodama-icon-select" name="num">
+                  <select class="kodama-icon-select" name="num" id="classnum">
                     <option value="1" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "1" ? ' selected="selected"' : ''); ?>>1</option>
                     <option value="2" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "2" ? ' selected="selected"' : ''); ?>>2</option>
                     <option value="3" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "3" ? ' selected="selected"' : ''); ?>>3</option>
@@ -76,37 +76,37 @@ if ( $recordclasstime == NULL ) {
               <li class="input-group">
                 <span class="input-group-addon">Class 2 Start: </span>
                 <div class="form-line form-group kodama-timepicker" id="time_021" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_021" data-toggle="datetimepicker" name="time21" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time21; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_021" data-toggle="datetimepicker" name="time21" id="time21" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time21; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 2 End: </span>
                 <div class="form-line form-group kodama-timepicker" id="time_022" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_022" data-toggle="datetimepicker" name="time22" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time22; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_022" data-toggle="datetimepicker" name="time22" id="time22" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time22; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 3 Start: </span>
                 <div class="form-line form-group kodama-timepicker" id="time_031" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_031" data-toggle="datetimepicker" name="time31" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time31; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_031" data-toggle="datetimepicker" name="time31" id="time31" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time31; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 3 End: </span>
                 <div class="form-line form-group kodama-timepicker" id="time_032" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_032" data-toggle="datetimepicker" name="time32" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time32; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_032" data-toggle="datetimepicker" name="time32" id="time32" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time32; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 4 Start: </span>
                 <div class="form-line form-group kodama-timepicker" id="time_041" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_041" data-toggle="datetimepicker" name="time41" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time41; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_041" data-toggle="datetimepicker" name="time41" id="time41" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time41; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group">
                 <span class="input-group-addon">Class 4 End: </span>
                 <div class="form-line form-group kodama-timepicker" id="time_042" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time42; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                  <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" id="time42" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time42; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
               </li>
               <li class="input-group spinner" data-trigger="spinner">
@@ -172,3 +172,44 @@ if ( $recordclasstime == NULL ) {
 <script src="../style/js/jquery.spinner.js"></script>
 <script src="../style/js/kodama-datetimepicker.js"></script>
 <script src="../style/js/kodama-formajaxsubmit.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  let classnum = <?= empty($recordclasstime) ? 1 : $recordclasstime->num; ?>;
+  enableTimeControl(classnum);
+  $('#classnum').change(function(){ //选中
+    let classnum = $("#classnum").val(); //可以用，这就是selected的值
+    enableTimeControl(classnum);
+  });
+  function enableTimeControl(classnum) {
+    if(classnum == 1) {
+      $("#time21").prop( "disabled", true );
+      $("#time22").prop( "disabled", true );
+      $("#time31").prop( "disabled", true );
+      $("#time32").prop( "disabled", true );
+      $("#time41").prop( "disabled", true );
+      $("#time42").prop( "disabled", true );
+    } else if(classnum == 2) {
+      $("#time21").prop( "disabled", false );
+      $("#time22").prop( "disabled", false );
+      $("#time31").prop( "disabled", true );
+      $("#time32").prop( "disabled", true );
+      $("#time41").prop( "disabled", true );
+      $("#time42").prop( "disabled", true );
+    } else if(classnum == 3) {
+      $("#time21").prop( "disabled", false );
+      $("#time22").prop( "disabled", false );
+      $("#time31").prop( "disabled", false );
+      $("#time32").prop( "disabled", false );
+      $("#time41").prop( "disabled", true );
+      $("#time42").prop( "disabled", true );
+    } else if(classnum == 4) {
+      $("#time21").prop( "disabled", false );
+      $("#time22").prop( "disabled", false );
+      $("#time31").prop( "disabled", false );
+      $("#time32").prop( "disabled", false );
+      $("#time41").prop( "disabled", false );
+      $("#time42").prop( "disabled", false );
+    }
+  }
+});
+</script>

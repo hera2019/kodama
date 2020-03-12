@@ -119,7 +119,7 @@ function postSaveData(id, fileID, postData) {
   $.ajax({
     // 调用jquery的ajax方法  
     type: "POST", // 设置ajax方法提交数据的形式  
-    url: "../dataproc/dataproc_post.php", // 把数据提交到php
+    url: "../dataproc/adminssiondata_proc.php", // 把数据提交到php
     /* 提交的数据，必须使用key/value的形式，如"key=value"，
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
     data: "mod=update&studentID=" + id + "&fileID=" + fileID + "&data=" + postData,
@@ -136,7 +136,7 @@ function postGetData(id, fileID, _student_file) {
   $.ajax({
     // 调用jquery的ajax方法  
     type: "POST", // 设置ajax方法提交数据的形式  
-    url: "../dataproc/dataproc_post.php", // 把数据提交到php  
+    url: "../dataproc/adminssiondata_proc.php", // 把数据提交到php  
 
     /* 提交的数据，必须使用key/value的形式，如"key=value"， 
      * 如果多个键值对，就使用&分隔开，如"key1=value1&key2=value2" */
