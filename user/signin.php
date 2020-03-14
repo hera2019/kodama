@@ -97,6 +97,34 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
   padding-left: 0;
   margin: 5% auto;
   overflow-x: hidden;
+  height: 100%;
+}
+.login-backpic {
+  text-align: center;
+  background-image: url('../style/images/login-back.jpg');
+  width: 1005px;
+  height: 484px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 10% auto;
+  margin-bottom: 5%;
+}
+.login-page {
+  background-color: #fff;/* #00BCD4; */
+  width: 360px;
+  height: 484px;
+  margin: 0 0 0 645px;
+  overflow-x: hidden;
+  padding-top: 50px;
+}
+.logo {
+  margin: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 0;
+  margin-bottom: 0 !important;
+  padding-top: 8px;
+  padding-bottom: 10px;
 }
 .horidiv {
   min-width: 720px;
@@ -115,68 +143,70 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
 </head>
 
 <body class="login-back">
-  <div class="login-page">
-    <div class="login-box">
-      <div class="logo"> <a href="https://www.example.com/"><b>KODAMA</b></a> <small></small> </div>
-      <?php if(!empty($message)): ?>
-      <div class="card">
-        <div class="body">
-          <div class="row m-t--15 m-b--35">
-            <div class="alert alert-warning align-left">
-              <p>
-                <?= $message; ?>
-              </p>
+  <div class="login-backpic">
+    <div class="login-page">
+      <div class="login-box">
+        <div class="logo bg-<?= $KODAMA_THEME_COLOR; ?>"> <a href="https://www.example.com/"><b>KODAMA</b></a> <small></small> </div>
+        <?php if(!empty($message)): ?>
+        <div class="card">
+          <div class="body">
+            <div class="row m-t--15 m-b--35">
+              <div class="alert alert-warning align-left">
+                <p>
+                  <?= $message; ?>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <?php endif; ?>
-      <div class="card">
-        <div class="body">
-          <!--通过$_SESSION['user_id']进行判断，如果用户未登录，则显示登录表单，让用户输入用户名和密码-->
-          <?php
-            if ( isset( $_SESSION[ 'rememberme' ] ) ) {
-              if ( $_SESSION[ 'rememberme' ] == "on" ) {
-                if ( empty( $user_username ) ) {
-                  $user_rememberme = $_SESSION[ 'rememberme' ];
-                  $user_username = $_SESSION[ 'username' ];
-                  $user_password = base64_decode( $_SESSION[ 'password' ] );
+        <?php endif; ?>
+        <div class="card1">
+          <div class="body" style="padding: 20px;">
+            <!--通过$_SESSION['user_id']进行判断，如果用户未登录，则显示登录表单，让用户输入用户名和密码-->
+            <?php
+              if ( isset( $_SESSION[ 'rememberme' ] ) ) {
+                if ( $_SESSION[ 'rememberme' ] == "on" ) {
+                  if ( empty( $user_username ) ) {
+                    $user_rememberme = $_SESSION[ 'rememberme' ];
+                    $user_username = $_SESSION[ 'username' ];
+                    $user_password = base64_decode( $_SESSION[ 'password' ] );
+                  }
                 }
               }
-            }
-            ?>
-          <!-- $_SERVER['PHP_SELF']代表用户提交表单时，调用自身php文件 -->
-          <form id="sign_in" method="POST">
-            <div class="msg">Sign in to start your session</div>
-            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">person</i> </span>
-              <div class="form-line"> 
-                <!-- 如果用户已输过用户名，则回显用户名 -->
-                <input value="<?php if(!empty($user_username)) echo $user_username; ?>" type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+              ?>
+            <!-- $_SERVER['PHP_SELF']代表用户提交表单时，调用自身php文件 -->
+            <form id="sign_in" method="POST">
+              <div class="msg">Sign in to start your session</div>
+              <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">person</i> </span>
+                <div class="form-line"> 
+                  <!-- 如果用户已输过用户名，则回显用户名 -->
+                  <input value="<?php if(!empty($user_username)) echo $user_username; ?>" type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+                </div>
               </div>
-            </div>
-            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">lock</i> </span>
-              <div class="form-line">
-                <input value="<?php if(!empty($user_password)) echo $user_password; ?>" type="password" class="form-control" name="password" placeholder="Password" required>
+              <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">lock</i> </span>
+                <div class="form-line">
+                  <input value="<?php if(!empty($user_password)) echo $user_password; ?>" type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <!--
-              <div class="col-xs-8 p-t-5">
-                <input <?php if($user_rememberme == "on") echo "checked"; ?> type="checkbox" name="rememberme" id="rememberme" class="filled-in <?php if(!empty($KODAMA_THEME_COLOR)) echo 'chk-col-' . $KODAMA_THEME_COLOR; else echo 'chk-col-pink'?>">
-                <label for="rememberme">Remember Me</label>
+              <div class="row">
+                <!--
+                <div class="col-xs-8 p-t-5">
+                  <input <?php if($user_rememberme == "on") echo "checked"; ?> type="checkbox" name="rememberme" id="rememberme" class="filled-in <?php if(!empty($KODAMA_THEME_COLOR)) echo 'chk-col-' . $KODAMA_THEME_COLOR; else echo 'chk-col-pink'?>">
+                  <label for="rememberme">Remember Me</label>
+                </div>
+                !-->
+                <div class="col-xs-8 p-t-5"> <a href="forgot-password.php">Forgot Password?</a> </div>
+                <div class="col-xs-4">
+                  <button class="btn btn-block bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">SIGN IN</button>
+                </div>
               </div>
-              !-->
-              <div class="col-xs-8 p-t-5"> <a href="forgot-password.php">Forgot Password?</a> </div>
-              <div class="col-xs-4">
-                <button class="btn btn-block bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">SIGN IN</button>
+              <div class="row m-t-10 m-b-10"> 
+                <!--<div class="col-xs-6">
+                                  <a href="sign-up.html">Register Now!</a>
+                              </div>-->
               </div>
-            </div>
-            <div class="row m-t-10 m-b-10"> 
-              <!--<div class="col-xs-6">
-                                <a href="sign-up.html">Register Now!</a>
-                            </div>-->
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -189,7 +219,7 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
     <ul class="horiul col-xs-5">
       <div>support@example.com<br>00 0000-0000</div>
     </ul>
-		<ul class="horiul col-xs-5">
+    <ul class="horiul col-xs-5">
       <div>日本国東京都千代田区<br>サンプル1-2-3</div>
     </ul>
   </div>
