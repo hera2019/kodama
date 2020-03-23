@@ -40,9 +40,9 @@ require_once( 'frame.php' );
                 <thead class="col-<?= $KODAMA_THEME_COLOR; ?>">
                   <tr>
                     <th hidden="hidden">クラスID</th>
-                    <th class="col-xs-2">クラス名</th>
-                    <th class="col-xs-2">担任教師</th>
-                    <th class="col-xs-2">クラス説明</th>
+                    <th class="col-xs-4">クラス名</th>
+                    <th class="col-xs-4">担任教師</th>
+                    <th class="col-xs-4">クラス説明</th>
                   </tr>
                 </thead>
               </table>

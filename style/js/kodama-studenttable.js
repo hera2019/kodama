@@ -342,7 +342,7 @@ function format(data) {
       '<tr>'+
         '<td></td>'+
         '<td>累计出席率:</td>'+
-        '<td>'+data.attendancebeforeday+'%</td>'+
+        '<td>'+data.attendancebeforeday+'</td>'+
       '</tr>'+
       '<tr>'+
         '<td></td>'+

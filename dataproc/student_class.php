@@ -155,7 +155,7 @@ class Student_Class
 	{
 		$message = 'Query record failed!';
     
-    $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, s.password AS password, s.nickname AS nickname, s.lastname AS lastname, s.firstname AS firstname, s.birthday AS birthday, s.genderfemale AS genderfemale, s.phonenumber AS phonenumber, s.description AS description, c.name AS classname, t.name AS classteachername, i.typename AS statusname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID LEFT JOIN teacher AS t ON s.classteacherID = t.ID LEFT JOIN idconfig AS i ON (type="status" AND s.status = i.typeID)';
+    $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, s.password AS password, s.nickname AS nickname, s.lastname AS lastname, s.firstname AS firstname, s.birthday AS birthday, s.genderfemale AS genderfemale, s.phonenumber AS phonenumber, s.description AS description, c.name AS classname, u.name AS classteachername, i.typename AS statusname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID LEFT JOIN usermanage AS u ON s.classteacherID = u.ID LEFT JOIN idconfig AS i ON (type="status" AND s.status = i.typeID)';
     $sql .= $Param;
     $statement = $this->connection->prepare($sql);
     $statement->execute();
@@ -218,7 +218,7 @@ class Student_Class
 	{
 		$message = 'Query record failed!';
     
-    $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, s.password AS password, s.nickname AS nickname, s.lastname AS lastname, s.firstname AS firstname, s.birthday AS birthday, s.genderfemale AS genderfemale, s.phonenumber AS phonenumber, s.description AS description, c.name AS classname, t.name AS classteachername, i.typename AS statusname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID LEFT JOIN teacher AS t ON s.classteacherID = t.ID LEFT JOIN idconfig AS i ON (type="status" AND s.status = i.typeID)';
+    $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, s.password AS password, s.nickname AS nickname, s.lastname AS lastname, s.firstname AS firstname, s.birthday AS birthday, s.genderfemale AS genderfemale, s.phonenumber AS phonenumber, s.description AS description, c.name AS classname, u.name AS classteachername, i.typename AS statusname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID LEFT JOIN usermanage AS u ON s.classteacherID = u.ID LEFT JOIN idconfig AS i ON (type="status" AND s.status = i.typeID) ORDER BY s.classID desc,  s.ID desc';
     $sql .= $Param;
     $statement = $this->connection->prepare($sql);
     $statement->execute();

@@ -241,14 +241,18 @@ input[type="password"] {
   list-style: none;
 }
   .kodama-texthorli .input-group,
-  .kodama-texthorli .input-group-select {
+  .kodama-texthorli .input-group-select,
+  .kodama-texthorli .form-group,
+  .kodama-texthorli .form-group-select {
     width: 45%;
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 20px;
   }
     .kodama-texthorli .input-group .input-group-addon,
-    .kodama-texthorli .input-group-select .input-group-addon {
+    .kodama-texthorli .input-group-select .input-group-addon,
+    .kodama-texthorli .form-group .input-group-addon,
+    .kodama-texthorli .form-group-select .input-group-addon {
       width: 140px;
       height: 24px;
       text-align: right;
@@ -261,7 +265,9 @@ input[type="password"] {
       font-weight: bold;
     }
     .kodama-texthorli .input-group .form-line, 
-    .kodama-texthorli .input-group-select .form-line {
+    .kodama-texthorli .input-group-select .form-line,
+    .kodama-texthorli .form-group .form-line, 
+    .kodama-texthorli .form-group-select .form-line {
       width: 70%;
       min-width: 200px;
       padding-left: 12px;
@@ -269,8 +275,8 @@ input[type="password"] {
       display: inline-block;
       vertical-align: middle;
     }
-      .kodama-texthorli .input-group-select .form-line .kodama-icon-select
-      {
+      .kodama-texthorli .input-group-select .form-line .kodama-icon-select,
+      .kodama-texthorli .form-group-select .form-line .kodama-icon-select {
         background-color: transparent;
         vertical-align: middle;
         min-height: 34.4px;
@@ -351,6 +357,7 @@ input[type="password"] {
   word-break: break-all;
   table-layout: fixed;
   vertical-align: middle;
+  border: 1px solid #ddd;
 }
 .kodama-formtable > thead > tr > th,
 .kodama-formtable > tbody > tr > th,

@@ -53,14 +53,12 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
               <div id="message" class="alert-warning align-left col-white" style="line-height: 23px; width: 100%;"><?= $message; ?></div>
             </div>
             <hr>
-            <div class="kodama-texthorli">
-              <div class="form-group" style="word-wrap: break-word; word-break: break-all;">
-                <div class="form-line">
-                  <textarea cols="12" rows="8" value="" type="text" class="form-control" name="description" id="text_description" placeholder="Description" autofocus><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
-                </div>
+            <div class="form-group" style="word-wrap: break-word; word-break: break-all;">
+              <div class="form-line">
+                <textarea cols="12" rows="8" value="" type="text" class="form-control" name="description" id="text_description" placeholder="Description" autofocus><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
               </div>
             </div>
-            
+
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
             <input type="hidden" name="mod" id="mod" value="updatedescription" />
             <input type="hidden" name="ID" id="text_ID" value="<?= $ID; ?>" />

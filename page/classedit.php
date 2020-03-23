@@ -36,7 +36,7 @@ if($mod == 'updateclassmanage') { //not addcheckin
       <div class="card">
         <div class="body">
           <form id="infoform" method="POST" action="../dataproc/checkin_proc.php">
-            <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">Class Info: <span class="col-rose-red">red</span> icon indicates required.</font></div>                     
+            <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">Class Info: <span class="col-rose-red">red</span> icon indicates required: <span class=\'bg-white\'><a href = "../page/classmanage.php">Click here choose another record.</a></span></font></div>                     
             <div  style="padding-left: 2rem; padding-right: 2rem;">
               <div id="message" class="alert-warning align-left col-white"><?= $message; ?></div>
             </div>
@@ -51,7 +51,7 @@ if($mod == 'updateclassmanage') { //not addcheckin
                 <select class="kodama-icon-select" name="classteacherID" id="select_classteacherID" style="border: none; width: 100%;">
                   <option value="0">-- Please select teacher --</option>
                   <?php
-                  $sql = 'SELECT ID, name FROM teacher';
+                  $sql = 'SELECT ID, name FROM usermanage WHERE isteacher=1';
                   $statement = $connection->prepare($sql);
                   $statement->execute();
                   $recordteachers = $statement->fetchAll( PDO::FETCH_OBJ );
@@ -77,5 +77,4 @@ if($mod == 'updateclassmanage') { //not addcheckin
   </div>
 </section>
 <script src="../style/js/jquery.validate.js"></script> 
-<script src="../style/js/sign-up.js"></script>
 <script src="../style/js/kodama-formajaxsubmit.js"></script>

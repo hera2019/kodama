@@ -1,5 +1,5 @@
 <?php
-require_once 'class_data.php';
+require_once 'adminssiondata_class.php';
 use NS_Kodama_DB\Class_Data;
 require_once 'student_class.php';
 use NS_Kodama_DB\Student_Class;

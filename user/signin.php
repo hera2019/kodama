@@ -37,25 +37,24 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
   if ( !empty( $user_username ) && !empty( $user_password ) ) {
     //MySql中的SHA()函数用于对字符串进行单向加密
     //用用户名和密码进行查询
-    $sql = "SELECT ID, name, nickname, email FROM usermanage WHERE name = :username AND password = SHA(:password)";
+    $sql = "SELECT ID, username, name, email FROM usermanage WHERE username = :username AND password = SHA(:password)";
     $statement = $connection->prepare( $sql );
     $statement->execute( [ ':username' => $user_username, ':password' => $user_password ] );
     $record = $statement->fetch( PDO::FETCH_OBJ );
     //若查到的记录正好为一条，则设置SESSION，同时进行页面重定向
     if ( $record != NULL ) {
       $_SESSION[ 'user_id' ] = $record->ID;
-      $_SESSION[ 'username' ] = $record->name;
-      if( empty( $record->nickname ) ) //防止昵称为空
+      if( empty( $record->name ) ) //防止昵称为空
       {
-        $record->nickname = $record->name;
+        $record->name = $record->username;
       }
-      $_SESSION[ 'nickname' ] = $record->nickname;        
+      $_SESSION[ 'username' ] = $record->name;        
       $_SESSION[ 'useremail' ] = $record->email;
       $_SESSION[ 'rememberme' ] = $user_rememberme;
       if ( $user_rememberme == "on" ) {
         $_SESSION[ 'password' ] = base64_encode( $user_password );
       }
-      WriteLog( $connection, 'Login', $_SESSION[ 'nickname' ] );
+      WriteLog( $connection, 'Login', $_SESSION[ 'username' ] );
       $home_url = '../index.php';
       GotoURL( $home_url );
     } else //若查到的记录不对，则设置错误信息

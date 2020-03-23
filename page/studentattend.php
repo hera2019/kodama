@@ -92,7 +92,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
             </table>
             <input type="hidden" name="mod" id="mod" value="updatedescription" />
             <input type="hidden" name="ID" id="text_ID" value="<?= $ID; ?>" />
-            <div id='echo'><?= isset($echo) ? $echo : ''; ?></div>
+            <!--<div id='echo'><?= isset($echo) ? $echo : ''; ?></div>-->
           </div>
         </div>
       </div>

@@ -46,11 +46,6 @@
               <caption><div class="text-left alert-warning align-left col-white" id="message"></div></caption>
               <thead><tr></tr></thead>
               <?php
-              $sql = 'SELECT ID, name FROM teacher ORDER BY ID ASC';
-              $statement = $connection->prepare($sql);
-              $statement->execute();
-              $recordteacher = $statement->fetchAll( PDO::FETCH_OBJ );
-              
               for($i=1; $i<=24; $i++): ?>
               <tbody id=recordrow<?= $i; ?><?= $i == 1 ? '' : " hidden=\"hidden\""; ?>>
                 <tr>

@@ -262,7 +262,8 @@ $(function () {
         
         for (var classname in studentclassinfo) {
           let studentinfo = studentclassinfo[classname];
-          studentclass = {
+          studentinfo.reverse();
+          var studentclass = {
             text: classname,
             nodes: [],
             tags: [],

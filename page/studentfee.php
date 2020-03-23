@@ -62,7 +62,7 @@
                 $statement->execute();
                 $recordfee = $statement->fetchAll( PDO::FETCH_OBJ );
                 
-                $sql = 'SELECT ID, name FROM teacher ORDER BY ID ASC';
+                $sql = 'SELECT ID, name FROM usermanage WHERE isteacher=1 ORDER BY ID ASC';
                 $statement = $connection->prepare($sql);
                 $statement->execute();
                 $recordteacher = $statement->fetchAll( PDO::FETCH_OBJ );

@@ -41,7 +41,10 @@ function postGetData(id, nomsg=false) {
         document.getElementById('message').innerHTML = jsonStr.message;
       }
       if(jsonStr.info && !nomsg) { //save后reload，不显示get成功信息
-        document.getElementById('echo').innerHTML = jsonStr.info;
+        let elecho = document.getElementById('echo');
+        if(elecho) {
+          elecho.innerHTML = jsonStr.info;
+        }
       }
     } else {
       document.getElementById('message').innerHTML = postdata;

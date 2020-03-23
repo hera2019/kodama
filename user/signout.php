@@ -7,7 +7,7 @@ session_name( 'KODAMA_SESSID' );
 session_start();
 //使用一个会话变量检查登录状态
 if ( isset( $_SESSION[ 'user_id' ] ) ) {
-  WriteLog( $connection, 'Logout', $_SESSION[ 'nickname' ] );
+  WriteLog( $connection, 'Logout', $_SESSION[ 'username' ] );
   //要清除会话变量，将$_SESSION超级全局变量设置为一个空数组
   //$_SESSION = array();
   //如果存在一个会话cookie，通过将到期时间设置为之前36天从而将其删除

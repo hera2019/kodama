@@ -381,7 +381,7 @@ class Checkin_Class
 	{
 		$message = 'Query record failed!';
     
-    $sql = 'SELECT c.ID AS ID, c.name AS name, c.description AS description, t.name AS classteachername FROM class AS c LEFT JOIN teacher AS t ON c.classteacherID=t.ID'; //CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, 
+    $sql = 'SELECT c.ID AS ID, c.name AS name, c.description AS description, u.name AS classteachername FROM class AS c LEFT JOIN usermanage AS u ON c.classteacherID=u.ID'; //CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, 
     $sql .= $Param;
     $statement = $this->connection->prepare($sql);
     $statement->execute();

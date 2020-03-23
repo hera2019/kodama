@@ -1,4 +1,5 @@
 <!-- code by zmq -->
+<head>
 <?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php
 require_once( '../include/include_database.php' );
@@ -47,8 +48,7 @@ if($mod != 'add') {
     }
   }
 }
-
-?><head>
+?>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
@@ -253,7 +253,7 @@ if($mod != 'add') {
                   <select class="kodama-icon-select" name="classteacherID" id="select_classteacherID">
                     <option value="0">-- Please select teacher --</option>
                     <?php
-                    $sql = 'SELECT ID, name FROM teacher';
+                    $sql = 'SELECT ID, name FROM usermanage WHERE isteacher=1';
                     $statement = $connection->prepare($sql);
                     $statement->execute();
                     $recordteachers = $statement->fetchAll( PDO::FETCH_OBJ );
@@ -292,7 +292,6 @@ if($mod != 'add') {
   </div>
 </section>
 <script src="../style/js/jquery.validate.js"></script> 
-<script src="../style/js/sign-up.js"></script>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>
