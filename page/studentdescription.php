@@ -25,9 +25,6 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
   }
 }
 ?>
-<!-- tempusdominus-bootstrap Datetime Picker Css -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
 </head>
 
 <section class="content">
@@ -46,7 +43,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
               if(empty($ID)) {
                 echo 'Please choose a student first. <span class=\'bg-white\'><a href = "../page/studenttable.php">Click here choose a student.</a></span>';
               } else {
-                echo 'Edit Student Description:';
+                echo '学生の摘要を編集します：';
               }
               ?></font></div>
             <div  style="padding-left: 2rem;">
@@ -69,24 +66,12 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
   </div>
 </section>
 <script src="../style/js/jquery.validate.js"></script> 
-<script src="../style/js/sign-up.js"></script>
-<!-- tempusdominus-bootstrap Datetime Picker Css -->
-<script src="../style/js/moment-with-locales.js"></script>
-<script src="../style/js/tempusdominus-bootstrap-4.js"></script>
-<script src="../style/js/kodama-datetimepicker.js"></script>
-<script src="../style/js/kodama-formajaxsubmit.js"></script>
-<!-- Input Mask Plugin Js -->
-<script src="../style/js/jquery.inputmask.bundle.js"></script>
 <script src="../style/js/kodama-table-student-infoedit.js"></script>
 <script type="text/javascript">
   var _studentrecord = { // 默认值需要与html中同样，重置时使用
     'text_description': '',
     'text_ID': '',
   };
-  g_records.mod = 'getdescription';
-  
-  $(document).ready(function() {  
-    var $maskedInput = $('.kodama-texthorli');
-    $maskedInput.find('.residenceperiod-mask').inputmask('9年mヶ月');
-  });
+  g_records.mod = 'getdescription';  
 </script>
+<script src="../style/js/kodama-formajaxsubmit.js"></script>

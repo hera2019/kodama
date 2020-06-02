@@ -29,18 +29,18 @@
                 <li> <a href="../page/useredit.php?ID=<?php if(!empty($userid)) echo $userid; ?>">
                     <div class="icon-circle bg-light-blue"> <i class="material-icons">person</i> </div>
                     <div class="menu-info">
-                      <h4>Edit</h4>
+                      <h4>編集</h4>
                       <p>
-                          <i class="material-icons">info_outline</i> Edit user info
+                          <i class="material-icons">info_outline</i> ユーザーの情報を編集する
                       </p>
                     </div>
                   </a> </li>
                 <li> <a href="../user/signout.php">
                     <div class="icon-circle bg-red"> <i class="material-icons">input</i> </div>
                     <div class="menu-info">
-                      <h4>Sign Out</h4>
+                      <h4>ログアウト</h4>
                       <p>
-                          <i class="material-icons">info_outline</i> Sign out change to another user
+                          <i class="material-icons">info_outline</i> ログアウトでユーザを切り替える
                       </p>
                     </div>
                   </a> </li>

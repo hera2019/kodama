@@ -57,7 +57,7 @@ if ( $recordcolumn == NULL ) {
               if(empty($ID)) {
                 echo 'Please choose a student first. <span class=\'bg-white\'><a href = "../page/studenttable.php">Click here choose a student.</a></span>';
               } else {
-                echo 'Edit Student other Info:';
+                echo '学籍情報を編集する：';
               }
               ?></font></div>            
             <div  style="padding-left: 2rem;">

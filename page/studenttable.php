@@ -32,34 +32,34 @@ require_once( '../include/include_database.php' );
     <div class="row m-t--60">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <?php
-        $strinfo = 'Student Info: You will operate the data by this student on other page. Then query and choose a student now.';
+        $strinfo = '学生情報：このページで生徒を選択する、編集ボタンを押して、学生の基本情報を編集します。';
         if(isset($INCLUDE_STUDENT_INFO) && $INCLUDE_STUDENT_INFO) {
           require_once( '../frame/studentinfo.php' );
         }
         ?>
         <div class="card">
           <div class="kodama-header">
-            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">Student Table<small>Choose student first before operate.</small></h2>
+            <h2 class="col-<?= $KODAMA_THEME_COLOR; ?>">学生一覧表<small>学生情報を編集する前に学生を選択してください。</small></h2>
             <ul class="header-button">
               <li><a href="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
-                <div class="kodama-menu-info"><h4>Query</h4></div>
+                <div class="kodama-menu-info"><h4>フィルタ</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="addStudent();">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">person_add</i> </div>
-                <div class="kodama-menu-info"><h4>Add</h4></div>
+                <div class="kodama-menu-info"><h4>追加</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="editStudent();">
                 <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">person</i> </div>
-                <div class="kodama-menu-info"><h4>Edit</h4></div>
+                <div class="kodama-menu-info"><h4>編集</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="deleteStudent();">
                 <div class="kodama-icon-circle bg-red"> <i class="material-icons">delete</i> </div>
-                <div class="kodama-menu-info"><h4>Delete</h4></div>
+                <div class="kodama-menu-info"><h4>削除</h4></div>
               </a></li>
               <li class="kodama-checkbox">
                   <input type="checkbox" id="checkbox_multiselect" class="filled-in chk-col-purple"/>
-                  <label for="checkbox_multiselect">複選</label>
+                  <label for="checkbox_multiselect">複数選択可</label>
               </li>
             </ul>
             <div class="collapse m-t-10" id="collapseExample">
@@ -69,13 +69,13 @@ require_once( '../include/include_database.php' );
                     <li class="input-group">
                       <span class="input-group-addon"> <i class="material-icons col-orange">person</i> </span>
                       <div class="form-line">
-                        <input value="" type="text" class="form-control" name="s.name" placeholder="Name" autofocus>
+                        <input value="" type="text" class="form-control" name="s.name" placeholder="名前" autofocus>
                       </div>
                     </li>
                     <li class="input-group">
                       <span class="input-group-addon"> <i class="material-icons col-orange">format_list_numbered</i> </span>
                       <div class="form-line">
-                        <input value="" type="text" class="form-control" name="s.studentnumber" placeholder="Student Number">
+                        <input value="" type="text" class="form-control" name="s.studentnumber" placeholder="学籍番号">
                       </div>
                     </li>
                     <li class="input-group">
@@ -93,7 +93,7 @@ require_once( '../include/include_database.php' );
                       <span class="input-group-addon"> <i class="material-icons col-orange">account_balance</i> </span>
                       <div class="form-line">
                         <select class="kodama-icon-select" name="s.nationalityregion">
-                          <option value="-1">-- Please select nationalityregion --</option>
+                          <option value="-1">-- 国籍・地域でフィルタ --</option>
                           <?php
                           $sql = 'SELECT typeID, typename FROM idconfig WHERE type="nationalityregion" ORDER BY typeID ASC';
                           $statement = $connection->prepare($sql);
@@ -109,7 +109,7 @@ require_once( '../include/include_database.php' );
                       <span class="input-group-addon"> <i class="material-icons col-orange">class</i> </span>
                       <div class="form-line">
                         <select class="kodama-icon-select" name="s.classID" id="classID">
-                          <option value="0">-- Please select class --</option>
+                          <option value="0">-- クラスでフィルタ --</option>
                           <?php
                           $sql = 'SELECT ID, name FROM class';
                           $statement = $connection->prepare($sql);
@@ -125,7 +125,7 @@ require_once( '../include/include_database.php' );
                       <span class="input-group-addon"> <i class="material-icons col-orange">beenhere</i> </span>
                       <div class="form-line">
                         <select class="kodama-icon-select" name="s.status">
-                          <option value="-1">-- Please select status --</option>
+                          <option value="-1">-- 在籍狀態でフィルタ --</option>
                           <?php
                           $sql = 'SELECT typeID, typename FROM idconfig WHERE type="status" ORDER BY typeID ASC';
                           $statement = $connection->prepare($sql);

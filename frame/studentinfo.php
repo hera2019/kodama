@@ -7,7 +7,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
 ?>
 <div class="card m-b-10">
   <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>" style="padding-top: 10px; padding-bottom: 10px;">
-    <h2><small class="col-<?= $KODAMA_THEME_COLOR; ?>"><?= (isset($strinfo) && !empty($strinfo) ? $strinfo : 'Student Info: You will operate the data by this student. <a href = "../page/studenttable.php">Click here choose another student</a>.') ?></small></h2>
+    <h2><small class="col-<?= $KODAMA_THEME_COLOR; ?>"><?= (isset($strinfo) && !empty($strinfo) ? $strinfo : '学生情報： <span class=\'bg-white\' style="float: right;"><a href = "../page/studenttable.php">学生情報を編集する前に学生を選択してください。</a><span>') ?></small></h2>
   </div>
   <div class="body" style="padding-top: 10px; padding-bottom: 10px;">
     <div id="studentid" hidden="true"><?= isset($StudentInfo) ? $StudentInfo->studentid : ''; ?></div>
@@ -58,11 +58,11 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
           <td class="col-xs-1" colspan="1" id="statusname"><?= isset($StudentInfo) ? $StudentInfo->statusname : ''; ?></td>
         </tr>
         <tr>
-          <th class="col-xs-1" colspan="1">アルファベット(姓・名)</th>
+          <th class="col-xs-1" colspan="1">ローマ字(姓・名)</th>
           <td class="col-xs-1" colspan="1"><span id="lastnamealphabet"><?= isset($StudentInfo) ? $StudentInfo->lastnamealphabet : ''; ?></span> <span id="firstnamealphabet"><?= isset($StudentInfo) ? $StudentInfo->firstnamealphabet : ''; ?></span></td>
           <th class="col-xs-1" colspan="1">性别</th>
           <td class="col-xs-1" colspan="1" id="genderfemale"><?= isset($StudentInfo) ? $StudentInfo->genderfemale : ''; ?></td>
-          <th class="col-xs-1" colspan="1">累计出席率(昨日まで)</th>
+          <th class="col-xs-1" colspan="1">累計出席率(昨日まで)</th>
           <td class="col-xs-1" colspan="1" id="attendancebeforeday"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ''; ?></td>
         </tr>
         <tr>
@@ -70,11 +70,11 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
           <td class="col-xs-1" colspan="1"><span id="lastnamemotherland"><?= isset($StudentInfo) ? $StudentInfo->lastnamemotherland : ''; ?></span> <span id="firstnamemotherland"><?= isset($StudentInfo) ? $StudentInfo->firstnamemotherland : ''; ?></span></td>
           <th class="col-xs-1" colspan="1">携帶電話番号</th>
           <td class="col-xs-1" colspan="1" id="phonenumber"><?= isset($StudentInfo) ? $StudentInfo->phonenumber : ''; ?></td>
-          <th class="col-xs-1" colspan="1">累计出席率(前月まで)</th>
+          <th class="col-xs-1" colspan="1">累計出席率(前月まで)</th>
           <td class="col-xs-1" colspan="1" id="attendancebeforemonth"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforemonth : ''; ?></td>
         </tr>
         <tr>
-          <th class="col-xs-1" colspan="1">要注意事項</th>
+          <th class="col-xs-1" colspan="1">注記</th>
           <td class="col-xs-6" colspan="6" id="description"><?= isset($StudentInfo) ? $StudentInfo->description : ''; ?></td>
         </tr>
       </tbody>

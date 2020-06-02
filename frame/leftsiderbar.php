@@ -1,8 +1,8 @@
 <!-- Left Sidebar -->
 <aside id="leftsidebar" class="sidebar"> 
   <ul class="nav nav-tabs tab-nav-right" role="tablist">
-    <li role="presentation" class="active"><a href="#menus" data-toggle="tab">MENUS</a></li>
-    <li role="presentation"><a href="#names" data-toggle="tab">NAMES</a></li>
+    <li role="presentation" class="active"><a href="#menus" data-toggle="tab">メニュー</a></li>
+    <li role="presentation"><a href="#names" data-toggle="tab">生徒名簿</a></li>
   </ul>
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade in active" id="menus">
@@ -10,7 +10,7 @@
       <div class="menu">
           <ul class="list">
             <!-- <li class="header"></li> -->
-            <li> <a href="welcome.php"> <i class="material-icons">home</i> <span>Welcome</span> </a> </li>
+            <li> <a href="welcome.php"> <i class="material-icons">home</i> <span>ようこそ</span> </a> </li>
             <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">person</i> <span>学生管理</span> </a>
               <ul class="ml-menu">
                 <li> <a href="studenttable.php"> <span>学生情報検索</span> </a> </li>
@@ -39,7 +39,7 @@
               <ul class="ml-menu">
                 <li> <a href="classsituation.php"> <span>クラスのスケジュール修正</span> </a> </li>
                 <li> <a href="checkinrecord.php"> <span>チェックイン記録</span> </a> </li>
-                <li> <a href="classtime.php"> <span>クラス時間修正</span> </a> </li>
+                <li> <a href="classtime.php"> <span>課程時間修正</span> </a> </li>
               </ul>
             </li><!--
             <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">print</i> <span>集計印刷</span> </a>
@@ -59,8 +59,8 @@
             </li>
             <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">account_box</i> <span>マスタ管理</span> </a>
               <ul class="ml-menu">
-                <li> <a href="usermanage.php"> <span>マスタ教師検索</span> </a> </li>
-                <li> <a href="classmanage.php"> <span>クラス検索</span> </a> </li>
+                <li> <a href="usermanage.php"> <span>ユーザー情報一覧</span> </a> </li>
+                <li> <a href="classmanage.php"> <span>クラス情報一覧</span> </a> </li>
               </ul>
             </li>
           </ul>

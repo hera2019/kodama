@@ -16,7 +16,12 @@ if ( isset( $_COOKIE[ 'KODAMA_THEME_COLOR' ] ) ) {
 if ( isset( $_COOKIE[ 'KODAMA_SESSID' ] ) ) {
   $KODAMA_SESSID = $_COOKIE[ 'KODAMA_SESSID' ];
 }
-isset( $KODAMA_SESSID ) ? session_id( $KODAMA_SESSID ) : $KODAMA_SESSID = session_id();
+if(isset( $KODAMA_SESSID )) {
+  session_id( $KODAMA_SESSID );
+} else {
+  $KODAMA_SESSID = session_id();
+}
+
 // 如果设置了$SESSID，就将SessionID赋值为$SESSID，否则生成SessionID
 setcookie( 'KODAMA_SESSID', $KODAMA_SESSID, time() + 60, '/' ); // 储存SessionID到Cookie中，时间31天2678400秒 //第4个参数路径一定要有
 session_name( 'KODAMA_SESSID' );

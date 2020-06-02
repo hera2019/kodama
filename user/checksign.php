@@ -9,7 +9,7 @@ if ( isset( $_SESSION[ 'user_id' ] ) ) { //通过$_SESSION['user_id']进行判�
   $userid = $_SESSION[ 'user_id' ];
   $username = $_SESSION[ 'username' ];
   $useremail = $_SESSION[ 'useremail' ];
-  $usersignin = true;
+  $usersignin = true;  
 } else {
   $home_url = '../user/signin.php';
   GotoURL( $home_url );

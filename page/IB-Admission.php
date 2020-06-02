@@ -59,7 +59,7 @@
                   </th>
                 </tr>
                 <tr>
-                  <th class="text-left" colspan="12" id="export">Tip: <span style="background-color: #fffede;">Light yellow</span> table need to be filled in. Use CTRL+ENTER to wrap in the input box. Modifying the <span style="background-color: #EDFCFF;">light blue</span> table data will change the basic information.</th>
+                  <th class="text-left" colspan="12" id="export">Tip: <span style="background-color: #fffede;">黄色</span> のフォームに学生情報を入力してください。フォーム内で改行するには、[Ctrl]＋[Enter]キーを押します。<span style="background-color: #EDFCFF;">水色</span> のフォーム内のデータを変更すると、生徒の基本情報が変更されます。</th>
                 </tr>
                 <tr>
                   <th class="col-xs-1" colspan="1">1</th>

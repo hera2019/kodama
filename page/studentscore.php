@@ -42,7 +42,7 @@ if ( $recordcolumn == NULL ) {
               <li><a href="javascript:void(0);" onclick="refreshRecord();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info">
-                  <h4>Reload</h4>
+                  <h4>リロード</h4>
                 </div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="saveRecord();">

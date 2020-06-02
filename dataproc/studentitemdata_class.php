@@ -157,7 +157,7 @@ class StudentItem_Class
       $statement->execute( [ ':studentID' => $studentID ] );
       $recordstudent = $statement->fetchAll( PDO::FETCH_OBJ );
       if($recordstudent == NULL) {
-        return 'No item record founded. ';
+        return '記録は一つも見つかりません。';
       }
       $strrecord = '';
       $arrayrecord = array();

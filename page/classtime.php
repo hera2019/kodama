@@ -50,64 +50,72 @@ if ( $recordclasstime == NULL ) {
             <div class="kodama-texthorli">
               <!-- 循环自动添加控件 -->
               <li class="input-group-select clearfix">
-                <span class="input-group-addon">Class Num: </span>
+                <span class="input-group-addon">課程数量選択：</span>
                 <div class="form-line">
                   <select class="kodama-icon-select" name="num" id="classnum">
-                    <option value="1" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "1" ? ' selected="selected"' : ''); ?>>1</option>
-                    <option value="2" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "2" ? ' selected="selected"' : ''); ?>>2</option>
-                    <option value="3" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "3" ? ' selected="selected"' : ''); ?>>3</option>
-                    <option value="4" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "4" ? ' selected="selected"' : ''); ?>>4</option>
+                    <option value="1" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "1" ? ' selected="selected"' : ''); ?>>1限</option>
+                    <option value="2" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "2" ? ' selected="selected"' : ''); ?>>2限</option>
+                    <option value="3" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "3" ? ' selected="selected"' : ''); ?>>3限</option>
+                    <option value="4" <?= empty($recordclasstime) ? '' : ($recordclasstime->num == "4" ? ' selected="selected"' : ''); ?>>4限</option>
                   </select>
                 </div>
               </li>
               <br>
               <li class="input-group">
-                <span class="input-group-addon">Class 1 Start: </span>
+                <span class="input-group-addon">1限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_011" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_011" data-toggle="datetimepicker" name="time11" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time11; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
+                </div>                
+                <span class="input-group-spinner">から</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 1 End: </span>
+                <span class="input-group-addon">1限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_012" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_012" data-toggle="datetimepicker" name="time12" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time12; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">まで</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 2 Start: </span>
+                <span class="input-group-addon">2限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_021" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_021" data-toggle="datetimepicker" name="time21" id="time21" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time21; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">から</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 2 End: </span>
+                <span class="input-group-addon">2限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_022" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_022" data-toggle="datetimepicker" name="time22" id="time22" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time22; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">まで</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 3 Start: </span>
+                <span class="input-group-addon">3限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_031" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_031" data-toggle="datetimepicker" name="time31" id="time31" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time31; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">から</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 3 End: </span>
+                <span class="input-group-addon">3限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_032" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_032" data-toggle="datetimepicker" name="time32" id="time32" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time32; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">まで</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 4 Start: </span>
+                <span class="input-group-addon">4限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_041" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_041" data-toggle="datetimepicker" name="time41" id="time41" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time41; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">から</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">Class 4 End: </span>
+                <span class="input-group-addon">4限目：</span>
                 <div class="form-line form-group kodama-timepicker" id="time_042" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="nes" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" id="time42" style="text-align: left; width: 100%;" value="<?= empty($recordclasstime) ? '' : $recordclasstime->time42; ?>"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
+                <span class="input-group-spinner">まで</span>
               </li>
               <li class="input-group spinner" data-trigger="spinner">
                 <span class="input-group-addon">アーリーチェックイン時間: </span>
@@ -165,7 +173,6 @@ if ( $recordclasstime == NULL ) {
   </div>
 </section>
 <script src="../style/js/jquery.validate.js"></script>
-<script src="../style/js/sign-up.js"></script>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>

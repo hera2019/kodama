@@ -78,7 +78,7 @@ if (!empty($mod))
       if($message == '')
       {
         $rtinfo->result = 200;
-        $rtinfo->message = "Get student info successfully!";
+        $rtinfo->message = "学生情報の読み込みが完了します。";
         $rtinfo->data = $data;
         echo json_encode($rtinfo);
         return $message;
@@ -119,7 +119,7 @@ if (!empty($mod))
       if($message == '')
       {
         $rtinfo->result = 200;
-        $rtinfo->message = "Get student description successfully!";
+        $rtinfo->message = "学生の摘要を取得しました。";
         $rtinfo->data = $data;
         echo json_encode($rtinfo);
         return $message;
@@ -239,7 +239,7 @@ if (!empty($mod))
       if($message == '')
       {
         $rtinfo->result = 200;
-        $rtinfo->message = "Get student otherinfo successfully!";
+        $rtinfo->message = "学籍情報の読み込みが完了します。";
         $rtinfo->data = $data;
         echo json_encode($rtinfo);
         return $message;

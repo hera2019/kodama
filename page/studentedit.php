@@ -1,5 +1,4 @@
-<!-- code by zmq -->
-<head>
+<!-- code by zmq --><head>
 <?php $INCLUDE_STUDENT_INFO = true; ?>
 <?php
 require_once( '../include/include_database.php' );
@@ -8,17 +7,17 @@ require_once( 'frame.php' );
 
 $baseitem = [
   //'nickname' => array('Nickname', 'face'),
-  'lastname' => array('Lastname', 'contacts'),
-  'firstname' => array('Firstname', 'contacts'),
-  'lastnamefurigana' => array('Lastname Furigana', 'contacts'),
-  'firstnamefurigana' => array('Firstname Furigana', 'contacts'),
-  'lastnamealphabet' => array('Lastname Alphabet', 'contacts'),
-  'firstnamealphabet' => array('Firstname Alphabet', 'contacts'),
-  'lastnamemotherland' => array('Lastname Motherland', 'contacts'),
-  'firstnamemotherland' => array('Firstname Motherland', 'contacts'),
-  'studentnumber' => array('Student Number', 'format_list_numbered'),
-  'applicationnumber' => array('Application Number', 'format_list_numbered'),
-  'phonenumber' => array('Phone Number', 'local_phone'),
+  'lastname' => array('姓', 'contacts'),
+  'firstname' => array('名', 'contacts'),
+  'lastnamefurigana' => array('姓フリガナ', 'contacts'),
+  'firstnamefurigana' => array('名フリガナ', 'contacts'),
+  'lastnamealphabet' => array('姓のローマ字', 'contacts'),
+  'firstnamealphabet' => array('名のローマ字', 'contacts'),
+  'lastnamemotherland' => array('姓　母語', 'contacts'),
+  'firstnamemotherland' => array('名　母語', 'contacts'),
+  'studentnumber' => array('学籍番号', 'format_list_numbered'),
+  'applicationnumber' => array('出願番号', 'format_list_numbered'),
+  'phonenumber' => array('電話番号', 'local_phone'),
 ];
 
 $message = '';
@@ -77,6 +76,7 @@ if($mod != 'add') {
 </style>
 </head>
 
+
 <section class="content">
   <div class="container-fluid">
     <div class="signup-box">
@@ -96,10 +96,10 @@ if($mod != 'add') {
                 if(empty($ID)) {
                   echo 'Please choose a student first. <span class=\'bg-white\'><a href = "../page/studenttable.php">Click here choose a student.</a></span>';
                 } else {
-                  echo 'Edit Student Info: <span class="col-rose-red">red</span> icon indicates required.';
+                  echo '学生基本情報を編集する：<span class="col-rose-red">赤い</span> アイコンは必要必要事項。';
                 }
               } else {
-                echo 'Add Student Info: <span class="col-rose-red">red</span> icon indicates required.';
+                echo '学生基本情報を追加する：<span class="col-rose-red">赤い</span> アイコンは必要必要事項。';
               }
               ?></font></div>
             <div  style="padding-left: 2rem;">
@@ -120,7 +120,7 @@ if($mod != 'add') {
                           <span class="input-group-addon"> <i class="material-icons col-rose-red">person</i> </span>
                           <div class="form-line">
                             <input value="<?= empty($recordstudent) ? '' : $recordstudent->name; ?>" type="text" class="form-control" name="name" id="text_name" required autofocus>
-                            <label class="form-label">Name</label>
+                            <label class="form-label">名前</label>
                           </div>
                         </div>
                       </div>
@@ -144,7 +144,7 @@ if($mod != 'add') {
                           <span class="input-group-addon"> <i class="material-icons col-green">today</i> </span>
                           <div class="form-line form-group kodama-datepicker" id="time_001" data-target-input="nearest" style="margin-bottom: 0;">
                             <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_001" data-toggle="datetimepicker" name="birthday" id="time_birthday" style="text-align: left; width: 100%;" value="<?= empty($recordstudent) ? '' : $recordstudent->birthday; ?>" /><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                            <label class="form-label">Birthday</label>
+                            <label class="form-label">生年月日</label>
                           </div>
                         </div>
                       </div>
@@ -155,7 +155,7 @@ if($mod != 'add') {
                           <span class="input-group-addon"> <i class="material-icons col-green">description</i> </span>
                           <div class="form-line">
                             <textarea cols="12" rows="4" value="" type="text" class="form-control" name="description" id="text_description"><?= empty($recordstudent) ? '' : $recordstudent->description; ?></textarea>
-                            <label class="form-label">Description</label>
+                            <label class="form-label">注記</label>
                           </div>
                         </div>
                       </div>
@@ -218,7 +218,7 @@ if($mod != 'add') {
                 <span class="input-group-addon"> <i class="material-icons col-green">account_balance</i> </span>
                 <div class="form-line">
                   <select class="kodama-icon-select" name="nationalityregion" id="select_nationalityregion">
-                    <option value="-1">-- Please select nationalityregion --</option>
+                    <option value="-1">-- 国籍・地域を選択してください --</option>
                     <?php
                     $sql = 'SELECT typeID, typename FROM idconfig WHERE type="nationalityregion" ORDER BY typeID ASC';
                     $statement = $connection->prepare($sql);
@@ -234,7 +234,7 @@ if($mod != 'add') {
                 <span class="input-group-addon"> <i class="material-icons col-green">class</i> </span>
                 <div class="form-line">
                   <select class="kodama-icon-select" name="classID" id="select_classID">
-                    <option value="0">-- Please select class --</option>
+                    <option value="0">-- クラスを選択してください --</option>
                     <?php
                     $sql = 'SELECT ID, name, classteacherID FROM class';
                     $statement = $connection->prepare($sql);
@@ -251,7 +251,7 @@ if($mod != 'add') {
                 <span class="input-group-addon"> <i class="material-icons col-green">perm_identity</i> </span>
                 <div class="form-line">
                   <select class="kodama-icon-select" name="classteacherID" id="select_classteacherID">
-                    <option value="0">-- Please select teacher --</option>
+                    <option value="0">-- 担任教師を選択してください --</option>
                     <?php
                     $sql = 'SELECT ID, name FROM usermanage WHERE isteacher=1';
                     $statement = $connection->prepare($sql);
@@ -267,7 +267,7 @@ if($mod != 'add') {
                 <span class="input-group-addon"> <i class="material-icons col-green">beenhere</i> </span>
                 <div class="form-line">
                   <select class="kodama-icon-select" name="status" id="select_status">
-                    <option value="-1">-- Please select status --</option>
+                    <option value="-1">-- 在籍狀態を選択してください --</option>
                     <?php
                     $sql = 'SELECT typeID, typename FROM idconfig WHERE type="status" ORDER BY typeID ASC';
                     $statement = $connection->prepare($sql);
