@@ -145,6 +145,33 @@ if (!empty($mod))
       }
     }*/
   }
+  else if($mod == 'updateschool')
+  {
+    $ID = GetParam('ID');
+    if(!empty($ID))
+    {
+      $sqlarray = array();
+      foreach($_POST as $key => $value) {
+        if($key != 'mod') {
+          $sqlarray[$key] = $value;
+        }
+      }    
+
+      if(!empty($sqlarray))
+      {
+        $classdata = new Setting_Class($connection);
+        $message = $classdata->UpdateSchool($ID, $sqlarray);
+
+        if($message == '')
+        {
+          $rtinfo->result = 200;
+          $rtinfo->message = "Update school info successfully!";
+          echo json_encode($rtinfo);
+          return $message;
+        }
+      }
+    }
+  }
 }
 
 $rtinfo->message = $message;

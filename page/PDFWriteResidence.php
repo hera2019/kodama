@@ -104,6 +104,7 @@ $textarea = array(
   'passportexpirationY' => new TextArea(129, 104, 145, 109),
   'passportexpirationM' => new TextArea(151, 104, 159, 109),
   'passportexpirationD' => new TextArea(166, 104, 174, 109),
+  'entrypurposeP' => new TextArea(129.4, 132.5, 131.3, 134.4),
   'prevjpentryYes' => new TextArea(66, 182, 72, 188),
   'prevjpentryNo' => new TextArea(74, 182, 80, 188),
   'prevjpentrytimes' => new TextArea(38, 192, 47, 197),

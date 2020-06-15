@@ -67,6 +67,7 @@
               <ul class="ml-menu">
                 <li> <a href="usermanage.php"> <span>ユーザー情報一覧</span> </a> </li>
                 <li> <a href="classmanage.php"> <span>クラス情報一覧</span> </a> </li>
+                <li> <a href="schoolinfo.php"> <span>学校情報修正</span> </a> </li>
               </ul>
             </li>
           </ul>

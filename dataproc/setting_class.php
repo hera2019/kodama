@@ -205,5 +205,53 @@ class Setting_Class
     }
 		
 		return $message;
-	}  
+	}
+  
+	//更新School
+	public function UpdateSchool($ID, $sqlarray)
+	{
+		$message = 'Update school record failed!';
+		if(empty($ID) || empty($sqlarray))
+		{
+      $message .= ' Param error!';
+      return $message;
+    }
+    
+    //数据表 student
+    //查询ID是否存在，不存在则返回错误
+    $sql = "SELECT ID from school WHERE ID = :ID";
+    $statement = $this->connection->prepare($sql);
+    $statement->execute([':ID' => $ID]);
+    $record = $statement->fetch( PDO::FETCH_OBJ );
+    if ( $record == NULL )
+    {
+      //$message = $this->AddClasstime($ID, $sqlarray);
+      //$message = 'This record is not exist!';
+      return $message;
+    }
+    
+    $context = '';
+    foreach($sqlarray as $key => $value) {
+      $context .= $key . '="' . $value . '"' . ',';
+    }
+    if(!empty($context)) {
+      $context = substr($context, 0, -1); //去掉最后的逗号
+    } else {
+      $message = '';//'Param error 2!';
+      return $message;
+    }    
+    
+    $sql = 'UPDATE school SET ' . $context .' WHERE ID=:ID';
+    $statement =  $this->connection->prepare($sql);
+    if ($statement->execute([':ID' => $ID])) {
+      $message = '';
+    }
+    else {
+      $message = 'Update school record failed!';
+      ShowErrorCode($statement);
+    }
+		
+		return $message;
+	}
+  
 }

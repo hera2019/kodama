@@ -36,17 +36,17 @@ if($mod == 'updateclassmanage') { //not addcheckin
       <div class="card">
         <div class="body">
           <form id="infoform" method="POST" action="../dataproc/checkin_proc.php">
-            <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">Class Info: <span class="col-rose-red">red</span> icon indicates required: <span class=\'bg-white\'><a href = "../page/classmanage.php">Click here choose another record.</a></span></font></div>                     
+            <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">Class Info: <span class="col-rose-red">red</span> item indicates required: <span class=\'bg-white\'><a href = "../page/classmanage.php">Click here choose another record.</a></span></font></div>                     
             <div  style="padding-left: 2rem; padding-right: 2rem;">
               <div id="message" class="alert-warning align-left col-white"><?= $message; ?></div>
             </div>
-            <div class="input-group"> <span class="input-group-addon"> <i class="material-icons col-rose-red">class</i> </span>
+            <div class="input-group"> <span class="input-group-addon"> <span class="col-rose-red">クラス名：</span> </span>
               <div class="form-line">
                 <input value="<?php if(!empty($record)) echo $record->name; ?>" type="text" class="form-control" name="name" placeholder="Class Name" required autofocus>
               </div>
             </div>
             <div class="input-group clearfix">
-              <span class="input-group-addon"> <i class="material-icons col-green">perm_identity</i> </span>
+              <span class="input-group-addon"> 担任教師： </span>
               <div class="form-line">
                 <select class="kodama-icon-select" name="classteacherID" id="select_classteacherID" style="border: none; width: 100%;">
                   <option value="0">-- Please select teacher --</option>
@@ -62,7 +62,7 @@ if($mod == 'updateclassmanage') { //not addcheckin
               </div>
             </div>
             <div class="input-group">
-              <span class="input-group-addon"> <i class="material-icons col-green">description</i> </span>
+              <span class="input-group-addon"> 注記： </span>
               <div class="form-line">
                 <input value="<?php if(!empty($record)) echo $record->description; ?>" type="text" class="form-control" name="description" id="description" placeholder="Description">
               </div>
