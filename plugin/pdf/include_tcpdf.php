@@ -13,6 +13,7 @@ class TextArea {
   public $bmulticell;
   public $align;
   public $valign;
+  public $fontsize;
   function __construct( $left, $top, $right, $bottom, $text='', $bmulticell=false, $align='C', $valign='M' ) {
     $this->left = $left;
     $this->top = $top;
@@ -22,6 +23,7 @@ class TextArea {
     $this->bmulticell = $bmulticell;
     $this->align = $align;
     $this->valign = $valign;
+    $this->fontsize = null;
   }
   function Width() {
     return $this->right - $this->left;

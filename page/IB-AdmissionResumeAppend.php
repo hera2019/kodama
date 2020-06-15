@@ -45,7 +45,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <th class="col-xs-12 text-center" colspan="12"><h4>東京四木教育学院履歴書（追加）</h4><small></small></th>
+                  <th class="col-xs-12 text-center" colspan="12"><h4>東京コダマ教育学院履歴書（追加）</h4><small></small></th>
                 </tr>
                 <tr>
                   <th class="col-xs-12" colspan="12" style="padding-bottom: 0;"><div class="text-left alert-warning align-left col-white" id="message"></div></th>

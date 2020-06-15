@@ -139,7 +139,6 @@ if ( $recordcolumn == NULL ) {
   </div>
 </section>
 <script src="../style/js/jquery.validate.js"></script> 
-<script src="../style/js/sign-up.js"></script>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>

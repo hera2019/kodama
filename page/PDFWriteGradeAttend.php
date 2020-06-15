@@ -1,4 +1,10 @@
-<?php 
+<?php
+//指定文件编号，使用日期时间
+$PDF_FileNo = date('YmdHis', time());
+//指定模板和生成文件前缀名称
+$PDF_FileName = '学業成績及び出席状況証明書';
+?>
+<?php
 // check param
 $studentID = '';
 if(isset($_GET['ID']) && !empty($_GET['ID'])) {
@@ -49,7 +55,7 @@ $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 // Add a page from a PDF by file path.
 $pdf->AddPage();
-$pdf->setSourceFile('../template/pdf/学業成績及び出席状況証明書.pdf');
+$pdf->setSourceFile('../template/pdf/' . $PDF_FileName . '.pdf');
 $idx = $pdf->importPage(1);
 $pdf->useTemplate($idx);
 /**
@@ -110,7 +116,7 @@ $pdf->SetFont('droidsansfallback', '', 10.5);	//完美显示汉字：cid0cs//dro
 $pdf->SetTextColor(0, 0, 0);
 
 $textarea = array(
-  'No' => new TextArea(23, 18.8, 39, 23, '202001110001', false, 'L'),
+  'No' => new TextArea(23, 18.8, 54, 23, '', false, 'L'),
   'studentnumber' => new TextArea(32, 44, 58, 48, '', false, 'L'),
   'period' => new TextArea(27, 49.8, 85, 55, '', false, 'L'),
   'builddate' => new TextArea(155, 49.8, 191, 55, '', false, 'L'),
@@ -158,6 +164,7 @@ $statement->execute([':ID' => $studentID ]);
 $studentscore = $statement->fetch(PDO::FETCH_OBJ);
 foreach($textarea as $key => $textobj) {
   if($key == 'No') {
+    $textobj->text = $PDF_FileNo;
   } elseif($key == 'studentnumber' && !empty($student)) {
     $textobj->text = $student->studentnumber;
   } elseif($key == 'period') {
@@ -438,8 +445,7 @@ $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj
 
 // ---------------------------------------------------------
 //PDF filename build
-$timetxt = date('Ymd_His', time());
-$outfilename = 'PDF001_' . $timetxt . '.pdf';
+$outfilename = $PDF_FileName . '_' . $PDF_FileNo . '.pdf';
 ob_end_clean();
 //Close and output PDF document
 $pdf->Output($outfilename, 'I');//

@@ -54,7 +54,13 @@
             </li>-->
             <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">file_download</i> <span>提出書類</span> </a>
               <ul class="ml-menu">
+                <li> <a href="PDFWriteResidence.php"> <span>在留資格認定証明書交付申請書</span> </a> </li>
                 <li> <a href="PDFWriteGradeAttend.php"> <span>学業成績及び出席状況証明書</span> </a> </li>
+                <li> <a href="PDFWriteSchoolEntry.php"> <span>在学証明書</span> </a> </li>
+                <li> <a href="PDFWriteEnrollment.php"> <span>在籍証明書</span> </a> </li>
+                <li> <a href="PDFWriteExpectedCompletion.php"> <span>修了見込証明書</span> </a> </li>
+                <li> <a href="PDFWriteCompletion.php"> <span>修了証明書</span> </a> </li>
+                <li> <a href="PDFWriteDiploma.php"> <span>修了証書</span> </a> </li>
               </ul>
             </li>
             <li> <a href="javascript:void(0);" class="menu-toggle"> <i class="material-icons">account_box</i> <span>マスタ管理</span> </a>

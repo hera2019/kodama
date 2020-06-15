@@ -47,7 +47,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <th colspan="12" class="text-center"><h4>東京四木教育学院入学追加調書</h4><small></small></th>
+                  <th colspan="12" class="text-center"><h4>東京コダマ教育学院入学追加調書</h4><small></small></th>
                 </tr>
                 <tr>
                   <th colspan="12" style="padding-bottom: 0;"><div class="text-left alert-warning align-left col-white" id="message"></div></th>
