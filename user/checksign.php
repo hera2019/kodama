@@ -11,7 +11,11 @@ if ( isset( $_SESSION[ 'user_id' ] ) ) { //通过$_SESSION['user_id']进行判�
   $useremail = $_SESSION[ 'useremail' ];
   $usersignin = true;  
 } else {
-  $home_url = '../user/signin.php';
+  $paramstring = '';
+  if(!empty($signinmod)) {
+    $paramstring = '?mod=' . $signinmod;
+  }
+  $home_url = '../user/signin.php' . $paramstring;
   GotoURL( $home_url );
 }
 return $usersignin;

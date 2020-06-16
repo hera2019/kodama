@@ -6,7 +6,7 @@ function radioStudentFun($connection)
 {
 	//$classID = str_replace("class", "", $classID);
 	// 定义保存html代码的变量
-	$sql = 'SELECT ID FROM  class';
+	$sql = 'SELECT ID FROM class';
 	$statement = $connection->prepare($sql);
 	$statement->execute();
 	$record1 = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -15,9 +15,9 @@ function radioStudentFun($connection)
 	{
 		$html = '';
 		$classID = $record1->ID;
-		$strClassID = "class" . $classID;
+		$strClassID = "groupClass" . $classID;
 		//get user ID name
-		$sql = 'SELECT ID, lastname, firstname, studentnumber FROM  student WHERE classID=:classID';
+		$sql = 'SELECT ID, lastname, firstname, studentnumber FROM student WHERE classID=:classID';
 		$statement = $connection->prepare($sql);
 		$statement->execute([':classID' => $classID]);
 		$record = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -25,11 +25,16 @@ function radioStudentFun($connection)
 		{
 			$name = $record->lastname .  "　" . $record->firstname; //$record->studentnumber . ": " . 
 			# 遍历数组,分别形成不同的单选框html代码
-			$html .= "
+			/*$html .= "
 				<li>
 					<input type=\"radio\"  id = \"" . $record->studentnumber . "\"  name=\"studentname\" value=\"" . $record->ID . "
 						\" data-labelauty=\"" . $name . "\" alt=\"" . $name . "\">
-				</li>";
+				</li>";*/
+      $html .= '
+        <li class="groupClass bg-white col-blue-grey btn waves-effect">
+          <input name="groupStudent" type="radio" id="' . $record->studentnumber . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" />
+          <label for="' . $record->studentnumber . '">' . $name . '</label>
+        </li>';
 		}
 		$arr[$strClassID] = $html;
 	}
@@ -39,5 +44,5 @@ function radioStudentFun($connection)
 
 $ret = radioStudentFun($connection);
 $json_string = json_encode($ret);
-echo "getProfile($json_string)";
+return $json_string;
 ?>

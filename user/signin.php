@@ -27,6 +27,8 @@ setcookie( 'KODAMA_SESSID', $KODAMA_SESSID, time() + 60, '/' ); // 储存Session
 session_name( 'KODAMA_SESSID' );
 session_start();
 
+$signinmod = GetParam('mod');
+
 $message = "";
 $user_username = '';
 $user_password = '';
@@ -59,8 +61,16 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
       if ( $user_rememberme == "on" ) {
         $_SESSION[ 'password' ] = base64_encode( $user_password );
       }
-      WriteLog( $connection, 'Login', $_SESSION[ 'username' ] );
       $home_url = '../index.php';
+      $logtitle = 'Login';
+      if($signinmod = 1) { //學生個人簽到界面
+        $home_url = '../attend/CheckInUI1.php';
+        $logtitle = 'SingleCheckinLogin';
+      } else if($signinmod = 2) { //學生集團簽到界面
+        $home_url = '../attend/CheckInUI2.php';
+        $logtitle = 'GroupCheckinLogin';
+      }
+      WriteLog( $connection, $logtitle, $_SESSION[ 'username' ] );
       GotoURL( $home_url );
     } else //若查到的记录不对，则设置错误信息
     {
@@ -147,6 +157,16 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
 </head>
 
 <body class="login-back">
+  <?php if(empty($signinmod)) : ?>
+  <div style="float: right; position: absolute; top: 0; font-size: 12pt; text-align: right; background-color: #fff;">
+    <ul class="col-xs-6" style="width: auto;">
+      <div><a href="../attend/CheckInUI1.php"><span class="col-<?= $KODAMA_THEME_COLOR; ?>">学生個人チェックインページ</span></a></div>
+    </ul>
+    <ul class="col-xs-6" style="width: auto;">
+      <div><a href="../attend/CheckInUI2.php"><span class="col-<?= $KODAMA_THEME_COLOR; ?>">学生集團チェックインページ</span></a></div>
+    </ul>
+  </div>
+  <?php endif; ?>
   <div class="login-backpic">
     <div class="login-page">
       <div class="login-box">

@@ -5,6 +5,7 @@
 
 <body class="theme-<?= $KODAMA_THEME_COLOR; ?>">
 <?php
+$signinmod = 0;
 if ( !require_once( '../user/checksign.php' ) ) {
   return;
 }
