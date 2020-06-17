@@ -54,7 +54,7 @@ require_once( 'frame.php' );
                       </div>
                     </th>
                     <th class="col-xs-2">クラス名</th>
-                    <th class="col-xs-1">クラス索引</th>
+                    <th class="col-xs-1">限目</th>
                     <th class="col-xs-2">チェックイン率</th>
                     <th class="col-xs-2">クラス属性</th>
                     <th class="col-xs-2">記録日時</th>
@@ -70,7 +70,7 @@ require_once( 'frame.php' );
                       </div>
                     </th>
                     <th>クラス名</th>
-                    <th>クラス索引</th>
+                    <th>限目</th>
                     <th>チェックイン率</th>
                     <th>クラス属性</th>
                     <th>記録時間</th>

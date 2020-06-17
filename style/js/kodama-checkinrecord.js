@@ -250,7 +250,7 @@ function format(data) {
         '<td class="col-xs-1">日時1:</td>'+
         '<td class="col-xs-3">'+(data.time11==null?"":data.time11)+'</td>'+
         '<td class="col-xs-3">'+(data.time12==null?"":data.time12)+'</td>'+
-        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td class="col-xs-1">限目:</td>'+
         '<td class="col-xs-1">'+(data.classindex1==null?"":data.classindex1)+'</td>'+
         '<td class="col-xs-1">属性:</td>'+
         '<td class="col-xs-1">'+getPropertyName(data.property1)+'</td>'+
@@ -260,7 +260,7 @@ function format(data) {
         '<td>日時2:</td>'+
         '<td>'+(data.time21==null?"":data.time21)+'</td>'+
         '<td>'+(data.time22==null?"":data.time22)+'</td>'+
-        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td class="col-xs-1">限目:</td>'+
         '<td>'+(data.classindex2==null?"":data.classindex2)+'</td>'+
         '<td class="col-xs-1">属性:</td>'+
         '<td>'+getPropertyName(data.property2)+'</td>'+
@@ -270,7 +270,7 @@ function format(data) {
         '<td>日時3:</td>'+
         '<td>'+(data.time31==null?"":data.time31)+'</td>'+
         '<td>'+(data.time32==null?"":data.time32)+'</td>'+
-        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td class="col-xs-1">限目:</td>'+
         '<td>'+(data.classindex3==null?"":data.classindex3)+'</td>'+
         '<td class="col-xs-1">属性:</td>'+
         '<td>'+getPropertyName(data.property3)+'</td>'+
@@ -280,7 +280,7 @@ function format(data) {
         '<td>日時4:</td>'+
         '<td>'+(data.time41==null?"":data.time41)+'</td>'+
         '<td>'+(data.time42==null?"":data.time42)+'</td>'+
-        '<td class="col-xs-1">クラス索引:</td>'+
+        '<td class="col-xs-1">限目:</td>'+
         '<td>'+(data.classindex4==null?"":data.classindex4)+'</td>'+
         '<td class="col-xs-1">属性:</td>'+
         '<td>'+getPropertyName(data.property4)+'</td>'+
@@ -352,7 +352,7 @@ function queryStudent(queryParam) {
 
 function addRecord()
 {
-  window.location.href = "checkinedit.php?mod=add";
+  window.location.href = "checkinadd.php";
 }
 
 function editRecord()

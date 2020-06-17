@@ -23,9 +23,9 @@ function radioClassFun( $connection ) {
   foreach ( $record as $record ) {
     if ( $bFirst ) {
       $html .= '
-        <li class="groupClass bg-rose-red btn waves-effect">
+        <li class="RadioCheckboxBtn bg-rose-red btn waves-effect">
           <input name="groupClass" type="radio" id="groupClass' . $record->ID . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" checked />
-          <label style="font-size: 16;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
+          <label class="RadioCheckboxTxt" style="font-size: 16;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
         </li>';
       //<li style=\"text-align:center\">
       //	<input type=\"radio\"  id = \"class" . $record->ID . "\"  name=\"classname\" value=\"" . $record->ID . "\" checked data-labelauty=\"" . $record->name . "\">
@@ -33,9 +33,9 @@ function radioClassFun( $connection ) {
     } else {
       # 遍历数组,分别形成不同的单选框html代码
       $html .= '
-        <li class="groupClass bg-white col-rose-red btn waves-effect">
+        <li class="RadioCheckboxBtn bg-white col-rose-red btn waves-effect">
           <input name="groupClass" type="radio" id="groupClass' . $record->ID . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" />
-          <label style="font-size: 16;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
+          <label class="RadioCheckboxTxt" style="font-size: 16;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
         </li>';
     }
     $bFirst = FALSE;
@@ -50,7 +50,7 @@ function radioClassFun( $connection ) {
 <!-- code by zmq -->
 <html lang="en">
 <head>
-<title>Check In</title>
+<title>学生個人チェックインページ</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- <link rel="stylesheet" href="../style/css/CheckInStyle.css"> -->
@@ -61,47 +61,25 @@ ul {
   margin: 0 0;
   padding: 0 1.5rem;
 }
+/* WANG CHONGYANG需要140px  */
 li {
   display: inline-block;
   width: 183px;
   margin: 0 0;
 }
-.groupClass {
-  padding: 5 25 5 10;
-  margin: 10 20;
+.RadioCheckboxBtn {
+  /*padding: 5 25 5 10;*/
+  margin: 10px 20px;
 }
-/* radio文字左右空白43，图片16  */
-/*
-input.labelauty + label {
-    font-size: 14px;
-    font-family: "Noto Sans SC", sans-serif;
-    padding-top: 5px;
+.RadioCheckboxTxt {
+  margin: 0;
 }
-.card-header {
-    background-color: #d4edda;
-    padding: .25rem 1.25rem;
-    margin: 0 0;
-}
-.card-body {
-    padding: 0 0;
-    margin-top: 10px;
-    margin-bottom: 0px;
-}
-h6 {
-    margin-bottom: 0;
-}
-span {
-    display: inline-block;
-    width: 140px;
-    margin: 0 0;
-    padding: 0 0;
-}*//* WANG CHONGYANG需要140px  */
 </style>
 </head>
 
 <!-- Body  -->
 <body class="bg-info theme-<?= $KODAMA_THEME_COLOR; ?>">
-  <div class="container">
+  <div class="container" style="margin-left: 15px; margin-right: 15px; width: 100%;">
     <div class="card mt-15">
       <hr>
       <center><h4>学生個人チェックインページ</h4></center>
@@ -164,9 +142,7 @@ function getProfile(str)
 <script>
   getProfile(<?= $json_string ?>);
 </script> 
-<?php
-  require_once('../frame/foot.php');
-?>
+<?php require_once('../frame/foot.php'); ?>
 <script>
 //获取单选按钮的数据 //id不可重复
 $('input:radio').on('click', function(e)
@@ -179,11 +155,10 @@ $('input:radio').on('click', function(e)
       {
         $("input[name='groupClass']").parent().removeClass("bg-rose-red");
         $("input[name='groupClass']").parent().addClass("bg-white col-rose-red");
-        e.currentTarget.parentNode.className = "groupClass bg-rose-red btn waves-effect";
+        e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-rose-red btn waves-effect";
+        
         var strHtml = strQuery[key];
-        //$("input[name='studentname']").remove();
         document.getElementById('studentarea').innerHTML = strHtml;
-        //$("input[name='groupStudent']").labelauty();
         document.getElementById('message').innerHTML = "Please check in...";
         break;
       }
@@ -196,7 +171,8 @@ $("#studentarea").on('click', "input[name='groupStudent']", function(e)
 {
   $("input[name='groupStudent']").parent().removeClass("bg-light-blue");
   $("input[name='groupStudent']").parent().addClass("bg-white col-blue-grey");
-  e.currentTarget.parentNode.className = "groupClass bg-light-blue btn waves-effect";
+  e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-light-blue btn waves-effect";
+  
   var strHtml = e.currentTarget.id;
   strHtml += " ：";
   strHtml += e.currentTarget.nextSibling.nextSibling.innerHTML;

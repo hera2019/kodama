@@ -25,14 +25,9 @@ function radioStudentFun($connection)
 		{
 			$name = $record->lastname .  "　" . $record->firstname; //$record->studentnumber . ": " . 
 			# 遍历数组,分别形成不同的单选框html代码
-			/*$html .= "
-				<li>
-					<input type=\"radio\"  id = \"" . $record->studentnumber . "\"  name=\"studentname\" value=\"" . $record->ID . "
-						\" data-labelauty=\"" . $name . "\" alt=\"" . $name . "\">
-				</li>";*/
       $html .= '
         <li class="RadioCheckboxBtn bg-white col-blue-grey btn waves-effect">
-          <input name="groupStudent" type="radio" id="' . $record->studentnumber . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" />
+          <input name="groupStudent" type="checkbox" id="' . $record->studentnumber . '" value=' . $record->ID . ' class="chk-col-yellow" />
           <label class="RadioCheckboxTxt" for="' . $record->studentnumber . '">' . $name . '</label>
         </li>';
 		}

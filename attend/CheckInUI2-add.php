@@ -3,22 +3,22 @@
 <?php
 require_once( '../include/include_database.php' );
 require_once( '../include/include_function.php' );
-require_once( 'frame.php' );
-
+require_once( '../frame/head.php' );
+  
+$signinmod = 2;
+if ( !require_once( '../user/checksign.php' ) ) {
+  return;
+}
+  
 $message = '';
-
-$ID = '';
-//签到信息
-if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
-  $ID = $_GET[ 'ID' ];
-  //查找记录
-  $sql = 'SELECT *, a.ID AS ID, s.studentnumber AS studentnumber, s.name AS studentname FROM attendance AS a LEFT JOIN student AS s ON a.studentID=s.ID WHERE a.ID=:ID';
-  $statement = $connection->prepare( $sql );
-  $statement->execute( [ ':ID' => $ID ] );
-  $recordcheckin = $statement->fetch( PDO::FETCH_OBJ );
-  if ( $recordcheckin == NULL ) {
-    $message .= "Checkin record not found.";
-  }
+  
+$sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, c.name AS classname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID';
+$statement = $connection->prepare($sql);
+$statement->execute();
+$recordstudent = $statement->fetchAll( PDO::FETCH_OBJ );
+$student_class = array(array());
+foreach($recordstudent as $recordstudent) {
+  $student_class[$recordstudent->classname][$recordstudent->ID] = $recordstudent->studentnumber . ': ' . $recordstudent->name;
 }
 
 //签到属性
@@ -82,59 +82,57 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
 </style>
 </head>
 
-<section class="content">
+<body class="theme-<?= $KODAMA_THEME_COLOR; ?>">
+<section class="content" style="margin-left: 15px;">
   <div class="container-fluid">
     <div class="signup-box">
       <div class="card">
         <div class="body">
           <form id="infoform" method="POST" action="../dataproc/checkin_proc.php">
-            <div class="msg" style="padding-bottom: 2rem;"><font class="col-<?= $KODAMA_THEME_COLOR; ?>">
-              <?php
-              if(empty($ID)) {
-                echo 'Please choose a record first. <span class=\'bg-white\'><a href = "../page/checkinrecord.php">Click here choose a record.</a></span>';
-              } else {
-                echo 'Edit Checkin Record: <span class=\'bg-white\'><a href = "../page/checkinrecord.php">Click here choose another record.</a></span>';
-              }
-              ?></font></div>            
             <div  style="padding-left: 2rem; padding-right: 2rem;">
               <div id="message" class="alert-warning align-left col-white"><?= $message; ?></div>
             </div>
             <div class="kodama-texthorli">
-              <li class="input-group">
-                <span class="input-group-addon">Student Number: </span>
-                <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->studentnumber; ?>" type="text" class="form-control" name="" disabled>
-                </div>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">Student Name: </span>
-                <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->studentname; ?>" type="text" class="form-control" name="" disabled>
-                </div>
-              </li>
+              <?php
+              if(isset($student_class)) {
+                echo '<li class="" style="padding: 1rem 2rem;">
+                        <span class="text-left">学生を選択：</span>
+                        <select id="optgroup" class="ms" multiple="multiple">';
+                foreach($student_class as $key => $value) {
+                  echo '<optgroup label="' . $key . '">';
+                  foreach($value as $key2 => $value2) {
+                    echo '<option value="' . $key2 . '">' . $value2 . '</option>';
+                  }
+                  echo '</optgroup>';
+                }
+                echo '</select>
+                    </li>
+                    <br>';
+              }
+              ?>
               <hr>
               <li class="input-group">
-                <span class="input-group-addon">限目1：</span>
+                <span class="input-group-addon">限目：</span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_011" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_011" data-toggle="datetimepicker" name="time11" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time11; ?>" id="time11"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
                 <span class="input-group-spinner">から</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">限目1：</span>
+                <span class="input-group-addon">限目：</span>
                 <div class="form-line form-group kodama-datetimepicker" id="time_012" data-target-input="nearest" style="margin-bottom: 0;">
                   <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_012" data-toggle="datetimepicker" name="time12" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time12; ?>" id="time12"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
                 </div>
                 <span class="input-group-spinner">まで</span>
               </li>
               <li class="input-group">
-                <span class="input-group-addon">限目1番号：</span>
+                <span class="input-group-addon">限目番号：</span>
                 <div class="form-line">
                   <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex1; ?>" type="text" class="form-control" name="classindex1" id="classindex1" readonly="readonly">
                 </div>
               </li>
               <li class="input-group-select clearfix">
-                <span class="input-group-addon">属性1：</span>
+                <span class="input-group-addon">属性：</span>
                 <div class="form-line">
                   <select class="kodama-icon-select" name="property1" id="property1">
                     <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
@@ -143,108 +141,20 @@ if ( $recordclasstime != NULL && $recordclasstime->num != 0 ) {
                   </select>
                 </div>
               </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目2：</span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_021" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_021" data-toggle="datetimepicker" name="time21" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time21; ?>" id="time21"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-                <span class="input-group-spinner">から</span>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目2：</span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_022" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_022" data-toggle="datetimepicker" name="time22" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time22; ?>" id="time22"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-                <span class="input-group-spinner">まで</span>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目2番号：</span>
-                <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex2; ?>" type="text" class="form-control" name="classindex2" id="classindex2" readonly="readonly">
-                </div>
-              </li>
-              <li class="input-group-select clearfix">
-                <span class="input-group-addon">属性2：</span>
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="property2" id="property2">
-                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
-                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property2 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
-                  <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目3：</span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_031" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_031" data-toggle="datetimepicker" name="time31" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time31; ?>" id="time31"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-                <span class="input-group-spinner">から</span>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目3：</span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_032" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_032" data-toggle="datetimepicker" name="time32" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time32; ?>" id="time32"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-                <span class="input-group-spinner">まで</span>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目3番号：</span>
-                <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex3; ?>" type="text" class="form-control" name="classindex3" id="classindex3" readonly="readonly">
-                </div>
-              </li>
-              <li class="input-group-select clearfix">
-                <span class="input-group-addon">属性3：</span>
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="property3" id="property3">
-                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
-                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property3 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
-                  <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目4：</span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_041" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_041" data-toggle="datetimepicker" name="time41" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time41; ?>" id="time41"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-                <span class="input-group-spinner">から</span>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目4：</span>
-                <div class="form-line form-group kodama-datetimepicker" id="time_042" data-target-input="nearest" style="margin-bottom: 0;">
-                  <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_042" data-toggle="datetimepicker" name="time42" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time42; ?>" id="time42"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
-                </div>
-                <span class="input-group-spinner">まで</span>
-              </li>
-              <li class="input-group">
-                <span class="input-group-addon">限目4番号：</span>
-                <div class="form-line">
-                  <input value="<?= empty($recordcheckin) ? '' : $recordcheckin->classindex4; ?>" type="text" class="form-control" name="classindex4" id="classindex4" readonly="readonly">
-                </div>
-              </li>
-              <li class="input-group-select clearfix">
-                <span class="input-group-addon">属性4：</span>
-                <div class="form-line">
-                  <select class="kodama-icon-select" name="property4" id="property4">
-                    <?php foreach($recordattendproperty as $recordattendproperty1) : ?>
-                    <option value="<?= $recordattendproperty1->ID; ?>" <?= empty($recordcheckin) ? '' : ($recordcheckin->property4 == $recordattendproperty1->ID ? ' selected="selected"' : ''); ?>><?= $recordattendproperty1->description; ?></option>
-                  <?php endforeach; ?>
-                  </select>
-                </div>
-              </li>
             </div>
             
             <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
-            <input type="hidden" name="mod" id="mod" value="updatecheckin" />
-            <input type="hidden" name="ID" id="ID" value="<?= empty($ID) ? '' : $ID; ?>" />
+            <input type="hidden" name="mod" id="mod" value="addcheckin" />
+            <input type="hidden" name="ID" id="ID" value="" />
           </form>
         </div>
       </div>
     </div>
   </div>
 </section>
-<script src="../style/js/jquery.validate.js"></script> 
+</body>
+<?php require_once('../frame/foot.php'); ?>
+<script src="../style/js/jquery.validate.js"></script>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
 <script src="../style/js/moment-with-locales.js"></script>
 <script src="../style/js/tempusdominus-bootstrap-4.js"></script>

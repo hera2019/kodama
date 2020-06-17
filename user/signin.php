@@ -63,10 +63,10 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
       }
       $home_url = '../index.php';
       $logtitle = 'Login';
-      if($signinmod = 1) { //學生個人簽到界面
+      if($signinmod == 1) { //學生個人簽到界面
         $home_url = '../attend/CheckInUI1.php';
         $logtitle = 'SingleCheckinLogin';
-      } else if($signinmod = 2) { //學生集團簽到界面
+      } else if($signinmod == 2) { //學生集團簽到界面
         $home_url = '../attend/CheckInUI2.php';
         $logtitle = 'GroupCheckinLogin';
       }
