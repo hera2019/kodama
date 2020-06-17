@@ -60,14 +60,14 @@ function radioClassFun( $connection ) {
   foreach ( $record as $record ) {
     if ( $bFirst ) {
       $html .= '
-        <li class="RadioCheckboxBtn bg-rose-red btn waves-effect">
+        <li class="RadioCheckboxBtn bg-rose-red btn waves-effect" name="groupClassBtn">
           <input name="groupClass" type="radio" id="groupClass' . $record->ID . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" checked />
           <label style="font-size: 16px;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
         </li>';
     } else {
       # 遍历数组,分别形成不同的单选框html代码
       $html .= '
-        <li class="RadioCheckboxBtn bg-white col-rose-red btn waves-effect">
+        <li class="RadioCheckboxBtn bg-white col-rose-red btn waves-effect" name="groupClassBtn">
           <input name="groupClass" type="radio" id="groupClass' . $record->ID . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" />
           <label class="RadioCheckboxTxt" style="font-size: 16px;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
         </li>';
@@ -106,10 +106,10 @@ li.CheckUI {
 }
 .RadioCheckboxBtn {
   /*padding: 5 25 5 10;*/
-  margin: 10 20;
+  margin: 10px 20px;
 }
 .RadioCheckboxTxt {
-  margin: 2 0;
+  margin: 2px 0;
 }
 .kodama-texthorli .input-group .input-group-addon,
 .kodama-texthorli .input-group-select .input-group-addon {
@@ -129,7 +129,7 @@ li.CheckUI {
 
 <!-- Body  -->
 <body class="bg-info theme-<?= $KODAMA_THEME_COLOR; ?>">
-  <div class="container" style="width: 95%; margin-left: 15px; margin-right: 15px;">
+  <div class="container" style="width: auto; margin-left: 15px; margin-right: 15px;">
     <div class="card mt-15">
       <hr>
       <center><h4>学生集團チェックインページ</h4></center>
@@ -228,10 +228,9 @@ function getProfile(str)
 ?>
 <script>
   getProfile(<?= $json_string ?>);
-</script> 
-<?php
-  require_once('../frame/foot.php');
-?>
+</script>
+  
+<?php require_once('../frame/foot.php'); ?>
   
 <script src="../style/js/jquery.validate.js"></script>
 <!-- tempusdominus-bootstrap Datetime Picker Css -->
@@ -251,28 +250,33 @@ $(document).ready(function()
     studentID: {},
   };
 
-  //获取单选按钮的数据 //id不可重复
-  $('input:radio').on('click', function(e)
+  //获取单选按钮边框外的事件
+  $("li[name='groupClassBtn']").on('click', function(e) //name='groupBtn'
   {
-    if(e.currentTarget.name == "groupClass")
-    {
-      for(var key in strQuery)
-      {
-        if(key == e.currentTarget.id)
-        {
-          $("input[name='groupClass']").parent().removeClass("bg-rose-red");
-          $("input[name='groupClass']").parent().addClass("bg-white col-rose-red");
-          e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-rose-red btn waves-effect";
-
-          var strHtml = strQuery[key];
-          document.getElementById('studentarea').innerHTML = strHtml;
-          document.getElementById('message').innerHTML = "Please check in...";
-          break;
-        }
-      }
+    if(!$(e.target).is($('label'))) {
+      $(this).children('input').trigger('click');
     }
   });
 
+  //获取单选按钮的数据 //id不可重复
+  $("input:radio[name='groupClass']").on('click', function(e)
+  {
+    for(var key in strQuery)
+    {
+      if(key == e.currentTarget.id)
+      {
+        $("input[name='groupClass']").parent().removeClass("bg-rose-red");
+        $("input[name='groupClass']").parent().addClass("bg-white col-rose-red");
+        e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-rose-red btn waves-effect";
+
+        var strHtml = strQuery[key];
+        document.getElementById('studentarea').innerHTML = strHtml;
+        document.getElementById('message').innerHTML = "Please check in...";
+        break;
+      }
+    }
+    e.stopPropagation(); //禁止触发父控件事件
+  });
   // student全选按钮点击事件
   $("#allstudent").on('click', function(e)
   {
@@ -298,8 +302,17 @@ $(document).ready(function()
     document.getElementById('message').innerHTML = strHtml;
   });
 
+  //获取复选按钮边框外的事件
+  $("#studentarea").on('click', "li[name='groupStudentBtn']", function(e) //name='groupBtn'
+  {
+    if(!$(e.target).is($('label'))) {
+      $(this).children('input').trigger('click');
+    }
+  });
+  
   // student复选按钮点击事件，因为是动态创建，只能这样获得parent事件
   $("#studentarea").on('click', "input[name='groupStudent']", function(e)
+  //$("input:checkbox[name='groupStudent']").on('click', function(e)
   {
     var strHtml = "";
     //$("input[name='groupStudent']").parent().removeClass("bg-light-blue");
@@ -318,6 +331,7 @@ $(document).ready(function()
     $('#ID').val(JSON.stringify(_kodama_students.studentID));
 
     document.getElementById('message').innerHTML = strHtml;
+    e.stopPropagation(); //禁止触发父控件事件
   });
   
   //timechange

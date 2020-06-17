@@ -23,7 +23,7 @@ function radioClassFun( $connection ) {
   foreach ( $record as $record ) {
     if ( $bFirst ) {
       $html .= '
-        <li class="RadioCheckboxBtn bg-rose-red btn waves-effect">
+        <li class="RadioCheckboxBtn bg-rose-red btn waves-effect" name="groupClassBtn">
           <input name="groupClass" type="radio" id="groupClass' . $record->ID . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" checked />
           <label class="RadioCheckboxTxt" style="font-size: 16;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
         </li>';
@@ -33,7 +33,7 @@ function radioClassFun( $connection ) {
     } else {
       # 遍历数组,分别形成不同的单选框html代码
       $html .= '
-        <li class="RadioCheckboxBtn bg-white col-rose-red btn waves-effect">
+        <li class="RadioCheckboxBtn bg-white col-rose-red btn waves-effect" name="groupClassBtn">
           <input name="groupClass" type="radio" id="groupClass' . $record->ID . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" />
           <label class="RadioCheckboxTxt" style="font-size: 16;" for="groupClass' . $record->ID . '">' . $record->name . '</label>
         </li>';
@@ -56,13 +56,13 @@ function radioClassFun( $connection ) {
 <!-- <link rel="stylesheet" href="../style/css/CheckInStyle.css"> -->
 <style>
 /*@import url('https://fonts.googleapis.com/css?family=Noto+Sans+SC&display=swap');*/
-ul {
+ul.CheckUI {
   list-style-type: none;
   margin: 0 0;
   padding: 0 1.5rem;
 }
 /* WANG CHONGYANG需要140px  */
-li {
+li.CheckUI {
   display: inline-block;
   width: 183px;
   margin: 0 0;
@@ -72,37 +72,32 @@ li {
   margin: 10px 20px;
 }
 .RadioCheckboxTxt {
-  margin: 0;
+  margin: 2px 0;
 }
 </style>
 </head>
 
 <!-- Body  -->
 <body class="bg-info theme-<?= $KODAMA_THEME_COLOR; ?>">
-  <div class="container" style="margin-left: 15px; margin-right: 15px; width: 100%;">
+  <div class="container" style="width: auto; margin-left: 15px; margin-right: 15px;">
     <div class="card mt-15">
       <hr>
       <center><h4>学生個人チェックインページ</h4></center>
       <div class="body">
-        <h6>クラス：</h6>
-        <ul class="classnamecls">
+        <ul class="CheckUI">
+          <li class="CheckUI"><h6>クラス：</h6></li>
+        </ul>
+        <ul class="classnamecls CheckUI">
           <div class="demo-radio-button" id="classarea">
-            <!--
-            <li class="groupClass bg-blue">
-              <input name="groupClass" type="radio" id="groupClass003" value=22 class="with-gap radio-col-rose-red bg-blue" />
-              <label for="groupClass003">name</label>
-            </li>
-            <li class="groupClass bg-blue">
-              <input name="groupClass" type="radio" id="groupClass004" value=22 class="with-gap radio-col-rose-red bg-blue" />
-              <label for="groupClass004">name2</label>
-            </li>
-          -->
             <?php echo radioClassFun($connection);?>
           </div>
         </ul>
         <hr>
-        <h6>名前：</h6>
-        <ul class="studentnamecls">
+        <ul class="CheckUI">
+          <li class="CheckUI" style="width: 60px; text-align: left;"><h6>名前：</h6></li>
+        </ul>
+        
+        <ul class="studentnamecls CheckUI">
           <div class="demo-radio-button" id="studentarea">
             please choose your class.
           </div>
@@ -142,46 +137,62 @@ function getProfile(str)
 <script>
   getProfile(<?= $json_string ?>);
 </script> 
+  
 <?php require_once('../frame/foot.php'); ?>
+  
 <script>
-//获取单选按钮的数据 //id不可重复
-$('input:radio').on('click', function(e)
+$(document).ready(function()
 {
-	if(e.currentTarget.name == "groupClass")
-	{
-		for(var key in strQuery)
-		{
+  //获取单选按钮边框外的事件
+  $("li[name='groupClassBtn']").on('click', function(e) //name='groupBtn'
+  {
+    if(!$(e.target).is($('label'))) {
+      $(this).children('input').trigger('click');
+    }
+  });
+
+  //获取单选按钮的数据 //id不可重复
+  $("input:radio[name='groupClass']").on('click', function(e)
+  {
+    for(var key in strQuery)
+    {
       if(key == e.currentTarget.id)
       {
         $("input[name='groupClass']").parent().removeClass("bg-rose-red");
         $("input[name='groupClass']").parent().addClass("bg-white col-rose-red");
         e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-rose-red btn waves-effect";
-        
+
         var strHtml = strQuery[key];
         document.getElementById('studentarea').innerHTML = strHtml;
         document.getElementById('message').innerHTML = "Please check in...";
         break;
       }
-		}
-	}
-});
+    }
+    e.stopPropagation(); //禁止触发父控件事件
+  });
 
-// student单选按钮点击事件，因为是动态创建，只能这样获得parent事件
-$("#studentarea").on('click', "input[name='groupStudent']", function(e)
-{
-  $("input[name='groupStudent']").parent().removeClass("bg-light-blue");
-  $("input[name='groupStudent']").parent().addClass("bg-white col-blue-grey");
-  e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-light-blue btn waves-effect";
+  //获取单选按钮边框外的事件
+  $("#studentarea").on('click', "li[name='groupStudentBtn']", function(e) //name='groupBtn'
+  {
+    if(!$(e.target).is($('label'))) {
+      $(this).children('input').trigger('click');
+    }
+  });
   
-  var strHtml = e.currentTarget.id;
-  strHtml += " ：";
-  strHtml += e.currentTarget.nextSibling.nextSibling.innerHTML;
-  document.getElementById('message').innerHTML = strHtml;
-});
+  // student单选按钮点击事件，因为是动态创建，只能这样获得parent事件
+  $("#studentarea").on('click', "input[name='groupStudent']", function(e)
+  {
+    $("input[name='groupStudent']").parent().removeClass("bg-light-blue");
+    $("input[name='groupStudent']").parent().addClass("bg-white col-blue-grey");
+    e.currentTarget.parentNode.className = "RadioCheckboxBtn bg-light-blue btn waves-effect";
 
-//DOM的onload事件处理函数
-$(document).ready(function()
-{
+    var strHtml = e.currentTarget.id;
+    strHtml += " ：";
+    strHtml += e.currentTarget.nextSibling.nextSibling.innerHTML;
+    document.getElementById('message').innerHTML = strHtml;
+    e.stopPropagation(); //禁止触发父控件事件
+  });
+
 	$("#submit").click(function ()
 	{
 		//$("#message").text("checking in...");
@@ -211,12 +222,6 @@ function postsubmitdata()
 		}
     });
 }
-
-//页面初始化
-$(function()
-{
-	//$(':input').labelauty();
-});
 </script>
 </body>
 </html>

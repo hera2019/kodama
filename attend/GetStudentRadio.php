@@ -31,7 +31,7 @@ function radioStudentFun($connection)
 						\" data-labelauty=\"" . $name . "\" alt=\"" . $name . "\">
 				</li>";*/
       $html .= '
-        <li class="RadioCheckboxBtn bg-white col-blue-grey btn waves-effect">
+        <li class="RadioCheckboxBtn bg-white col-blue-grey btn waves-effect" name="groupStudentBtn">
           <input name="groupStudent" type="radio" id="' . $record->studentnumber . '" value=' . $record->ID . ' class="with-gap radio-col-yellow" />
           <label class="RadioCheckboxTxt" for="' . $record->studentnumber . '">' . $name . '</label>
         </li>';

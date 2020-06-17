@@ -26,7 +26,7 @@ function radioStudentFun($connection)
 			$name = $record->lastname .  "　" . $record->firstname; //$record->studentnumber . ": " . 
 			# 遍历数组,分别形成不同的单选框html代码
       $html .= '
-        <li class="RadioCheckboxBtn bg-white col-blue-grey btn waves-effect">
+        <li class="RadioCheckboxBtn bg-white col-blue-grey btn waves-effect" name="groupStudentBtn">
           <input name="groupStudent" type="checkbox" id="' . $record->studentnumber . '" value=' . $record->ID . ' class="chk-col-yellow" />
           <label class="RadioCheckboxTxt" for="' . $record->studentnumber . '">' . $name . '</label>
         </li>';
