@@ -3,6 +3,7 @@
 $PDF_FileNo = date('YmdHis', time());
 //指定模板和生成文件前缀名称
 $PDF_FileName = '在留資格認定証明書交付申請書';
+$PDF_StudentName = '学生';
 ?>
 <?php
 // check param
@@ -40,6 +41,33 @@ if(empty($studentID)) :?>
 endif;
 ?>
 <?php
+
+function GetStudentData($data, $key) {
+  if(empty($data) || empty($key)) {
+    return null;
+  }
+  $data1 = json_decode($data, true);
+  return $data1[$key];
+}
+
+  //write text
+function WriteText($pdf, $textobj, $defaultfontsize) {
+  if(empty($textobj->fontsize)) {
+    $pdf->SetFont('droidsansfallback', '', $defaultfontsize);
+  } else {
+    $pdf->SetFont('droidsansfallback', '', $textobj->fontsize);
+  }
+  
+  if($textobj->bmulticell) {
+    // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0, $valign='M') //T M B
+    // 使用\n换行必须双引号
+    $pdf->MultiCell($textobj->Width(), $textobj->Height(), $textobj->text, 0, $textobj->align, 0, 0, $textobj->left, $textobj->top, true, 0, false, true, $textobj->Height(), $textobj->valign);
+  } else {
+    //Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M') // LEFT CENTER RIGHT：L C R //calign整个cell位置停靠
+    $pdf->SetXY($textobj->left, $textobj->top);
+    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
+  }
+}
 //============================================================+
 /**
  * Modify an PDF document using TCPDF
@@ -54,10 +82,7 @@ $pdf = new TCPDI(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 // Add a page from a PDF by file path.
-$pdf->AddPage();
 $pdf->setSourceFile('../template/pdf/' . $PDF_FileName . '.pdf');
-$idx = $pdf->importPage(1);
-$pdf->useTemplate($idx);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/TCPDF/examples/lang/jpn.php')) {
@@ -78,6 +103,11 @@ $pdf->SetFont('droidsansfallback', '', $FONT_DEFAULT_SIZE);	//完美显示汉字
 
 // set color for text
 $pdf->SetTextColor(0, 0, 0);
+
+// 1 ---------------------------------------------------------
+$pdf->AddPage();
+$idx = $pdf->importPage(1);
+$pdf->useTemplate($idx);
 
 $textarea = array(
   //'No' => new TextArea(23, 18.8, 54, 23, '', false, 'L'),
@@ -168,14 +198,6 @@ $statement = $connection->prepare($sql);
 $statement->execute([':ID' => $studentID ]);
 $studentdata2 = $statement->fetch(PDO::FETCH_OBJ);
 
-function GetStudentData($data, $key) {
-  if(empty($data) || empty($key)) {
-    return null;
-  }
-  $data1 = json_decode($data, true);
-  return $data1[$key];
-}
-
 foreach($textarea as $key => $textobj) {
   if($key == 'No') {
     $textobj->text = $PDF_FileNo;
@@ -205,6 +227,7 @@ foreach($textarea as $key => $textobj) {
     $textobj->text = date('Y年m月', $startdate) . ' 至 ' . date('Y年m月', $enddate);
   } elseif($key == 'name' && !empty($student)) {
     $textobj->text = $student->lastname . " " . $student->firstname;
+    $PDF_StudentName = $textobj->text;
   } elseif($key == 'photo' && !empty($student) && !empty($student->photo)) {
     $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(255,255,255));
     $pdf->Image('../data/photo/' . $student->photo, $textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), '', '', '', false, 300, '', false, false, 0, 'CM', false, false);
@@ -279,7 +302,7 @@ foreach($textarea as $key => $textobj) {
       $textobj->text = '';
     }
   } elseif($key == 'entrypurposeP') {
-    $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(0,0,0));    
+    $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(0,0,0));
   } elseif($key == 'prevjpentryYes' && !empty($studentdata1)) {
     if(GetStudentData($studentdata1->data, 'radio_prevjp') == 1) {
       $radius = $textobj->Width() / 2.0;
@@ -485,46 +508,71 @@ foreach($textarea as $key => $textobj) {
   }
   
   //write text
-  if(!empty($textobj->fontsize)) {
-    $pdf->SetFont('droidsansfallback', '', $textobj->fontsize);
-  }
-  if($textobj->bmulticell) {
-    // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0, $valign='M') //T M B
-    // 使用\n换行必须双引号
-    $pdf->MultiCell($textobj->Width(), $textobj->Height(), $textobj->text, 0, $textobj->align, 0, 0, $textobj->left, $textobj->top, true, 0, false, true, $textobj->Height(), $textobj->valign);
-  } else {
-    //Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M') // LEFT CENTER RIGHT：L C R //calign整个cell位置停靠
-    $pdf->SetXY($textobj->left, $textobj->top);
-    $pdf->Cell($textobj->Width(), $textobj->Height(), $textobj->text, 0, 0, $textobj->align, 0, '', 0, false, 'T', $textobj->valign);
-  }
-  if(!empty($textobj->fontsize)) {
-    $pdf->SetFont('droidsansfallback', '', $FONT_DEFAULT_SIZE);
-  }
+  WriteText($pdf, $textobj, $FONT_DEFAULT_SIZE);
 }
 
-// ---------------------------------------------------------
+// 2 ---------------------------------------------------------
 $pdf->AddPage();
 $idx = $pdf->importPage(2);
 $pdf->useTemplate($idx);
 
+// 3 ---------------------------------------------------------
 $pdf->AddPage();
 $idx = $pdf->importPage(3);
 $pdf->useTemplate($idx);
 
+// 4 ---------------------------------------------------------
 $pdf->AddPage();
 $idx = $pdf->importPage(4);
 $pdf->useTemplate($idx);
 
+$textarea = array(
+  'checkbox_returncountry' => new TextArea(80.6, 107.5, 83.2, 110.1), //
+  'checkbox_furtherjpstudy' => new TextArea(24.3, 107.5, 26.9, 110.1), //
+  'checkbox_getjpjob' => new TextArea(24.3, 116.9, 26.9, 119.5), //
+  'checkbox_otherplan' => new TextArea(80.6, 116.9, 83.2, 119.5), //
+  'text_otherplan' => new TextArea(100, 116, 182, 120, '', false, 'L'), //
+);
+
+foreach($textarea as $key => $textobj) {
+  if($key == 'No') {
+  } elseif($key == 'checkbox_returncountry' && !empty($studentdata1)) {
+    if(GetStudentData($studentdata1->data, 'checkbox_returncountry')) {
+      $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(0,0,0));
+    }
+  } elseif($key == 'checkbox_furtherjpstudy' && !empty($studentdata1)) {
+    if(GetStudentData($studentdata1->data, 'checkbox_furtherjpstudy')) {
+      $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(0,0,0));
+    }
+  } elseif($key == 'checkbox_getjpjob' && !empty($studentdata1)) {
+    if(GetStudentData($studentdata1->data, 'checkbox_getjpjob')) {
+      $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(0,0,0));
+    }
+  } elseif($key == 'checkbox_otherplan' && !empty($studentdata1)) {
+    if(GetStudentData($studentdata1->data, 'checkbox_otherplan')) {
+      $pdf->Rect($textobj->left, $textobj->top, $textobj->Width(), $textobj->Height(), 'F', array(), array(0,0,0));
+    }
+  } elseif($key == 'text_otherplan' && !empty($studentdata1)) {
+    $textobj->text = GetStudentData($studentdata1->data, 'text_otherplan');
+  }
+  
+  //write text
+  WriteText($pdf, $textobj, $FONT_DEFAULT_SIZE);
+}
+
+// 5 ---------------------------------------------------------
 $pdf->AddPage();
 $idx = $pdf->importPage(5);
 $pdf->useTemplate($idx);
 
+// 6 ---------------------------------------------------------
 $pdf->AddPage();
 $idx = $pdf->importPage(6);
 $pdf->useTemplate($idx);
 // ---------------------------------------------------------
+
 //PDF filename build
-$outfilename = $PDF_FileName . '_' . $PDF_FileNo . '.pdf';
+$outfilename = $PDF_StudentName . '_' . $PDF_FileName . '_' . $PDF_FileNo . '.pdf';
 ob_end_clean();
 //Close and output PDF document
 $pdf->Output($outfilename, 'I');//

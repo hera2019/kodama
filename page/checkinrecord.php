@@ -40,7 +40,7 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
             <ul class="header-button">
               <li><a href="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
-                <div class="kodama-menu-info"><h4>Query</h4></div>
+                <div class="kodama-menu-info"><h4>フィルタ</h4></div>
               </a></li>
               <li><a href="../attend/situation_build.php">
                 <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">build</i> </div>
@@ -48,19 +48,19 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
               </a></li>
               <li><a href="../attend/situation_rebuildall.php">
                 <div class="kodama-icon-circle bg-indigo"> <i class="material-icons">build</i> </div>
-                <div class="kodama-menu-info"><h4>Rebuild All</h4></div>
+                <div class="kodama-menu-info"><h4>すべてを作成</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="addRecord();">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">person_add</i> </div>
-                <div class="kodama-menu-info"><h4>Add</h4></div>
+                <div class="kodama-menu-info"><h4>追加</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="editRecord();">
                 <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">person</i> </div>
-                <div class="kodama-menu-info"><h4>Edit</h4></div>
+                <div class="kodama-menu-info"><h4>編集</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="deleteRecord();">
                 <div class="kodama-icon-circle bg-red"> <i class="material-icons">delete</i> </div>
-                <div class="kodama-menu-info"><h4>Delete</h4></div>
+                <div class="kodama-menu-info"><h4>削除</h4></div>
               </a></li>
               <li class="kodama-checkbox">
                   <input type="checkbox" id="checkbox_multiselect" class="filled-in chk-col-purple"/>
@@ -74,13 +74,13 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
                     <li class="input-group">
                       <span class="input-group-addon"> <i class="material-icons col-orange">person</i> </span>
                       <div class="form-line">
-                        <input value="" type="text" class="form-control" name="s.name" placeholder="Name" autofocus>
+                        <input value="" type="text" class="form-control" name="s.name" placeholder="名前" autofocus>
                       </div>
                     </li>
                     <li class="input-group">
                       <span class="input-group-addon"> <i class="material-icons col-orange">format_list_numbered</i> </span>
                       <div class="form-line">
-                        <input value="" type="text" class="form-control" name="s.studentnumber" placeholder="Student Number">
+                        <input value="" type="text" class="form-control" name="s.studentnumber" placeholder="学籍番号">
                       </div>
                     </li>
 
@@ -88,7 +88,7 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
                       <span class="input-group-addon"> <i class="material-icons col-orange">class</i> </span>
                       <div class="form-line">
                         <select class="kodama-icon-select" name="s.classID" id="classID">
-                          <option value="0">-- Please select class --</option>
+                          <option value="0">-- クラスでフィルタ --</option>
                           <?php
                           $sql = 'SELECT ID, name FROM class';
                           $statement = $connection->prepare($sql);
@@ -102,7 +102,7 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
                     </li>
                   </div>
                   <div style="text-align: center;">
-                    <button type="submit" class="btn bg-orange waves-effect" href="javascript:void(0);">Conditional Query</button>
+                    <button type="submit" class="btn bg-orange waves-effect" href="javascript:void(0);">フィルタ</button>
                   </div>
                 </div>
               </form>

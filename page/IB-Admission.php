@@ -477,7 +477,7 @@
                 <tr>
                   <td class="col-xs-1 kodama-fillcontrol" colspan="1">
                     <input type="checkbox" id="checkbox_otherplan" class="filled-in chk-col-pink"/>
-                    <label for="checkbox_otherplan"></label>f
+                    <label for="checkbox_otherplan"></label>
                   </td>
                   <th class="col-xs-2" colspan="2">その他<br>Others</th>
                   <th class="col-xs-1" colspan="1">説明：</th>

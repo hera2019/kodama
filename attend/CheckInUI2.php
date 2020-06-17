@@ -161,16 +161,16 @@ li.CheckUI {
         <form id="infoform" method="POST" action="../dataproc/checkin_proc.php">
           <div class="kodama-texthorli">
             <li class="input-group">
-              <span class="input-group-addon">限目：</span>
+              <span class="input-group-addon">日時：</span>
               <div class="form-line form-group kodama-datetimepicker" id="time_011" data-target-input="nearest" style="margin-bottom: 0;">
-                <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_011" data-toggle="datetimepicker" name="time11" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time11; ?>" id="time11"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_011" data-toggle="datetimepicker" name="time11" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time11; ?>" id="time11" required><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
               </div>
               <span class="input-group-spinner">から</span>
             </li>
             <li class="input-group">
-              <span class="input-group-addon">限目：</span>
+              <span class="input-group-addon">日時：</span>
               <div class="form-line form-group kodama-datetimepicker" id="time_012" data-target-input="nearest" style="margin-bottom: 0;">
-                <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_012" data-toggle="datetimepicker" name="time12" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time12; ?>" id="time12"><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
+                <input type="text" autocomplete="off" class="form-control datetimepicker-input" data-target="#time_012" data-toggle="datetimepicker" name="time12" style="text-align: left; width: 100%;" value="<?= empty($recordcheckin) ? '' : $recordcheckin->time12; ?>" id="time12" required><!-- autocomplete="off":禁用Chrome自动提示填充,使用随机值，填充但不出现下拉框 -->
               </div>
               <span class="input-group-spinner">まで</span>
             </li>

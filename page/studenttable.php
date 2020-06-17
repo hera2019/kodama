@@ -59,7 +59,7 @@ require_once( '../include/include_database.php' );
               </a></li>
               <li class="kodama-checkbox">
                   <input type="checkbox" id="checkbox_multiselect" class="filled-in chk-col-purple"/>
-                  <label for="checkbox_multiselect">複数選択可</label>
+                  <label for="checkbox_multiselect">複選</label>
               </li>
             </ul>
             <div class="collapse m-t-10" id="collapseExample">
@@ -139,7 +139,7 @@ require_once( '../include/include_database.php' );
                     </li>
                   </div>
                   <div style="text-align: center;">
-                    <button type="submit" class="btn bg-orange waves-effect" href="javascript:void(0);">Conditional Query</button>
+                    <button type="submit" class="btn bg-orange waves-effect" href="javascript:void(0);">フィルタ</button>
                   </div>
                 </div>
               </form>

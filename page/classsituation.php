@@ -18,11 +18,11 @@ require_once( 'frame.php' );
             <ul class="header-button">
               <li><a href="../attend/situation_build.php">
                 <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">build</i> </div>
-                <div class="kodama-menu-info"><h4>Build</h4></div>
+                <div class="kodama-menu-info"><h4>作成</h4></div>
               </a></li>
               <li><a href="../attend/situation_rebuildall.php">
                 <div class="kodama-icon-circle bg-indigo"> <i class="material-icons">build</i> </div>
-                <div class="kodama-menu-info"><h4>Rebuild All</h4></div>
+                <div class="kodama-menu-info"><h4>すべてを作成</h4></div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="setClassProperty(1);">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">person</i> </div>
