@@ -31,11 +31,11 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
             <ul class="header-button">
               <li><a href="javascript:void(0);" onclick="refreshRecord();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
-                <div class="kodama-menu-info"><h4>Reload</h4></div>
+                <div class="kodama-menu-info"><h4>リロード</h4></div>
               </a></li>
               <li><a href="../attend/situation_build.php">
                 <div class="kodama-icon-circle bg-cyan"> <i class="material-icons">person_add</i> </div>
-                <div class="kodama-menu-info"><h4>Build</h4></div>
+                <div class="kodama-menu-info"><h4>作成</h4></div>
               </a></li>
             </ul>
           </div>

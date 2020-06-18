@@ -60,7 +60,7 @@ if ( $record == NULL ) {
                 <input value="<?php if(!empty($record)) echo $record->website; ?>" type="text" class="form-control" name="website" id="postcode" placeholder="ウェブサイト">
               </div>
             </div>
-            <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
+            <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">確認</button>
             <input type="hidden" name="mod" id="mod" value="<?= $mod; ?>" />
             <input type="hidden" name="ID" id="ID" value="<?= empty($ID) ? '' : $ID; ?>" />
           </form>

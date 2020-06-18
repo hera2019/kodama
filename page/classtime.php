@@ -163,7 +163,7 @@ if ( $recordclasstime == NULL ) {
               </li>
             </div>
             
-            <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
+            <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">確認</button>
             <input type="hidden" name="mod" id="mod" value="updateclasstime" />
             <input type="hidden" name="ID" id="ID" value="<?= empty($recordclasstime) ? '' : $recordclasstime->ID; ?>" />
           </form>

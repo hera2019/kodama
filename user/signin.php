@@ -200,7 +200,7 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
               ?>
             <!-- $_SERVER['PHP_SELF']代表用户提交表单时，调用自身php文件 -->
             <form id="sign_in" method="POST">
-              <div class="msg">Sign in to start your session</div>
+              <div class="msg">ログインしてセッションを開始してください</div>
               <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">person</i> </span>
                 <div class="form-line"> 
                   <!-- 如果用户已输过用户名，则回显用户名 -->
@@ -219,9 +219,9 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
                   <label for="rememberme">Remember Me</label>
                 </div>
                 !-->
-                <div class="col-xs-8 p-t-5"> <a href="forgot-password.php">Forgot Password?</a> </div>
+                <div class="col-xs-8 p-t-5"> <a href="forgot-password.php">パスワードをお忘れですか？</a> </div>
                 <div class="col-xs-4">
-                  <button class="btn btn-block bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">SIGN IN</button>
+                  <button class="btn btn-block bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">ログイン</button>
                 </div>
               </div>
               <div class="row m-t-10 m-b-10"> 

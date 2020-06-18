@@ -24,19 +24,19 @@
               <li><a href="javascript:void(0);" onclick="newRecord();">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">create_new_folder</i> </div>
                 <div class="kodama-menu-info">
-                  <h4>New</h4>
+                  <h4>追加</h4>
                 </div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="refreshRecord();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
                 <div class="kodama-menu-info">
-                  <h4>Reload</h4>
+                  <h4>リロード</h4>
                 </div>
               </a></li>
               <li><a href="javascript:void(0);" onclick="saveRecord();">
                 <div class="kodama-icon-circle bg-light-blue"> <i class="material-icons">save</i> </div>
                 <div class="kodama-menu-info">
-                  <h4>Save</h4>
+                  <h4>保存</h4>
                 </div>
               </a></li>
             </ul>

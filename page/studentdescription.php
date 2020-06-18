@@ -56,7 +56,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
               </div>
             </div>
 
-            <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">Submit</button>
+            <button class="btn btn-block btn-lg bg-<?= $KODAMA_THEME_COLOR; ?> waves-effect" type="submit">確認</button>
             <input type="hidden" name="mod" id="mod" value="updatedescription" />
             <input type="hidden" name="ID" id="text_ID" value="<?= $ID; ?>" />
           </form>
