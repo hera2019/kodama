@@ -1,4 +1,20 @@
-﻿<?php
+<?php
+
+//使用会话内存储的变量值之前必须先开启会话
+//$KODAMA_SESSID = 'KODAMASESSID';
+if ( isset( $_COOKIE[ 'KODAMA_SESSID' ] ) ) {
+  $KODAMA_SESSID = $_COOKIE[ 'KODAMA_SESSID' ];
+}
+if(isset( $KODAMA_SESSID )) {
+  session_id( $KODAMA_SESSID );
+} else {
+  $KODAMA_SESSID = session_id();
+}
+
+// 如果设置了$SESSID，就将SessionID赋值为$SESSID，否则生成SessionID
+setcookie( 'KODAMA_SESSID', $KODAMA_SESSID, time() + 60, '/' ); // 储存SessionID到Cookie中，时间31天2678400秒 //第4个参数路径一定要有
+session_start();
+
 //插入连接数据库的相关信息
 require_once('../include/include_database.php');
 require_once('../include/include_function.php');
@@ -11,21 +27,6 @@ if ( isset( $_COOKIE[ 'KODAMA_THEME_COLOR' ] ) ) {
     $KODAMA_THEME_COLOR = 'rose-red';
   }
 }
-
-//使用会话内存储的变量值之前必须先开启会话
-if ( isset( $_COOKIE[ 'KODAMA_SESSID' ] ) ) {
-  $KODAMA_SESSID = $_COOKIE[ 'KODAMA_SESSID' ];
-}
-if(isset( $KODAMA_SESSID )) {
-  session_id( $KODAMA_SESSID );
-} else {
-  $KODAMA_SESSID = session_id();
-}
-
-// 如果设置了$SESSID，就将SessionID赋值为$SESSID，否则生成SessionID
-setcookie( 'KODAMA_SESSID', $KODAMA_SESSID, time() + 60, '/' ); // 储存SessionID到Cookie中，时间31天2678400秒 //第4个参数路径一定要有
-session_name( 'KODAMA_SESSID' );
-session_start();
 
 $signinmod = GetParam('mod');
 
@@ -44,7 +45,7 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
   if ( !empty( $user_username ) && !empty( $user_password ) ) {
     //MySql中的SHA()函数用于对字符串进行单向加密
     //用用户名和密码进行查询
-    $sql = "SELECT ID, username, name, email FROM usermanage WHERE username = :username AND password = SHA(:password)";
+    $sql = "SELECT ID, username, name, email, userrights FROM usermanage WHERE username = :username AND password = SHA(:password)";
     $statement = $connection->prepare( $sql );
     $statement->execute( [ ':username' => $user_username, ':password' => $user_password ] );
     $record = $statement->fetch( PDO::FETCH_OBJ );
@@ -55,7 +56,8 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
       {
         $record->name = $record->username;
       }
-      $_SESSION[ 'username' ] = $record->name;        
+      $_SESSION[ 'username' ] = $record->name;
+      $_SESSION[ 'userrights' ] = $record->userrights;
       $_SESSION[ 'useremail' ] = $record->email;
       $_SESSION[ 'rememberme' ] = $user_rememberme;
       if ( $user_rememberme == "on" ) {

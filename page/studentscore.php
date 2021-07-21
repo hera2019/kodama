@@ -1,8 +1,10 @@
+<?php
+require_once( 'frame.php' );
+require_once( '../include/include_database.php' );
+?>
 <head>
 <!-- code by zmq -->
-<?php $INCLUDE_STUDENT_INFO = true; ?>
-<?php require_once( 'frame.php' ); ?>
-<?php require_once('../include/include_database.php');
+<?php $INCLUDE_STUDENT_INFO = true;
 
 $message = '';
 

@@ -1,7 +1,6 @@
-<!-- code by zmq -->
 <?php
-require_once( '../include/include_database.php' );
 require_once( 'frame.php' );
+require_once( '../include/include_database.php' );
 
 $message = '';
 $record = NULL;

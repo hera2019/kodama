@@ -1,5 +1,5 @@
+<?php require_once( 'frame.php' ); ?>
 <head>
-  <?php require_once( 'frame.php' ); ?>
 <style>
 .info-box {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -41,6 +41,8 @@
   }
 </style>
 </head>
+
+
 
 <section class="content">
   <div class="container-fluid">

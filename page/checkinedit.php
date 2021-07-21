@@ -1,10 +1,11 @@
+<?php
+require_once( 'frame.php' );
+require_once( '../include/include_database.php' );
+require_once( '../include/include_function.php' );
+?>
 <head>
 <!-- code by zmq -->
 <?php
-require_once( '../include/include_database.php' );
-require_once( '../include/include_function.php' );
-require_once( 'frame.php' );
-
 $message = '';
 
 $ID = '';

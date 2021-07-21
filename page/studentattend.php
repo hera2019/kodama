@@ -1,7 +1,7 @@
+<?php require_once( 'frame.php' ); ?>
 <head>
 <!-- code by zmq -->
 <?php $INCLUDE_STUDENT_INFO = true; ?>
-<?php require_once( 'frame.php' ); ?>
 <?php
 $message = '';
 $ID = '';

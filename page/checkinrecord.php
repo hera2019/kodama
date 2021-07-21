@@ -1,8 +1,10 @@
-<head>
-<!-- code by zmq -->
 <?php
 require_once( 'frame.php' );
 require_once( '../include/include_database.php' );
+?>
+<head>
+<!-- code by zmq -->
+<?php
 $studentID = '';
 if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
   $studentID = $_GET[ 'ID' ];

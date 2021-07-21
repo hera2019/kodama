@@ -53,6 +53,7 @@ function queryClassManage(queryParam) {
       { "data": "ID", "visible": false },
       { "data": "username" },
       { "data": "name" },
+      { "data": "userrightsname" },
       { "data": "genderfemale",
         render: function (data, type, obj, meta) {
           return data == 1 ? '女 Female' : data == 0 ? '男 Male' : '';

@@ -1,10 +1,11 @@
+<?php
+require_once( 'frame.php' );
+require_once( '../include/include_database.php' );
+require_once( '../include/include_function.php' );
+?>
 <head>
 <!-- code by zmq -->
 <?php
-require_once( '../include/include_database.php' );
-require_once( '../include/include_function.php' );
-require_once( 'frame.php' );
-
 $message = '';
   
 $sql = 'SELECT *, s.ID AS ID, s.studentnumber AS studentnumber, s.name AS name, c.name AS classname FROM student AS s LEFT JOIN class AS c ON s.classID = c.ID';

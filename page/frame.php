@@ -1,15 +1,16 @@
-﻿<!DOCTYPE html>
-<html>
-<?php require_once('../include/include_function.php'); // function and const ?>
-<?php require_once('../frame/head.php'); ?>
-
-<body class="theme-<?= $KODAMA_THEME_COLOR; ?>">
 <?php
 $signinmod = 0;
 if ( !require_once( '../user/checksign.php' ) ) {
   return;
 }
 ?>
+<!DOCTYPE html>
+<html>
+<?php require_once('../include/include_function.php'); // function and const ?>
+<?php require_once('../frame/head.php'); ?>
+
+<body class="theme-<?= $KODAMA_THEME_COLOR; ?>">
+
 <!-- Page Loader -->
 <div class="page-loader-wrapper">
   <div class="loader">

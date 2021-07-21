@@ -1,3 +1,4 @@
+<?php require_once( 'frame.php' ); ?>
 <?php
 //指定文件编号，使用日期时间
 $PDF_FileNo = date('YmdHis', time());
@@ -16,7 +17,6 @@ if(isset($_GET['ID']) && !empty($_GET['ID'])) {
 }
 if(empty($studentID)) :?>
 <?php $INCLUDE_STUDENT_INFO = true; ?>
-<?php require_once( 'frame.php' ); ?>
 <section class="content">
   <div class="container-fluid">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

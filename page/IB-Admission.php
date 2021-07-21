@@ -1,8 +1,10 @@
+<?php
+require_once( 'frame.php' );
+require_once( '../include/include_database.php' );
+?>
 <head>
 <!-- code by zmq -->
 <?php $INCLUDE_STUDENT_INFO = true; ?>
-<?php require_once( 'frame.php' ); ?>
-<?php require_once('../include/include_database.php'); ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
 </head>

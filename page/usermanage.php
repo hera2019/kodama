@@ -1,8 +1,8 @@
-<head>
-<!-- code by zmq -->
 <?php
 require_once( 'frame.php' );
 ?>
+<head>
+<!-- code by zmq -->
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="../style/css/kodama.css" rel="stylesheet">
@@ -42,8 +42,9 @@ require_once( 'frame.php' );
                     <th hidden="hidden">ID</th>
                     <th class="col-xs-1">ユーザーID</th>
                     <th class="col-xs-2">名前</th>
+                    <th class="col-xs-1">権限</th>
                     <th class="col-xs-1">性別</th>
-                    <th class="col-xs-2">電話番号</th>
+                    <th class="col-xs-1">電話番号</th>
                     <th class="col-xs-1">是否教師</th>
                     <th class="col-xs-1">教師番号</th>
                     <th class="col-xs-2">Email</th>

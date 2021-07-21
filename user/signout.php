@@ -1,10 +1,9 @@
 <?php
+session_start();
 require_once('../include/include_database.php');
 require_once('../include/include_function.php');
 
 //即使是注销时，也必须首先开始会话才能访问会话变量
-session_name( 'KODAMA_SESSID' );
-session_start();
 //使用一个会话变量检查登录状态
 if ( isset( $_SESSION[ 'user_id' ] ) ) {
   WriteLog( $connection, 'Logout', $_SESSION[ 'username' ] );

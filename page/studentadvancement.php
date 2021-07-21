@@ -1,8 +1,10 @@
+<?php
+require_once( 'frame.php' );
+require_once( '../include/include_database.php' );
+?>
 <head>
 <!-- code by zmq -->
 <?php $INCLUDE_STUDENT_INFO = true; ?>
-<?php require_once( 'frame.php' ); ?>
-<?php require_once('../include/include_database.php'); ?>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
 <link href="../style/css/jquery-editable-select.css" rel="stylesheet" />
@@ -19,7 +21,7 @@
         ?>
         <div class="card">
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
-            <h2>進學·就職<small></small></h2>
+            <h2>進学·就職<small></small></h2>
             <ul class="header-button">
               <li><a href="javascript:void(0);" onclick="newRecord();">
                 <div class="kodama-icon-circle bg-green"> <i class="material-icons">create_new_folder</i> </div>
@@ -53,7 +55,7 @@
                   <td class="col-xs-2 kodama-fill text-left" colspan="3" id="text_<?= $i; ?>_title"></td>
                 </tr>
                 <tr>
-                  <th class="col-xs-2">進學·就職</th>
+                  <th class="col-xs-2">進学·就職</th>
                   <td class="col-xs-2 kodama-fillcontrol" style="padding: 0px 10px;">
                       <select class="kodama-select" name="teacher" id="select_<?= $i; ?>_advancementtype">
                         <option class="kodama-select" value="-1">- - - -</option>

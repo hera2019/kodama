@@ -66,7 +66,7 @@ if ( isset( $_COOKIE[ 'KODAMA_STUDENT_INFO' ] ) && !empty( $_COOKIE[ 'KODAMA_STU
           <td class="col-xs-1" colspan="1" id="attendancebeforeday"><?= isset($StudentInfo) ? $StudentInfo->attendancebeforeday : ''; ?></td>
         </tr>
         <tr>
-          <th class="col-xs-1" colspan="1">母国语(姓・名)</th>
+          <th class="col-xs-1" colspan="1">母国語(姓・名)</th>
           <td class="col-xs-1" colspan="1"><span id="lastnamemotherland"><?= isset($StudentInfo) ? $StudentInfo->lastnamemotherland : ''; ?></span> <span id="firstnamemotherland"><?= isset($StudentInfo) ? $StudentInfo->firstnamemotherland : ''; ?></span></td>
           <th class="col-xs-1" colspan="1">携帶電話番号</th>
           <td class="col-xs-1" colspan="1" id="phonenumber"><?= isset($StudentInfo) ? $StudentInfo->phonenumber : ''; ?></td>

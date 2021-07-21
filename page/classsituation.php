@@ -1,8 +1,8 @@
-<head>
-<!-- code by zmq -->
 <?php
 require_once( 'frame.php' );
 ?>
+<head>
+<!-- code by zmq -->
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="../style/css/kodama.css" rel="stylesheet">

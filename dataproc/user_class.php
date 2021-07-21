@@ -80,7 +80,7 @@ class UserManage_Class
 	{
 		$message = 'Query record failed!';
     
-    $sql = 'SELECT * FROM usermanage'; //CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, 
+    $sql = 'SELECT *, usermanage.ID AS ID, usermanage.name AS name, usermanage.description AS description, userrights.name AS userrightsname FROM usermanage LEFT JOIN userrights ON usermanage.userrights = userrights.ID'; //CONCAT(left (s.checkinnum * 100 / s.studentnum, 5),"%") AS checkinpercent, 
     $sql .= $Param;
     $statement = $this->connection->prepare($sql);
     $statement->execute();
