@@ -1,8 +1,7 @@
 <?php
 require_once( 'frame.php' );
 require_once( '../include/include_database.php' );
-?>
-<head>
+?><head>
 <!-- code by zmq -->
 <?php
 $studentID = '';
@@ -32,9 +31,10 @@ if ( isset( $_GET[ 'ID' ] ) && !empty( $_GET[ 'ID' ] ) ) {
 </style>
 </head>
 
+
 <section class="content">
   <div class="container-fluid">
-    <div class="row m-t--60">
+    <div class="row m-t-0">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="kodama-header">

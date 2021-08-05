@@ -1,12 +1,11 @@
 <?php
-require_once '../include/include_database.php';
-require_once( '../include/include_function.php' ); // function and const
-require_once( '../frame/head.php' );
-
 $signinmod = 2;
 if ( !require_once( '../user/checksign.php' ) ) {
   return;
 }
+require_once '../include/include_database.php';
+require_once( '../include/include_function.php' ); // function and const
+require_once( '../frame/head.php' );
 
 //签到属性
 $sql = 'SELECT ID, description FROM attendproperty ORDER BY ID ASC';

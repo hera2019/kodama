@@ -1,14 +1,15 @@
+<?php
+$signinmod = 2;
+if ( !require_once( '../user/checksign.php' ) ) {
+  return;
+}
+?>
 <head>
 <!-- code by zmq -->
 <?php
 require_once( '../include/include_database.php' );
 require_once( '../include/include_function.php' );
 require_once( '../frame/head.php' );
-  
-$signinmod = 2;
-if ( !require_once( '../user/checksign.php' ) ) {
-  return;
-}
   
 $message = '';
   

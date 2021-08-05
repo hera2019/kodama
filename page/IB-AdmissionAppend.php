@@ -1,13 +1,13 @@
 <?php
 require_once( 'frame.php' );
 require_once( '../include/include_database.php' );
-?>
-<head>
+?><head>
 <!-- code by zmq -->
 <?php $INCLUDE_STUDENT_INFO = true; ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="../style/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
 </head>
+
 
 <section class="content">
   <div class="container-fluid">
@@ -20,7 +20,7 @@ require_once( '../include/include_database.php' );
         ?>
         <div class="card">
           <div class="kodama-header col-<?= $KODAMA_THEME_COLOR; ?>">
-            <h2>東京四木教育学院入学追加調書<small></small></h2>
+            <h2>入学追加調書<small></small></h2>
             <ul class="header-button">
               <li><a href="javascript:void(0);" onclick="refreshRecord();">
                 <div class="kodama-icon-circle bg-orange"> <i class="material-icons">query_builder</i> </div>
@@ -49,7 +49,7 @@ require_once( '../include/include_database.php' );
               </thead>
               <tbody>
                 <tr>
-                  <th colspan="12" class="text-center"><h4>東京コダマ教育学院入学追加調書</h4><small></small></th>
+                  <th colspan="12" class="text-center"><h4>入学追加調書</h4><small></small></th>
                 </tr>
                 <tr>
                   <th colspan="12" style="padding-bottom: 0;"><div class="text-left alert-warning align-left col-white" id="message"></div></th>

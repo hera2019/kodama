@@ -1,16 +1,16 @@
 <?php
 require_once( 'frame.php' );
-?>
-<head>
+?><head>
 <!-- code by zmq -->
 <!-- JQuery DataTable Css -->
 <link href="../style/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="../style/css/kodama.css" rel="stylesheet">
 </head>
 
+
 <section class="content">
   <div class="container-fluid">
-    <div class="row m-t--60">
+    <div class="row m-t-0">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="kodama-header">

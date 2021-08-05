@@ -117,7 +117,6 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
 }
 .login-backpic {
   text-align: center;
-  background-image: url('../style/images/login-back.jpg');
   width: 1005px;
   height: 484px;
   background-position: center;
@@ -159,7 +158,7 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
 </head>
 
 <body class="login-back">
-  <?php if(empty($signinmod)) : ?>
+  <?php if(empty($signinmod)) : $pagetext = "ダッシュボード" ?>
   <div style="float: right; position: absolute; top: 0; font-size: 12pt; text-align: right; background-color: #fff;">
     <ul class="col-xs-6" style="width: auto;">
       <div><a href="../attend/CheckInUI1.php"><span class="col-<?= $KODAMA_THEME_COLOR; ?>">学生個人チェックインページ</span></a></div>
@@ -168,11 +167,15 @@ if ( isset( $_POST[ 'username' ] ) ) //用户提交登录表单时执行如下�
       <div><a href="../attend/CheckInUI2.php"><span class="col-<?= $KODAMA_THEME_COLOR; ?>">学生集團チェックインページ</span></a></div>
     </ul>
   </div>
+  <div class="login-backpic" style="background-image: url('../style/images/login-back.jpg');">
+  <?php elseif($signinmod == 1): $pagetext = "学生個人チェックインページ" ?>
+  <div class="login-backpic" style="background-image: url('../style/images/login-back-student.jpg');">
+  <?php elseif($signinmod == 2): $pagetext = "学生集團チェックインページ" ?>
+  <div class="login-backpic" style="background-image: url('../style/images/login-back-teacher.jpg');">
   <?php endif; ?>
-  <div class="login-backpic">
     <div class="login-page">
       <div class="login-box">
-        <div class="logo bg-<?= $KODAMA_THEME_COLOR; ?>"> <a href="https://www.example.com/"><b>KODAMA</b></a> <small></small> </div>
+        <div class="logo bg-<?= $KODAMA_THEME_COLOR; ?>"> <a href="https://www.example.com/"><b>KODAMA</b></a> <small><?= $pagetext; ?></small> </div>
         <?php if(!empty($message)): ?>
         <div class="card">
           <div class="body">
