@@ -221,7 +221,7 @@ function cancelSelectData() {
     }
   }
   //Set Cookie
-  document.cookie = 'KODAMA_STUDENT_INFO' + "=" + "" + ";" + ";path=/";
+  document.cookie = 'KODAMA_STUDENT_INFO' + "=" + "" + ";path=/";
 }
 
 function selectStudent(studentid, selected) {
@@ -296,7 +296,7 @@ function showStudent(studentid, selected) {
       //console.log(JSON.stringify(info));
       
       //Set Cookie
-      document.cookie = 'KODAMA_STUDENT_INFO' + "=" + JSON.stringify(info) + ";" + ";path=/";
+      document.cookie = 'KODAMA_STUDENT_INFO' + "=" + JSON.stringify(info) + ";path=/";// + ";max-age=" + (2*24*60*60);
     } else {
       _kodama_students.currentstudentid = '';
       for(let key of _kodama_students.studentkey) {
@@ -307,7 +307,7 @@ function showStudent(studentid, selected) {
         }
       }
       //Set Cookie
-      document.cookie = 'KODAMA_STUDENT_INFO' + "=" + "" + ";" + ";path=/";
+      document.cookie = 'KODAMA_STUDENT_INFO' + "=" + "" + ";path=/";
     }
   }  
   //console.log(_kodama_students);

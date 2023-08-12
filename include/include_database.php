@@ -12,7 +12,7 @@ $connection->query("set character set 'utf8'");//读库
 $connection->query("set names 'utf8'");//写库
 date_default_timezone_set('Asia/Tokyo');//设置php时区
 $connection->query("SET time_zone = '+9:00'"); //设置数据库时区
-$connection->query("flush privileges");//立即生效
+//$connection->query("flush privileges");//数据库用户密码修改后立即生效，因网站安全原因，此命令不被允许了
 
 //显示数据库错误
 function ShowErrorCode( PDOStatement $statement ) {

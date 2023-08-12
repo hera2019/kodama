@@ -18,12 +18,12 @@
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown" style="margin: 10px 0 0 0; padding: 0;">
-          <button type="text" class="bg-<?= $KODAMA_THEME_COLOR; ?> btn-circle-lg" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="bottom" title="<?php if(!empty($KODAMA_USERINFO->username)) echo $KODAMA_USERINFO->username; ?>" data-content="<?php if(!empty($KODAMA_USERINFO->useremail)) echo $KODAMA_USERINFO->useremail; ?>">
+          <button type="text" class="bg-<?= $KODAMA_THEME_COLOR; ?> btn-circle-lg" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="bottom" title="<?php if(!empty($username)) echo $username; ?>" data-content="<?php if(!empty($useremail)) echo $useremail; ?>">
           <img src="../style/images/user.png" width="60" height="60" alt="User" style="margin: -5px 0 0 -10px;"/></button>
           <i class="material-icons col-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i> 
           <ul class="dropdown-menu" style="height: 16rem;">
             <li class="header bg-<?= $KODAMA_THEME_COLOR; ?>" style="margin: 0rem 0.5rem;">
-              <?php if(!empty($KODAMA_USERINFO->username)) echo $KODAMA_USERINFO->username; ?><small><?php if(!empty($KODAMA_USERINFO->useremail)) echo '<br>' . $KODAMA_USERINFO->useremail; ?></small></li>
+              <?php if(!empty($username)) echo $username; ?><small><?php if(!empty($useremail)) echo '<br>' . $useremail; ?></small></li>
             <li class="body">
               <ul class="menu">
                 <li> <a href="../page/useredit.php?ID=<?php if(!empty($userid)) echo $userid; ?>">
@@ -54,5 +54,4 @@
   </div>
 </nav>
 <!-- #Top Bar -->
-<?php require_once('foot.php'); ?>
 <script src="../style/js/tooltips-popovers.js"></script>

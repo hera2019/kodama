@@ -1,5 +1,10 @@
 <?php require_once( 'frame.php' ); ?>
 <?php
+
+//打开错误信息提示
+//ini_set('display_errors','1');
+//error_reporting(E_ALL);
+
 //指定文件编号，使用日期时间
 $PDF_FileNo = date('YmdHis', time());
 //指定模板和生成文件前缀名称
@@ -410,7 +415,7 @@ foreach($textarea as $key => $textobj) {
     $textobj->text = GetStudentData($studentdata2->data, 'text_jpfamilyname');
     $textobj->fontsize = 5.5;
   } elseif($key == 'jpfamilybirthday' && !empty($studentdata2)) {
-    $textobj->text = date('Y年m月d日', GetStudentData($studentdata2->data, 'time_jpfamilybirthday'));
+    $textobj->text = date('Y年m月d日', strtotime(GetStudentData($studentdata2->data, 'time_jpfamilybirthday')));
     $textobj->fontsize = 5.5;
   } elseif($key == 'jpfamilynationality' && !empty($studentdata2)) {
     $textobj->text = GetStudentData($studentdata2->data, 'text_jpfamilynationality');
@@ -573,6 +578,7 @@ $pdf->useTemplate($idx);
 
 //PDF filename build
 $outfilename = $PDF_StudentName . '_' . $PDF_FileName . '_' . $PDF_FileNo . '.pdf';
+
 ob_end_clean();
 //Close and output PDF document
 $pdf->Output($outfilename, 'I');//

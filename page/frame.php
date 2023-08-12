@@ -31,6 +31,7 @@ if ( !require_once( '../user/checksign.php' ) ) {
 <div class="overlay"></div>
 <!-- #END# Overlay For Sidebars -->
 <!-- Top Bar -->
+<?php require_once('../frame/foot.php'); ?>
 <?php require_once('../frame/navibar.php'); ?>
 <!-- #Top Bar -->
 <section>
@@ -41,6 +42,5 @@ if ( !require_once( '../user/checksign.php' ) ) {
   <?php require_once('../frame/rightsiderbar.php'); ?>
   <!-- #END# Right Sidebar -->
 </section>
-<?php require_once('../frame/foot.php'); ?>
 </body>
 </html>
