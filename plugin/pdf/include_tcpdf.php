@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once('../plugin/pdf/TCPDF/config/tcpdf_config.php');
 require_once('../plugin/pdf/TCPDF/tcpdf.php');
 require_once('../plugin/pdf/TCPDF/tcpdi.php');
