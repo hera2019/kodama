@@ -1,3 +1,44 @@
+-- =====================================================================
+--  KODAMA — Demo database / デモ用データベース / 演示数据库
+--  https://github.com/hera2019/kodama
+-- ---------------------------------------------------------------------
+--  [EN] All personal data in this file is FICTIONAL.
+--       Student and staff names, photos, phone numbers, addresses,
+--       postcodes, dates of birth, passport / residence-card numbers,
+--       school name and contact details are invented placeholders
+--       created for demonstration purposes. They do not refer to any
+--       real person, school or organisation. Any resemblance to a real
+--       person or institution is coincidental.
+--       Portrait images referenced by the `photo` columns are
+--       programmatically generated placeholder graphics, not photographs
+--       of real people.
+--       The `admin` account password is the publicly documented demo
+--       credential `kodama-demo` (stored as an unsalted SHA-1 hash, as
+--       the original application did). Never reuse this database, this
+--       account or this hashing scheme in production.
+--
+--  [JA] 本ファイルに含まれる個人データはすべて架空のものです。
+--       学生・職員の氏名、写真、電話番号、住所、郵便番号、生年月日、
+--       パスポート／在留カード番号、学校名および連絡先は、デモンストレーション
+--       のために作成された架空のプレースホルダーであり、実在の個人・学校・
+--       団体とは一切関係ありません。実在のものと類似していた場合も偶然です。
+--       `photo` 列が参照する人物画像は、プログラムで生成した
+--       プレースホルダー画像であり、実在の人物の写真ではありません。
+--       `admin` アカウントのパスワードは公開されたデモ用の認証情報
+--       `kodama-demo` です（元のアプリケーションと同様、ソルトなしの
+--       SHA-1 ハッシュで保存されています）。本データベース、本アカウント、
+--       および本ハッシュ方式を実運用で再利用しないでください。
+--
+--  [ZH] 本文件中的所有个人数据均为杜撰。
+--       学生与教职员的姓名、照片、电话号码、住址、邮编、出生日期、
+--       护照／在留卡号码、学校名称及联系方式，均为为演示而虚构的占位内容，
+--       与任何真实的个人、学校或机构无关。如有雷同，纯属巧合。
+--       `photo` 列引用的人物图像为程序生成的占位图，并非真实人物照片。
+--       `admin` 账号的密码为公开的演示凭据 `kodama-demo`
+--       （沿用原程序的做法，以无加盐 SHA-1 存储）。
+--       请勿在生产环境中复用本数据库、该账号或该哈希方式。
+-- =====================================================================
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
