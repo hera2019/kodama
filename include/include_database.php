@@ -1,6 +1,10 @@
 <?php
 //header("content-Type: text/html; charset=utf-8");
-require_once(dirname(__FILE__) . '/../config/config.php' );
+$configfile = dirname(__FILE__) . '/../config/config.php';
+if ( !file_exists( $configfile ) ) {
+  exit( '未找到 config/config.php，请复制 config/config.example.php 并填写数据库信息。' );
+}
+require_once( $configfile );
 $options = [];
 //try {
 $connection = new PDO($dsn, $username, $password, $options);
