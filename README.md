@@ -9,6 +9,13 @@ A school management system written from scratch in PHP between 2018 and 2020, an
 production at a Japanese language school. Its most distinctive idea is that it **derives the
 school calendar from check-in data** rather than asking anyone to maintain one.
 
+> [!WARNING]
+> **This is a read-only code archive. Do not deploy it on a public network.**
+> The application has unauthenticated data endpoints, SQL injection, an unauthenticated
+> file-upload handler and reflected XSS. It is published so that the design and the code can be
+> *read*, not so that it can be run as a service. If you want to try the demo, bind it to
+> `127.0.0.1` only and use throwaway data. See [Known limitations](#known-limitations).
+
 ---
 
 ## What this is
@@ -115,9 +122,12 @@ Japanese and Chinese UI, with several selectable colour themes remembered via co
 
 ---
 
-## Getting started
+## Running it locally
 
-**Requirements:** PHP 7.4+ (with PDO and GD) · MySQL 5.7+ · Apache or Nginx
+**Requirements:** PHP 7.4 (with PDO and GD) · MySQL 5.7+ · Apache or Nginx
+
+PHP 8 is **not** supported: the bundled TCPDF 6.2.26 uses `$str{i}` string offsets, which
+were removed in PHP 8.0. Upgrading the vendored libraries would be required first.
 
 ```bash
 git clone https://github.com/hera2019/kodama.git
@@ -209,7 +219,7 @@ kodama/
 
 | | |
 |---|---|
-| Backend | PHP 7.4, PDO prepared statements, no framework |
+| Backend | PHP 7.4, PDO — parameterised in most places, but several queries are assembled by string concatenation (see [Known limitations](#known-limitations)); no framework |
 | Database | MySQL (MyISAM), utf8mb4 |
 | Frontend | Bootstrap 3 with the AdminBSB theme, jQuery, DataTables, bootstrap-treeview, bootstrap-datetimepicker |
 | PDF | TCPDF |
@@ -222,24 +232,56 @@ Roughly 14,000 lines of first-party PHP and JavaScript, excluding third-party li
 
 ## Known limitations
 
-This is 2018–2020 code. By today's standards several things are plainly wrong, and they are
-listed here rather than hidden:
+This is 2018–2020 code, written by one person learning as they went. Several things are plainly
+wrong by today's standards — and some were already wrong by 2019 standards. They are listed
+here rather than hidden: an archive that oversells itself is worse than one that is honest.
 
-- **Passwords are stored with MySQL `SHA()`** — unsalted SHA-1. Common practice at the time;
-  it should be `password_hash()` / bcrypt.
-- **No CSRF protection.** Form submissions carry no token.
-- **MyISAM tables**, so no foreign keys and no transactions. Cross-table consistency is
-  enforced in application code.
-- **Data and presentation are entangled.** `dataproc/*_class.php` mixes SQL, business logic
-  and HTML assembly in the same file.
-- **No automated tests.** The `test/` directory holds throwaway scratch pages used while
-  debugging front-end widgets — it is not a test suite.
-- **Dependencies are vendored by hand** into `plugin/`. No Composer.
+### Security defects
 
-Rebuilding it today, I would reach for Laravel or Slim with Composer, move to InnoDB with
-real foreign keys, delegate authentication to the framework, and extract the attendance
-inference into a standalone, testable domain service. That logic is the part of this system
-most deserving of unit tests, and back then it was verified entirely by hand.
+These are the reason for the warning at the top of this file.
+
+- **The Ajax data endpoints have no authentication.** `dataproc/*_proc.php` exposes query, add,
+  update and delete operations for students, users, check-ins and school settings, and none of
+  the six files checks for a session or a role. Anyone who can reach the URL can read student
+  records and password hashes, or modify and delete data.
+- **SQL injection.** Several queries are assembled by string concatenation *before* being handed
+  to `prepare()`, so the prepared statement protects nothing: the WHERE clause in `QueryStudent`
+  (`$sql .= $Param`), the SET clause in `UpdateStudent`, and the ID list in `DeleteStudent` —
+  all in [`dataproc/student_class.php`](dataproc/student_class.php).
+- **Unauthenticated file upload with a caller-supplied path.**
+  [`plugin/upload/upload.php`](plugin/upload/upload.php) takes its destination directory from the
+  `dir` request parameter, concatenates it into a path with no `realpath()` containment, and
+  performs no authentication. Combined with permissive accepted types, this allows arbitrary
+  file writes and path traversal.
+- **Reflected XSS.** [`page/info.php`](page/info.php) echoes `$_GET['title']` and `$_GET['info']`
+  unescaped; other pages emit database content unescaped as well.
+- **Session fixation.** [`user/signin.php`](user/signin.php) passes a user-controlled cookie
+  straight into `session_id()` and never regenerates the ID after a successful login. Session
+  cookies carry no `HttpOnly`, `Secure` or `SameSite` attributes.
+- **Weak credential handling.** Passwords are stored with MySQL `SHA()` — unsalted SHA-1.
+  "Remember me" keeps the password base64-encoded in the session. Generated passwords come from
+  `substr(md5(time()), 0, 8)` ([`user/resetpassword.php`](user/resetpassword.php)), guessable
+  from the request timestamp.
+- **No CSRF protection.** No form submission carries a token.
+- **The demo administrator password is published** in this README and the demo database ships
+  with the matching hash. It is a demo credential, not a default to keep.
+
+### Design and maintenance
+
+- **MyISAM tables**, so no foreign keys and no transactions. Cross-table consistency is enforced
+  in application code.
+- **Data and presentation are entangled.** `dataproc/*_class.php` mixes SQL, business logic and
+  HTML assembly in the same file.
+- **No automated tests.** The attendance logic — the part most deserving of them — was verified
+  entirely by hand.
+- **Dependencies are vendored by hand** into `plugin/` and `style/`, pinned to whatever was
+  current in 2019. No Composer, no npm. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- **PHP 8 is not supported**, as noted under [Running it locally](#running-it-locally).
+
+Rebuilding it today, I would reach for Laravel or Slim with Composer, move to InnoDB with real
+foreign keys, put every endpoint behind framework authentication and authorisation, escape
+output by default through a template engine, and extract the attendance inference into a
+standalone, testable domain service.
 
 ---
 
@@ -261,21 +303,14 @@ maintained.
 
 ## License
 
-The first-party code in this repository — everything outside `plugin/` — is released under the
-[MIT License](LICENSE).
+The first-party code — everything outside `plugin/` and `style/` — is offered under the
+[MIT License](LICENSES/MIT.txt).
 
-### Third-party components
+The application loads and calls `plugin/upload/class.upload.php`, which is **GPL-2.0-only**.
+When this repository is distributed as a combined work, the conservative reading is that
+**the combined work is governed by GPL-2.0-only**; a full copy of that license is included at
+[`LICENSES/GPL-2.0.txt`](LICENSES/GPL-2.0.txt) and beside the component at
+[`plugin/upload/COPYING`](plugin/upload/COPYING).
 
-The `plugin/` directory vendors three libraries, each of which keeps its own license:
-
-| Library | Location | License |
-|---|---|---|
-| TCPDF | `plugin/pdf/TCPDF/` | LGPL-3.0 |
-| PHPMailer | `plugin/mail/` | LGPL-2.1 |
-| class.upload.php | `plugin/upload/` | **GPL-2.0** |
-
-Note that `class.upload.php` is GPL-2.0, which is copyleft. The MIT grant above covers my own
-code on its own terms, but because the application links against a GPL-2.0 component,
-**redistributing this repository as a combined work is subject to GPL-2.0**. If you want to
-reuse this code without that constraint, take the first-party files and supply your own upload
-handling — `plugin/upload/` is only used by the student-photo upload feature.
+Every bundled component, its version and its license are listed in
+**[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**.

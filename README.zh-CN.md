@@ -4,6 +4,12 @@
 
 [English →](README.md) ・ [日本語 →](README.ja.md)
 
+> [!WARNING]
+> **本仓库是只读的代码存档,请勿部署到公网。**
+> 程序存在无需登录即可调用的数据接口、SQL 注入、无认证的文件上传处理和反射型 XSS。
+> 公开它是为了让人「阅读」设计与代码,不是为了当服务跑起来。
+> 若要试用演示,请只绑定 `127.0.0.1` 并使用可丢弃的数据。详见[已知局限](#已知局限)。
+
 ---
 
 ## 这是什么
@@ -87,7 +93,10 @@ KODAMA 反过来做:**不问校历,只看签到数据**。
 
 ## 快速开始
 
-**环境**:PHP 7.4+(含 PDO / GD 扩展) · MySQL 5.7+ · Apache 或 Nginx
+**环境**:PHP 7.4(含 PDO / GD 扩展) · MySQL 5.7+ · Apache 或 Nginx
+
+**不支持 PHP 8**:内置的 TCPDF 6.2.26 使用了 PHP 8.0 已移除的 `$str{i}` 字符串下标语法,
+要支持 PHP 8 需先升级内置库。
 
 ```bash
 git clone https://github.com/hera2019/kodama.git
@@ -176,7 +185,7 @@ kodama/
 
 | | |
 |---|---|
-| 后端 | PHP 7.4,PDO 预处理语句,无框架 |
+| 后端 | PHP 7.4,PDO —— 多数查询使用占位符,但部分 SQL 由字符串拼接而成(见[已知局限](#已知局限));无框架 |
 | 数据库 | MySQL(MyISAM),utf8mb4 |
 | 前端 | Bootstrap 3 + AdminBSB 主题,jQuery,DataTables,bootstrap-treeview,bootstrap-datetimepicker |
 | PDF | TCPDF |
@@ -189,16 +198,47 @@ kodama/
 
 ## 已知局限
 
-这是 2018–2020 年的代码,以今天的标准看有几处明显不足,列在这里而不是藏起来:
+这是 2018–2020 年边学边写的代码,以今天的标准看有多处明显不足,其中一些按 2019 年的标准
+也已经不合格。列在这里而不是藏起来 —— 一份把自己说得比实际好的存档,还不如一份诚实的。
 
-- **密码用 MySQL `SHA()` 存储**,即无加盐 SHA-1。当年常见,今天应该用 `password_hash()` / bcrypt。
-- **无 CSRF 防护**,表单提交没有 token 校验。
+### 安全缺陷
+
+顶部那条警告的依据就是下面这些。
+
+- **Ajax 数据接口没有任何认证。** `dataproc/*_proc.php` 提供学生、用户、签到、学校设置的
+  查询/新增/修改/删除,六个文件没有一个检查会话或权限。任何能访问到该 URL 的人都可以读取
+  学生资料和密码哈希,或修改、删除数据。
+- **SQL 注入。** 部分查询在交给 `prepare()` **之前**就已用字符串拼接组装完毕,预处理语句对
+  这些部分毫无保护:`QueryStudent` 的 WHERE 子句(`$sql .= $Param`)、`UpdateStudent` 的
+  SET 子句、`DeleteStudent` 的 ID 列表 —— 均位于
+  [`dataproc/student_class.php`](dataproc/student_class.php)。
+- **无认证的文件上传,且保存目录由调用方指定。**
+  [`plugin/upload/upload.php`](plugin/upload/upload.php) 从请求参数 `dir` 取得目标目录,
+  未经 `realpath()` 约束就拼进路径,且完全没有认证。加上可接受的文件类型过于宽松,
+  可造成任意文件写入与路径穿越。
+- **反射型 XSS。** [`page/info.php`](page/info.php) 直接 `echo` 了未转义的
+  `$_GET['title']` 与 `$_GET['info']`;其他页面也存在未转义输出数据库内容的情况。
+- **会话固定。** [`user/signin.php`](user/signin.php) 把用户可控的 cookie 值直接传给
+  `session_id()`,且登录成功后不重新生成会话 ID。会话 cookie 未设置
+  `HttpOnly` / `Secure` / `SameSite`。
+- **凭据处理薄弱。** 密码用 MySQL `SHA()` 存储,即无加盐 SHA-1。"记住密码"把密码以 base64
+  存在 session 里。自动生成的密码是 `substr(md5(time()), 0, 8)`
+  ([`user/resetpassword.php`](user/resetpassword.php)),可由请求时间推算。
+- **无 CSRF 防护。** 表单提交不带任何 token。
+- **演示管理员密码已公开在本 README 中**,演示数据库里也带着对应的哈希。它是演示凭据,
+  不是可以留着继续用的默认值。
+
+### 设计与维护
+
 - **MyISAM 引擎**,没有外键约束和事务,表间一致性靠应用层保证。
 - **数据处理层与展示层耦合**,`dataproc/*_class.php` 里 SQL、业务逻辑和 HTML 拼装混在一起。
-- **无自动化测试**,`test/` 目录是当年调试前端组件用的草稿,不是测试套件。
-- **依赖靠手工放入 `plugin/`**,没有 Composer。
+- **无自动化测试。** 连最该写测试的出勤判定逻辑,当年也完全靠手工验证。
+- **依赖手工放入 `plugin/` 与 `style/`**,版本停留在 2019 年,没有 Composer 也没有 npm。
+  详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+- **不支持 PHP 8**(见"快速开始"一节)。
 
-如果今天重写,我会用 Laravel 或 Slim + Composer,数据库换 InnoDB 并加外键,认证交给框架,把出勤判定逻辑抽成独立的、可测试的领域服务 —— 那段逻辑是整个系统里最值得写单元测试的部分,当年却完全靠手工验证。
+如果今天重写,我会用 Laravel 或 Slim + Composer,数据库换 InnoDB 并加外键,所有接口都放在
+框架的认证与授权之下,靠模板引擎默认转义输出,并把出勤判定逻辑抽成独立的、可测试的领域服务。
 
 ---
 
@@ -216,19 +256,12 @@ kodama/
 
 ## 许可证
 
-本仓库中由我编写的代码 —— `plugin/` 之外的全部内容 —— 采用 [MIT 许可证](LICENSE)。
+`plugin/` 与 `style/` 之外的自有代码,采用 [MIT 许可证](LICENSES/MIT.txt)。
 
-### 第三方组件
+程序会加载并调用 `plugin/upload/class.upload.php`,该库为 **GPL-2.0-only**。
+将本仓库作为一个整体再分发时,保守的理解是**整体受 GPL-2.0-only 约束**;
+该许可证全文已包含在 [`LICENSES/GPL-2.0.txt`](LICENSES/GPL-2.0.txt),
+并在组件同目录下另放了一份 [`plugin/upload/COPYING`](plugin/upload/COPYING)。
 
-`plugin/` 目录内置了三个库,各自沿用原有许可证:
-
-| 库 | 位置 | 许可证 |
-|---|---|---|
-| TCPDF | `plugin/pdf/TCPDF/` | LGPL-3.0 |
-| PHPMailer | `plugin/mail/` | LGPL-2.1 |
-| class.upload.php | `plugin/upload/` | **GPL-2.0** |
-
-需要注意:`class.upload.php` 是 GPL-2.0,属于传染性许可证。上面的 MIT 授权就我自己的代码而言成立,
-但由于程序调用了 GPL-2.0 组件,**将本仓库作为一个整体再分发时受 GPL-2.0 约束**。
-若希望不带这个限制地复用,可只取 `plugin/` 之外的代码并自行实现上传功能 ——
-`plugin/upload/` 仅被学生照片上传功能使用。
+所有内置组件的版本与许可证清单见
+**[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**。
