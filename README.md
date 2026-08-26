@@ -1,103 +1,129 @@
 # KODAMA
 
-**日本語学校 / 塾向けの学生カルテ・出欠管理システム**
-A student-records and attendance-management system for Japanese language schools, built in PHP.
+**Student records and attendance management for Japanese language schools**
+日本語学校 / 塾向けの学生カルテ・出欠管理システム
 
-> A solo-built, production-used school management system (2018–2020). Its distinctive feature is
-> **inferring the school calendar from raw check-in data** instead of maintaining one by hand —
-> a class with zero check-ins in a time slot is recorded as a school holiday, over 50% as a held
-> class, and anything in between is flagged for a human to confirm. Also includes a colour-coded
-> monthly attendance ledger and one-click generation of the official PDF certificates
-> (immigration applications, enrolment/graduation certificates) that these schools file constantly.
+[中文版 →](README.zh-CN.md)
 
----
-
-## 这是什么
-
-日本的语言学校和私塾有两件事天天要做,而且都很烦:
-
-1. **考勤** —— 不只是记出勤,还要按「コマ数」(课时)算出席率。入国管理局审查留学生在留资格时会查这个数字,算错是要出事的。
-2. **出证明** —— 在学証明書、卒業証明書、在留資格認定証明書交付申請書…… 每份都是有固定格式的官方表格,手填耗时且容易错。
-
-KODAMA 把这两件事做成了一套系统:学生档案是数据源,考勤自动统计,证明书从档案直接生成 PDF。
-
-这是 2018 年开始、一个人从零手写的项目 —— 没有框架,没有 Composer,PHP + jQuery + 原生 SQL。代码部分从数据库设计到前端全部由我完成,产品与测试由同事负责。它在真实的语言学校里跑过。
+A school management system written from scratch in PHP between 2018 and 2020, and used in
+production at a Japanese language school. Its most distinctive idea is that it **derives the
+school calendar from check-in data** rather than asking anyone to maintain one.
 
 ---
 
-## 亮点:用签到数据反推校历
+## What this is
 
-大多数考勤系统要求你先维护一份校历,告诉它哪天上课、哪天放假。这在语言学校不现实 —— 临时调课、国定假日、学校自定的休校日太多,维护校历本身就成了负担,而且一旦忘记更新,出席率就全错。
+Japanese language schools do two things constantly, and both are tedious:
 
-KODAMA 反过来做:**不问校历,只看签到数据**。
+**Tracking attendance.** Not just presence, but attendance *rate* measured in コマ (class
+periods). The Immigration Services Agency checks this number when reviewing a student's
+residence status. Getting it wrong has real consequences for the student.
 
-对每个班级的每个课段,统计签到人数与在籍人数之比:
+**Issuing certificates.** Enrolment certificates, graduation certificates, the Certificate of
+Eligibility application — each is an official form with a fixed layout, filled in by hand,
+over and over.
 
-| 签到率 | 判定 | 说明 |
+KODAMA makes these one system: the student record is the source of truth, attendance is
+computed automatically from check-ins, and certificates are generated as PDFs straight from
+the record.
+
+Built solo, from database schema to front-end — no framework, no Composer, just PHP, jQuery
+and hand-written SQL. Product decisions and testing were handled by colleagues.
+
+---
+
+## The interesting part: inferring the school calendar
+
+Most attendance systems require you to maintain a school calendar telling them which days
+have classes. For a language school that is impractical — rescheduled lessons, national
+holidays, school-specific closures. Maintaining the calendar becomes its own chore, and the
+moment someone forgets to update it, every attendance rate is wrong.
+
+KODAMA inverts this: **don't ask for a calendar, look at who actually checked in.**
+
+For each class and each time slot, it compares the number of check-ins against enrolment:
+
+| Check-in rate | Verdict | Reasoning |
 |---|---|---|
-| 0% | `休` 休校日 | 一个人都没来 → 这天本来就没课 |
-| > 50% | `出` 正常上课 | 计入课时,参与出席率计算 |
-| 0% ~ 50% | `不` 不明 | 不自动判定,标记出来等负责人确认 |
+| 0% | `休` School holiday | Nobody came → there was no class that day |
+| > 50% | `出` Class held | Counts toward コマ totals and attendance rate |
+| 0–50% | `不` Unknown | Not decided automatically; flagged for a human to confirm |
 
-实现在 [`attend/situation_class.php:109`](attend/situation_class.php#L109)。
+Implemented in [`attend/situation_class.php:109`](attend/situation_class.php#L109).
 
-中间档不猜、而是交回给人,是这个设计里我自己最满意的地方 —— 出席率是要拿去给入管看的数字,系统在没把握的时候应该说「我不确定」,而不是给一个看起来很确定的错数。
+Refusing to guess in the middle band is the design decision I am happiest with. This
+attendance rate ends up in front of immigration officials. When the system isn't sure, it
+should say so, rather than hand back a confident-looking wrong number.
 
-签到时间窗口允许提前 / 延后(`classtime` 表的 `aheadperiod` / `delayperiod`),迟到早退阈值(`allowlate` / `allowearly`)也可配置。
+Check-in windows tolerate arriving early or leaving late (`aheadperiod` / `delayperiod` in
+the `classtime` table), and the late/early-leave thresholds (`allowlate` / `allowearly`) are
+configurable per school.
 
 ---
 
-## 功能
+## Features
 
-### 出欠管理
+### Attendance
 
-- **签到界面**:个人签到 / 集体签到两种模式,支持远程设备通过 HTTP 接口打卡([`attend/AddAttendRecordGet.php`](attend/AddAttendRecordGet.php))
-- **月度考勤簿**:31 天 × 8 种出勤状态的颜色矩阵,一屏看完一个学生或一个班一个月的全貌
+- **Check-in screens** — individual and group modes, plus an HTTP endpoint so remote devices
+  can post check-ins ([`attend/AddAttendRecordGet.php`](attend/AddAttendRecordGet.php))
+- **Monthly ledger** — a colour-coded matrix of 31 days against up to 4 class periods per day,
+  so one screen shows a student's or a class's entire month at a glance
 
-  状态:`出` 出席 · `欠` 欠席 · `遅` 遅刻早退 · `公` 公欠 · `休` 休学 · `帰` 一時帰国 · `-` 休校日 · `不` 不明
-- **双口径统计**:按 **コマ数**(课时)和按 **日数** 分别计算出席率 —— 入管看课时,学校内部管理看日数
-- **人工修正**:自动判定的记录可手工覆盖,`manualmodified` 标记保留修改痕迹
-- **统计重建**:[`attend/situation_rebuildall.php`](attend/situation_rebuildall.php) 可从原始签到记录全量重算,规则改了不用怕
+  States: `出` present · `欠` absent · `遅` late/left early · `公` excused · `休` on leave ·
+  `帰` temporarily home · `-` school holiday · `不` unknown
+- **Two parallel metrics** — attendance rate by **コマ** (class periods) and by **days**.
+  Immigration looks at periods; schools manage by days. Arriving late counts as present for
+  the day but costs one コマ, which is exactly why the two numbers differ
+  ([`attend/getstudentmonthattand.php:205`](attend/getstudentmonthattand.php#L205))
+- **Manual override** — automatic verdicts can be corrected by hand; the `manualmodified`
+  flag preserves the fact that a human intervened
+- **Full recompute** — [`attend/situation_rebuildall.php`](attend/situation_rebuildall.php)
+  rebuilds all statistics from raw check-in records, so changing the rules is not scary
 
-### 学生档案
+### Student records
 
-学籍信息、在留资格信息(在留カード番号 / パスポート / 在留期限)、成绩、面谈记录、赏罚、进路(升学就职)、学费缴纳、作品集 —— 分表存储,`student` 存基本信息,`student2` 存在留相关,其余各成一表。
+Enrolment details, residence status (residence card number, passport, expiry), exam scores,
+interview notes, commendations and penalties, career outcomes, tuition payments and a
+portfolio of student work — normalised across tables, with `student` holding basics and
+`student2` holding immigration-related fields.
 
-### 证明书 PDF 生成
+### Certificate generation
 
-基于 TCPDF,套用真实表格版式直接填充学生数据:
+Built on TCPDF, filling real official layouts directly from student data:
 
 | | |
 |---|---|
-| 在学証明書 | 卒業証明書 |
-| 在籍証明書 | 卒業見込証明書 |
-| 修了証明書 | 修了見込証明書 |
-| 修了証書 | 卒業証書 |
-| 退学証明書 | 推薦書 |
-| 学業成績及び出席状況証明書 | 承认书(再入国) |
+| Certificate of Enrolment (在学証明書) | Certificate of Graduation (卒業証明書) |
+| Certificate of Registration (在籍証明書) | Expected Graduation (卒業見込証明書) |
+| Certificate of Completion (修了証明書) | Expected Completion (修了見込証明書) |
+| Completion Diploma (修了証書) | Graduation Diploma (卒業証書) |
+| Certificate of Withdrawal (退学証明書) | Letter of Recommendation (推薦書) |
+| Academic Record & Attendance (学業成績及び出席状況証明書) | Re-entry Approval (承认书) |
 
-以及最复杂的那份:**在留資格認定証明書交付申請書**(入国管理局在留资格认定申请书),多页、字段上百。
+Plus the hardest one: the **Certificate of Eligibility application**
+(在留資格認定証明書交付申請書) — multi-page, with well over a hundred fields.
 
-### 权限与账号
+### Access control
 
-三级角色(管理者 / 教師 / 仲介),由 `userrights` 表控制;邮件找回密码(PHPMailer + `token` 表,token 两天过期)。
+Three roles (administrator / teacher / agency), driven by the `userrights` table. Password
+reset by email via PHPMailer, with tokens in a `token` table expiring after two days.
 
-### 界面
+### Interface
 
-日语 / 中文双语界面,多套主题配色可切换(cookie 记住选择)。
+Japanese and Chinese UI, with several selectable colour themes remembered via cookie.
 
 ---
 
-## 快速开始
+## Getting started
 
-**环境**:PHP 7.4+(含 PDO / GD 扩展) · MySQL 5.7+ · Apache 或 Nginx
+**Requirements:** PHP 7.4+ (with PDO and GD) · MySQL 5.7+ · Apache or Nginx
 
 ```bash
 git clone https://github.com/hera2019/kodama.git
-cd kodama
 ```
 
-**1. 建库并导入演示数据**
+**1. Create the database and load the demo data**
 
 ```bash
 mysql -u root -p -e "CREATE DATABASE kodama_demo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;"
@@ -107,110 +133,149 @@ mysql -u root -p -e "CREATE DATABASE kodama_demo CHARACTER SET utf8mb4 COLLATE u
 mysql -u root -p kodama_demo < db/kodama_demo.sql
 ```
 
-**2. 配置数据库连接**
+**2. Configure the database connection**
 
 ```bash
 cp config/config.example.php config/config.php
 ```
 
-编辑 `config/config.php` 填入数据库信息。该文件已在 `.gitignore` 中,不会被提交。
+Edit `config/config.php` with your credentials. It is listed in `.gitignore` and will not be
+committed.
 
-**3. 指向 Web 根目录后访问**
+**3. Point a web server at the project root and open it**
 
-演示账号:
+Demo account:
 
-| 用户名 | 密码 |
+| Username | Password |
 |---|---|
 | `admin` | `kodama-demo` |
 
-演示数据包含 2 个班级、约 30 名学生、2019-08 至 2020-02 近千条签到记录 —— 足够看到考勤矩阵和自动休校日判定的实际效果。所有学生姓名、照片、联系方式均为虚构或占位内容。
+The demo database contains 2 classes, about 30 students and close to a thousand check-in
+records spanning 2019-08 to 2020-02 — enough to see the attendance matrix and the automatic
+school-holiday detection doing real work. All names, photos and contact details in it are
+fictional or placeholder content.
 
 ---
 
-## 目录结构
+## Layout
 
 ```
 kodama/
-├── index.php              程序入口
-├── attend/                签到与出欠统计
-│   ├── attend_class.php       签到记录操作类
-│   ├── CheckInUI*.php         签到界面(个人 / 集体)
-│   ├── situation_class.php    ★ 班级出勤统计 + 休校日自动判定
-│   ├── situation_month.php    月度统计生成
-│   └── situation_rebuildall.php  全量重建统计
-├── page/                  各功能页面(学生管理 / 班级 / 成绩 / 证明书…)
-│   ├── PDFWrite*.php          各类证明书 PDF 生成
-│   └── IB-Admission*.php      在留資格認定証明書交付申請書
-├── dataproc/              数据处理层(*_class.php 数据类 / *_proc.php Ajax 接口)
-├── frame/                 页面框架(头部 / 侧栏 / 底部)
-├── include/               数据库连接与全局函数
-├── user/                  登录 / 注册 / 密码重置
-├── mail/                  邮件发送
-├── template/pdf/          证明书 PDF 版式模板
-├── config/                数据库配置(config.php 需自行创建)
-├── db/kodama_demo.sql     演示数据库
-├── data/photo/            学生照片(仓库内仅占位图)
-├── style/                 前端资源
-└── plugin/                第三方库(TCPDF / PHPMailer / class.upload)
+├── index.php              Entry point
+├── attend/                Check-in and attendance statistics
+│   ├── attend_class.php       Check-in record operations
+│   ├── CheckInUI*.php         Check-in screens (individual / group)
+│   ├── situation_class.php    ★ Class statistics + school-holiday inference
+│   ├── situation_month.php    Monthly aggregation
+│   └── situation_rebuildall.php  Full statistics rebuild
+├── page/                  Feature pages (students, classes, scores, certificates…)
+│   ├── PDFWrite*.php          Certificate PDF generation
+│   └── IB-Admission*.php      Certificate of Eligibility application
+├── dataproc/              Data layer (*_class.php data classes / *_proc.php Ajax endpoints)
+├── frame/                 Page chrome (header, sidebars, footer)
+├── include/               Database connection and global helpers
+├── user/                  Sign-in, registration, password reset
+├── mail/                  Outbound email
+├── template/pdf/          Certificate layout templates
+├── config/                Database config (create config.php yourself)
+├── db/kodama_demo.sql     Demo database
+├── data/photo/            Student photos (placeholders only in this repo)
+├── style/                 Front-end assets
+└── plugin/                Third-party libraries (TCPDF / PHPMailer / class.upload)
 ```
 
 ---
 
-## 数据模型
+## Data model
 
-22 张表。核心几张:
+22 tables. The ones that matter:
 
-| 表 | 作用 |
+| Table | Purpose |
 |---|---|
-| `student` / `student2` | 学生基本信息 / 在留资格信息 |
-| `attendance` | 原始签到记录,每天一行,最多 4 个课段(`time11`~`time42`) |
-| `situationclass` | 按班级 · 课段聚合的出勤统计,含休校日判定结果 |
-| `situationmonth` | 按学生 · 月聚合的出勤统计,JSON 存每日状态 |
-| `classtime` | 课段时间表与迟到早退阈值 |
-| `attendproperty` | 出勤状态字典(出 / 欠 / 遅 / 公 / 休 / 帰 / - / 不) |
-| `idconfig` | 通用字典表(国籍 / 在籍状态 / 课程 / 在留资格 / 进路…) |
-| `studentdata` | 申请表单数据,JSON 存储 |
-| `usermanage` / `userrights` | 用户与权限 |
-| `operatelog` | 操作日志 |
+| `student` / `student2` | Student basics / residence-status fields |
+| `attendance` | Raw check-ins, one row per day, up to 4 periods (`time11`–`time42`) |
+| `situationclass` | Per class and period aggregates, including the holiday verdict |
+| `situationmonth` | Per student and month aggregates, daily states stored as JSON |
+| `classtime` | Period timetable and late/early-leave thresholds |
+| `attendproperty` | Attendance state dictionary (present / absent / late / …) |
+| `idconfig` | Generic lookup table (nationality, enrolment status, course, visa, outcome…) |
+| `studentdata` | Application form submissions, stored as JSON |
+| `usermanage` / `userrights` | Users and roles |
+| `operatelog` | Audit log |
 
 ---
 
-## 技术栈
+## Stack
 
 | | |
 |---|---|
-| 后端 | PHP 7.4,PDO 预处理语句,无框架 |
-| 数据库 | MySQL(MyISAM),utf8mb4 |
-| 前端 | Bootstrap 3 + AdminBSB 主题,jQuery,DataTables,bootstrap-treeview,bootstrap-datetimepicker |
+| Backend | PHP 7.4, PDO prepared statements, no framework |
+| Database | MySQL (MyISAM), utf8mb4 |
+| Frontend | Bootstrap 3 with the AdminBSB theme, jQuery, DataTables, bootstrap-treeview, bootstrap-datetimepicker |
 | PDF | TCPDF |
-| 邮件 | PHPMailer |
-| 上传 | class.upload.php |
+| Email | PHPMailer |
+| Uploads | class.upload.php |
 
-自有代码约 14,000 行(PHP + JS),不含第三方库。
-
----
-
-## 已知局限
-
-这是 2018–2020 年的代码,以今天的标准看有几处明显不足,列在这里而不是藏起来:
-
-- **密码用 MySQL `SHA()` 存储**,即无加盐 SHA-1。当年常见,今天应该用 `password_hash()` / bcrypt。
-- **无 CSRF 防护**,表单提交没有 token 校验。
-- **MyISAM 引擎**,没有外键约束和事务,表间一致性靠应用层保证。
-- **数据处理层与展示层耦合**,`dataproc/*_class.php` 里 SQL、业务逻辑和 HTML 拼装混在一起。
-- **无自动化测试**,`test/` 目录是当年调试前端组件用的草稿,不是测试套件。
-- **依赖靠手工放入 `plugin/`**,没有 Composer。
-
-如果今天重写,我会用 Laravel 或 Slim + Composer,数据库换 InnoDB 并加外键,认证交给框架,把出勤判定逻辑抽成独立的、可测试的领域服务 —— 那段逻辑是整个系统里最值得写单元测试的部分,当年却完全靠手工验证。
+Roughly 14,000 lines of first-party PHP and JavaScript, excluding third-party libraries.
 
 ---
 
-## 关于这份代码
+## Known limitations
 
-- **2018 年**开始开发,当时还不会用 Git,靠手工备份文件夹
-- **2019 年 11 月**起纳入 Git 管理,仓库中的提交历史从这里开始
-- **2019–2020 年**为主力开发期,2021、2023 年有零星维护提交
-- 代码由一人完成,产品与测试由同事负责
-- 曾在真实的日本語学校环境中运行
+This is 2018–2020 code. By today's standards several things are plainly wrong, and they are
+listed here rather than hidden:
 
-本仓库为公开存档,已移除全部生产环境凭据、真实学校信息与个人数据;演示数据库中的学生姓名、照片、联系方式均为虚构或占位内容。项目不再维护。
+- **Passwords are stored with MySQL `SHA()`** — unsalted SHA-1. Common practice at the time;
+  it should be `password_hash()` / bcrypt.
+- **No CSRF protection.** Form submissions carry no token.
+- **MyISAM tables**, so no foreign keys and no transactions. Cross-table consistency is
+  enforced in application code.
+- **Data and presentation are entangled.** `dataproc/*_class.php` mixes SQL, business logic
+  and HTML assembly in the same file.
+- **No automated tests.** The `test/` directory holds throwaway scratch pages used while
+  debugging front-end widgets — it is not a test suite.
+- **Dependencies are vendored by hand** into `plugin/`. No Composer.
+
+Rebuilding it today, I would reach for Laravel or Slim with Composer, move to InnoDB with
+real foreign keys, delegate authentication to the framework, and extract the attendance
+inference into a standalone, testable domain service. That logic is the part of this system
+most deserving of unit tests, and back then it was verified entirely by hand.
+
+---
+
+## About this code
+
+- Development started in **2018**, before I knew how to use Git — versioning meant copying
+  folders by hand
+- The repository history begins in **November 2019**, when the project moved into Git
+- **2019–2020** was the main development period; 2021 and 2023 saw occasional maintenance
+- Written by one person; product and testing were handled by colleagues
+- Ran in production at a Japanese language school
+
+This repository is a public archive. All production credentials, real school information and
+personal data have been removed, including from the commit history. Names, photos and contact
+details in the demo database are fictional or placeholder content. The project is no longer
+maintained.
+
+---
+
+## License
+
+The first-party code in this repository — everything outside `plugin/` — is released under the
+[MIT License](LICENSE).
+
+### Third-party components
+
+The `plugin/` directory vendors three libraries, each of which keeps its own license:
+
+| Library | Location | License |
+|---|---|---|
+| TCPDF | `plugin/pdf/TCPDF/` | LGPL-3.0 |
+| PHPMailer | `plugin/mail/` | LGPL-2.1 |
+| class.upload.php | `plugin/upload/` | **GPL-2.0** |
+
+Note that `class.upload.php` is GPL-2.0, which is copyleft. The MIT grant above covers my own
+code on its own terms, but because the application links against a GPL-2.0 component,
+**redistributing this repository as a combined work is subject to GPL-2.0**. If you want to
+reuse this code without that constraint, take the first-party files and supply your own upload
+handling — `plugin/upload/` is only used by the student-photo upload feature.
