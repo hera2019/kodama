@@ -2,7 +2,7 @@
 
 **日本語学校 / 塾向けの学生カルテ・出欠管理システム**
 
-[English →](README.md)
+[English →](README.md) ・ [日本語 →](README.ja.md)
 
 ---
 

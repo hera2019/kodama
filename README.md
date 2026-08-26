@@ -3,7 +3,7 @@
 **Student records and attendance management for Japanese language schools**
 日本語学校 / 塾向けの学生カルテ・出欠管理システム
 
-[中文版 →](README.zh-CN.md)
+[日本語 →](README.ja.md) ・ [中文 →](README.zh-CN.md)
 
 A school management system written from scratch in PHP between 2018 and 2020, and used in
 production at a Japanese language school. Its most distinctive idea is that it **derives the
